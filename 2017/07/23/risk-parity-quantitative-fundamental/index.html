@@ -1,0 +1,692 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="摘要：本文论述了Risk Partity的基本概念，并介绍了如何通过量化的方法构建Risk Parity的Portfolio，并以excel作为工具实现一个简单的Risk Parity的应用。 关键字：Risk Parity， Risk contribution">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Risk Parity 量化入门">
+<meta property="og:url" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/index.html">
+<meta property="og:site_name" content="Liang的风险平价观">
+<meta property="og:description" content="摘要：本文论述了Risk Partity的基本概念，并介绍了如何通过量化的方法构建Risk Parity的Portfolio，并以excel作为工具实现一个简单的Risk Parity的应用。 关键字：Risk Parity， Risk contribution">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/1.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/2.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/3.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/4.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/5.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/6.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/7.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/8.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/9.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/10.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/11.png">
+<meta property="og:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/12.png">
+<meta property="og:updated_time" content="2017-07-23T06:54:18.149Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Risk Parity 量化入门">
+<meta name="twitter:description" content="摘要：本文论述了Risk Partity的基本概念，并介绍了如何通过量化的方法构建Risk Parity的Portfolio，并以excel作为工具实现一个简单的Risk Parity的应用。 关键字：Risk Parity， Risk contribution">
+<meta name="twitter:image" content="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/"/>
+
+
+
+
+
+  <title>Risk Parity 量化入门 | Liang的风险平价观</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Liang的风险平价观</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/23/risk-parity-quantitative-fundamental/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Liang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liang的风险平价观">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Risk Parity 量化入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-23T14:20:59+08:00">
+                2017-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>摘要：本文论述了Risk Partity的基本概念，并介绍了如何通过量化的方法构建Risk Parity的Portfolio，并以excel作为工具实现一个简单的Risk Parity的应用。</p>
+<p>关键字：Risk Parity， Risk contribution</p>
+<a id="more"></a>
+<p>“不要将鸡蛋放在同一个篮子里”告诉我们要分散风险，个人觉得是一句无比智慧的话。在没有修炼成巴菲特之前我觉得还是要牢牢记住这句话。如何做到分散风险？60%的股票+40%的债券算是分散风险吗？不妨做一个情景假设，你有100w元资金，60w买入股票ETF，40w买入债券ETF，持有    1年后，假如股票下跌了10%，而债券收益2%，那么你的投资总额变成了60w<em>0.9+40w</em>1.02=95.88；相当于总资产减值了4.14%，这似乎是不太理想的，尤其是在股票和债券的correlation还是负相关的情况下。在以上情形下，如果加大债券的配置那么整个portfolio就会更加的平稳。那么接下来的问题就是该如何分配股票和债券的权重？</p>
+<h2 id="Risk-Contribution"><a href="#Risk-Contribution" class="headerlink" title="Risk Contribution"></a>Risk Contribution</h2><p>单个risk asset可以用variance来度量风险，而要计算一个投资组合的variance的话还需要知道convariance。假设这些数据是已知的。</p>
+<h3 id="组合中包括2种asset的情况："><a href="#组合中包括2种asset的情况：" class="headerlink" title="- 组合中包括2种asset的情况："></a>- 组合中包括2种asset的情况：</h3><p>还是假设60%股票+40%债券，并进一步假设股票的volatility是15%，债券的volatility是5%，correlation为0.2。那么根据公式：<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/1.png" alt="1.png" title=""></p>
+<p>就可以计算出组合的variance：<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/2.png" alt="2.png" title=""></p>
+<p>有了组合的variance，又该如何计算股票和债券对该组合variance的占比呢？观察以上的计算式，第一项可归因到股票，第三项可归因到债券。那么第二项（convariance）该如何归因呢？其实就是将一半归因到股票另一半归因到债券！<br>由此可知，股票的 risk contribution:<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/3.png" alt="3.png" title=""></p>
+<p>债券的risk contribution：<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/4.png" alt="4.png" title=""></p>
+<p>有了这些数据，接下来就能很容易计算出股票和债券在组合variance中的占比，也就是risk contribution的占比。<br>股票的风险占比：<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/5.png" alt="5.png" title=""></p>
+<p>债券的风险占比：<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/6.png" alt="6.png" title=""></p>
+<p>从以上数据就可以清晰的看出60/40其实是一种非常不平衡的组合，其中股票的risk contribution高达92%，也就是说在60/40的组合里面，风险主要集中在股票上。</p>
+<h3 id="组合中包括3种asset的情况："><a href="#组合中包括3种asset的情况：" class="headerlink" title="- 组合中包括3种asset的情况："></a>- 组合中包括3种asset的情况：</h3><p>再来讨论一下组合中持有3中资产的情况，因为3中资产的情况更具一般性，可以推广到持有更多资产的情况。假设新增资产为商品，volitility 和 correlation见下表：<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/7.png" alt="7.png" title=""></p>
+<p>并假设按照40%的股票，40%的债券，20%的商品来分配。根据以下公式可以获得组合的variance：<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/8.png" alt="8.png" title=""></p>
+<p>以本例的3种asset来说，可以获得如下的计算公式：<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/9.png" alt="9.png" title=""></p>
+<p>代入上表中的数据，可得出计算出组合的variance: 0.00778<br>接下来要求每一项资产的risk contribution, 可以通过如下方式获得：<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/10.png" alt="10.png" title=""></p>
+<p>第一项是variance, 第二和第三项分别对应covariance的一半。根据以上算式可计算出：</p>
+<ul>
+<li>债券的risk contribution：0.00044；占比：0.00044/0.00778=6%</li>
+<li>股票的risk contribution：0.0044；占比：0.00444/0.00778=57%</li>
+<li>商品的risk contribution：0.0029；占比：0.0029/0.00778=37%</li>
+</ul>
+<p>以上数据显示，40%的债券对应的risk contribution只是6%，而股票和商品的risk contribution则显得太高了。</p>
+<h2 id="Risk-Parity"><a href="#Risk-Parity" class="headerlink" title="Risk Parity"></a>Risk Parity</h2><p>Risk Parity (也叫risk budgeting)，是通过调整各asset在组合中所占的比重以实现个asset的risk contribution相同或等于指定的数值。</p>
+<h3 id="组合中包括2种asset的情况：-1"><a href="#组合中包括2种asset的情况：-1" class="headerlink" title="- 组合中包括2种asset的情况："></a>- 组合中包括2种asset的情况：</h3><p>这种情况很简单了，不需要考虑2种asset的correlation, 只需要比较他们的volitility就行了，再使用之前的例子，因为股票的volatility是15%，债券的volatility是5%，那么，通过让债券的volatility对应的金额增至现在的3倍即能实现股票和债券的volatility对应的金额相等。从组合比重的角度来说，也就是1%的股票要对应3%的债券，所以，组合的权重就为：75%的债券 + 25%的股票。</p>
+<h3 id="组合中包括3种asset的情况：-1"><a href="#组合中包括3种asset的情况：-1" class="headerlink" title="- 组合中包括3种asset的情况："></a>- 组合中包括3种asset的情况：</h3><p>这种情况会比上面复杂，因为没有直接的计算方法，需要通过数值分析法来获得近似解。这里通过excel solver举例，如下图所示：<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/11.png" alt="11.png" title=""></p>
+<p>最终的解为：股票18%，债券68%，商品14%。接着对excel的输入输出做一些说明。绿色部分是correlation matrix，作为输入参数。红色部分是solver的“可变单元格”，也就是最终的输出（参见下图）。“约束条件”设置成“总计”=1 并勾选“非负数”（参见下图）。棕色部分即risk contribution是根据组合的比重计和correlation matrix算出来的，比如股票部分的计算设置成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">=(C2^2*F6^2+C2*C3*E4*E6*F6+C2*C4*F5*F6*G6)*10000</div></pre></td></tr></table></figure></p>
+<p>注意这里有意将最终的计算结果放大了10000倍，这么处理是便于处理Error项，因为risk contribution的值都很小。Error项作为solver的“设置目标”，也就是优化要达到的最终目标。由于优化的目标是希望Risk contribution的各项都相同，那么也就是说这3项对应的variance=0，因此，Error就设置成：=VAR.P(C7:C9)<br><img src="/2017/07/23/risk-parity-quantitative-fundamental/12.png" alt="12.png" title=""></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>本文介绍了实现risk parity的一种量化方法。并通过使用Excel的solver实现了组合中包含3类asset的risk parity的计算。以3类资产为基础很容易推广至更多类资产。个人觉得用excel+solver的方式对于组合里面asset数量在10多个的情况下是足够应付了。Risk Parity本身计算所需的输入其实很简单，就是各类asset的variance和correlation matrix。但是，所谓garbage in garbage out。如何获取可靠的variance和correlation其实倒是一个难点。</p>
+<p>参考文献：</p>
+<ul>
+<li>2017 CFA level1 volumn 4 corporate finance and portfolio management</li>
+<li>Edward E. Qian, Risk Parity Fundmentals</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Liang" />
+          <p class="site-author-name" itemprop="name">Liang</p>
+           
+              <p class="site-description motion-element" itemprop="description">Keep Walking</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Risk-Contribution"><span class="nav-number">1.</span> <span class="nav-text">Risk Contribution</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#组合中包括2种asset的情况："><span class="nav-number">1.1.</span> <span class="nav-text">- 组合中包括2种asset的情况：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合中包括3种asset的情况："><span class="nav-number">1.2.</span> <span class="nav-text">- 组合中包括3种asset的情况：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Risk-Parity"><span class="nav-number">2.</span> <span class="nav-text">Risk Parity</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#组合中包括2种asset的情况：-1"><span class="nav-number">2.1.</span> <span class="nav-text">- 组合中包括2种asset的情况：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合中包括3种asset的情况：-1"><span class="nav-number">2.2.</span> <span class="nav-text">- 组合中包括3种asset的情况：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">3.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Liang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
