@@ -1,192 +1,143 @@
-<!doctype html>
+<!DOCTYPE html>
 
 
 
-  
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
 
 
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
 
 
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
 
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Hexo, NexT" />
-
-
-
-
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
-
-
-
-
-
-
-<meta name="description" content="每次市场上出现一些热点事件后，通常都是众说风云，自己看了这些新闻，以及网上大V们的论述之后往往觉得是一头雾水，也没有办法分清楚谁对谁错。最近想想，觉得其实自己有武器却没有利用起来啊，毕竟也是学过宏观经济学的人，教材里面清清楚楚的把分析框架提供给我了，而我却视而不见，反倒是迷失在各种标题党中。想想觉得自己也是蛮愚蠢的。情愿相信不可靠的消息和评论，却不依靠教材上提供的可靠的框架。经常听见说教材上的东西">
+  <meta name="description" content="每次市场上出现一些热点事件后，通常都是众说风云，自己看了这些新闻，以及网上大V们的论述之后往往觉得是一头雾水，也没有办法分清楚谁对谁错。最近想想，觉得其实自己有武器却没有利用起来啊，毕竟也是学过宏观经济学的人，教材里面清清楚楚的把分析框架提供给我了，而我却视而不见，反倒是迷失在各种标题党中。想想觉得自己也是蛮愚蠢的。情愿相信不可靠的消息和评论，却不依靠教材上提供的可靠的框架。经常听见说教材上的东西">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Trump税改的宏观分析">
 <meta property="og:url" content="http://yoursite.com/2017/12/07/Trump-tax-reform/index.html">
 <meta property="og:site_name" content="Liang的风险平价观">
 <meta property="og:description" content="每次市场上出现一些热点事件后，通常都是众说风云，自己看了这些新闻，以及网上大V们的论述之后往往觉得是一头雾水，也没有办法分清楚谁对谁错。最近想想，觉得其实自己有武器却没有利用起来啊，毕竟也是学过宏观经济学的人，教材里面清清楚楚的把分析框架提供给我了，而我却视而不见，反倒是迷失在各种标题党中。想想觉得自己也是蛮愚蠢的。情愿相信不可靠的消息和评论，却不依靠教材上提供的可靠的框架。经常听见说教材上的东西">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2017/12/07/Trump-tax-reform/IS-LM.png">
 <meta property="og:image" content="http://yoursite.com/2017/12/07/Trump-tax-reform/AS-AD.png">
-<meta property="og:updated_time" content="2017-12-07T13:25:05.319Z">
+<meta property="og:updated_time" content="2017-12-07T13:25:05.320Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Trump税改的宏观分析">
 <meta name="twitter:description" content="每次市场上出现一些热点事件后，通常都是众说风云，自己看了这些新闻，以及网上大V们的论述之后往往觉得是一头雾水，也没有办法分清楚谁对谁错。最近想想，觉得其实自己有武器却没有利用起来啊，毕竟也是学过宏观经济学的人，教材里面清清楚楚的把分析框架提供给我了，而我却视而不见，反倒是迷失在各种标题党中。想想觉得自己也是蛮愚蠢的。情愿相信不可靠的消息和评论，却不依靠教材上提供的可靠的框架。经常听见说教材上的东西">
 <meta name="twitter:image" content="http://yoursite.com/2017/12/07/Trump-tax-reform/IS-LM.png">
+  <link rel="canonical" href="http://yoursite.com/2017/12/07/Trump-tax-reform/">
 
 
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
   };
 </script>
 
-
-
-  <link rel="canonical" href="http://yoursite.com/2017/12/07/Trump-tax-reform/"/>
-
-
-
-
-
   <title>Trump税改的宏观分析 | Liang的风险平价观</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail ">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
+  <div class="site-meta">
 
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+    <div>
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">Liang的风险平价观</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
-      
-        <p class="site-subtitle"></p>
-      
   </div>
 
   <div class="site-nav-toggle">
-    <button>
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -194,54 +145,57 @@
   </div>
 </div>
 
+
 <nav class="site-nav">
   
-
-  
-    <ul id="menu" class="menu">
+  <ul id="menu" class="menu">
+      
+      
       
         
         <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
       
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
+    
 
-      
-    </ul>
-  
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
-  
+  </li>
+  </ul>
+
+    
+
 </nav>
-
-
-
- </div>
+</div>
     </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
 
     <main id="main" class="main">
       <div class="main-inner">
@@ -250,71 +204,53 @@
             
 
   <div id="posts" class="posts-expand">
-    
-
-  
-
+      <article itemscope itemtype="http://schema.org/Article">
   
   
   
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <div class="post-block post">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/07/Trump-tax-reform/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Liang">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="Keep Walking">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Liang的风险平价观">
     </span>
-
-    
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Trump税改的宏观分析
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">Trump税改的宏观分析</h1>
-        
+          
+        </h1>
 
         <div class="post-meta">
-          <span class="post-time">
-            
+            <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
+              <span class="post-meta-item-text">发表于</span>
+
               
-                <span class="post-meta-item-text">发表于</span>
+                
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-07T21:21:53+08:00">
-                2017-12-07
-              </time>
-            
 
-            
-
-            
-          </span>
-
+              <time title="创建时间：2017-12-07 21:21:53 / 修改时间：21:25:05" itemprop="dateCreated datePublished" datetime="2017-12-07T21:21:53+08:00">2017-12-07</time>
+            </span>
           
-            <span class="post-category" >
             
-              <span class="post-meta-divider">|</span>
+
             
+          
+            <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
+              <span class="post-meta-item-text">分类于</span>
               
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Macro/" itemprop="url" rel="index">
-                    <span itemprop="name">Macro</span>
-                  </a>
-                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Macro/" itemprop="url" rel="index"><span itemprop="name">Macro</span></a></span>
 
                 
                 
@@ -323,33 +259,23 @@
           
 
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
 
         </div>
       </header>
+
     
-
+    
+    
     <div class="post-body" itemprop="articleBody">
-
-      
-      
 
       
         <p>每次市场上出现一些热点事件后，通常都是众说风云，自己看了这些新闻，以及网上大V们的论述之后往往觉得是一头雾水，也没有办法分清楚谁对谁错。最近想想，觉得其实自己有武器却没有利用起来啊，毕竟也是学过宏观经济学的人，教材里面清清楚楚的把分析框架提供给我了，而我却视而不见，反倒是迷失在各种标题党中。想想觉得自己也是蛮愚蠢的。情愿相信不可靠的消息和评论，却不依靠教材上提供的可靠的框架。经常听见说教材上的东西都是过时的，没有实际作用的，我自己也很轻易就相信了。但是，稍微分析一下：首先：教材上的东西都是经典，是经过时间积累下来的精华部分，如果没有用怎么会写进教材呢？其次，这些经典理论的作者都是大家，比我要聪明无数倍了，我没有理由不去使用他们。最后，反省一下我看了那么多所谓大V的文章有收获和进步么？</p>
 <a id="more"></a>
+
 <p>Trump的税改于2017/12/02日在参议院通过。税改的主要目的就是减税，而减税作为一项财政政策，会对宏观经济，包括：GDP，利率，汇率，通胀，股市造成哪些影响呢？接下来就根据教材上提供的框架来一一分析之。</p>
 <p>宏观分析的时间纬度是一个非常重要的着眼点，很多时候大家为了某些观点争论不休，其原因可能就是考察的时间纬度不同。拿长期的观点和短期的观点进行比较显然会造成各说各的。那么，首先从短期的时间纬度进行分析，从短期来看，需求决定了产出（短期究竟是多久？答案是不一定，有可能几个月，也有可能几年，主要看决定长期的因素–price level有没有开始发生改变，如果price level开始改变，那么短期的作用也就over了）。刚才提到了减税是一项财政政策，能刺激需求端。使用短期的分析框架：IS-LM模型，如下图所示：</p>
-<img src="/2017/12/07/Trump-tax-reform/IS-LM.png" alt="IS-LM.png" title="">
+<img src="/2017/12/07/Trump-tax-reform/IS-LM.png">
+
 <p>从上图可见，因为短期内由于减税，消费者的可支配收入增加，进而增加消费，通过乘数效应进一步增加产出。也就是说IS curve右移至IS’。那么，在来看LM curve，从美联储的货币政策来看，当前处在加息通道中，那么从保守的角度来说，LM保持不变，而如果美联储在2018年继续加息的话，其实LM是该向上平移的。由此，我们从IS-LM模型可知：产出（GDP）会比当前增加，而利率会上升，而利率上升会导致货币升值，也就是美元汇率也上涨。</p>
 <p>接下来分析一下减税的长期情况。这里有一个概念叫做“natural level of output”。从短期来看output是可以偏离natural level of output的，但是长期来说是要回归的，因为price level是会做出调整的。之所以会调整是因为，劳动力市场本身也存在一个natrual rate of umemployement，由于短期的财政政策的刺激导致失业率低于这个natrual rate, 使得工资上升，从而导致物价上升。从长期角度来说，可以使用AS-AD模型进行分析。影响AS curve主要有以下这些因素：</p>
 <ul>
@@ -359,7 +285,8 @@
 </ul>
 <p>另外，还要提一下财政赤字，此次降税如果没有伴随财政紧缩，所以会造成财政赤字上升。财政赤字的上升会影响消费者的预期从而影响到AD curve。但是，现在似乎大家都不关心这事情，一则是因为相信Trump的供给侧改革会成功，要么就是今朝有酒今朝醉，因此，财政赤字对AD curve的影响不明朗。</p>
 <p>综上，工资水平使得AS curve轻微向上平移，原油价格使得AS curve轻微向上平移，汇率使得AS curve轻微向下平移。总体来说，AS会向上，但是程度很小。如下图所示：</p>
-<img src="/2017/12/07/Trump-tax-reform/AS-AD.png" alt="AS-AD.png" title="">
+<img src="/2017/12/07/Trump-tax-reform/AS-AD.png">
+
 <p>再从open economy的角度来分析：减税会刺激国内的需求，但是这些新增的需求并非会全部购买国内的商品和服务，有部分会去购买国外的产品和服务，所以进口增加而出口不变，因此贸易赤字增加，另外，对国内的产出（GDP）的刺激效果也相应的减弱了。之前在短期情况的分析可知利率会走高，汇率也会走高而通胀保持稳定，那么美国的金融市场会比较有吸引力。为了保证减税的效果，从美国的角度来说，还是希望美元不要太强势。</p>
 <p>综合以上的分析，可得出美国会在一段时间内维持一个高于natural level of output。也就是相对高的增长，而通胀相对比较温和。所以可以得到以下这些结论：</p>
 <ul>
@@ -370,89 +297,59 @@
 <li>黄金：震荡向下。作为零息债券，随着实际利率的抬升，不看好它的表现。</li>
 </ul>
 
-      
     </div>
 
-    <div>
-      
-        
-<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="/uploads/wx.jpg" alt="Liang wechat" style="width: 200px; max-width: 100%;"/>
-    <div>欢迎订阅我的微信公众号！</div>
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/uploads/wx.jpg" alt="Liang wechat" style="width: 200px; max-width: 100%;">
+  <div>欢迎订阅我的微信公众号！</div>
 </div>
 
-
-      
-    </div>
-
-    <div>
       
         
-
       
-    </div>
 
-    <div>
-      
+      <footer class="post-footer">
+
         
 
-      
-    </div>
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2017/10/16/rp-benchmark-index/" rel="next" title="风险评价策略（Risk Parity)基准指数">
+                  <i class="fa fa-chevron-left"></i> 风险评价策略（Risk Parity)基准指数
+                </a>
+              
+            </div>
 
-    <footer class="post-footer">
-      
+            <span class="post-nav-divider"></span>
 
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/10/16/rp-benchmark-index/" rel="next" title="风险评价策略（Risk Parity)基准指数">
-                <i class="fa fa-chevron-left"></i> 风险评价策略（Risk Parity)基准指数
-              </a>
-            
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2018/08/16/How-did-I-prepare-CFA-level-II/" rel="prev" title="CFA Level II 准备过程 【2018年6月】">
+                  CFA Level II 准备过程 【2018年6月】 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
           </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/16/How-did-I-prepare-CFA-level-II/" rel="prev" title="CFA Level II 准备过程 【2018年6月】">
-                CFA Level II 准备过程 【2018年6月】 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-  <div class="comments" id="comments">
+        
+      </footer>
     
   </div>
+  
+  
+  
+  </article>
 
+  </div>
+
+
+          </div>
+          
 
         </div>
-        
           
   
   <div class="sidebar-toggle">
@@ -463,151 +360,140 @@
     </div>
   </div>
 
-  <aside id="sidebar" class="sidebar">
+  <aside class="sidebar">
     <div class="sidebar-inner">
-
+        
+        
+        
+        
       
 
-      
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/images/avatar.gif"
-               alt="Liang" />
-          <p class="site-author-name" itemprop="name">Liang</p>
-           
-              <p class="site-description motion-element" itemprop="description">Keep Walking</p>
-          
-        </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/archives/">
-                <span class="site-state-item-count">5</span>
-                <span class="site-state-item-name">日志</span>
-              </a>
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-categories">
-              
-                <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">分类</span>
-              
-            </div>
-          
-
-          
-            
-            
-            <div class="site-state-item site-state-tags">
-              
-                <span class="site-state-item-count">1</span>
-                <span class="site-state-item-name">标签</span>
-              
-            </div>
-          
-
-        </nav>
-
+  <p class="site-author-name" itemprop="name">Liang</p>
+  <div class="site-description" itemprop="description">Keep Walking</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
         
-
-        <div class="links-of-author motion-element">
-          
-            
-              <span class="links-of-author-item">
-                <a href="http://weibo.com/ecmkit" target="_blank" title="Weibo">
-                  
-                    <i class="fa fa-fw fa-weibo"></i>
-                  
-                  Weibo
-                </a>
-              </span>
-            
-          
-        </div>
-
+          <a href="/archives/">
         
-        
-
-        
-        
-
-        
-
-
-      </section>
-
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
       
-
       
+      <div class="site-state-item site-state-categories">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+        
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/ecmkit" title="Weibo &rarr; https://weibo.com/ecmkit" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
 
     </div>
   </aside>
+  <div id="sidebar-dimmer"></div>
 
 
-        
       </div>
     </main>
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy; 
-  <span itemprop="copyrightYear">2018</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Liang</span>
 </div>
-
-
-<div class="powered-by">
-  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
-</div>
-
-<div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
-  </a>
-</div>
-
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
 
         
+
+
+
+
+
+
+
+
+
+
+
 
         
       </div>
     </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
   </div>
 
   
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/muse.js?v=7.3.0"></script>
 
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
+<script src="/js/next-boot.js?v=7.3.0"></script>
 
 
 
@@ -624,94 +510,14 @@
 
 
 
-  
-  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-  
 
 
 
 
 
 
-  
 
 
-
-
-
-  
-
-  
-
-  
 
   
 
