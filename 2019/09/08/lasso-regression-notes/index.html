@@ -54,17 +54,23 @@
   };
 </script>
 
-  <meta name="description" content="Keep Walking">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Liang的风险平价观">
-<meta property="og:url" content="http://yoursite.com/archives/2018/08/index.html">
+  <meta name="description" content="这周读了一篇论文《基于LASSO和神经网络的量化交易智能系统构建》，借机看了一下Lasso的概念。做点笔记以备复习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lasso Regression Notes">
+<meta property="og:url" content="http://yoursite.com/2019/09/08/lasso-regression-notes/index.html">
 <meta property="og:site_name" content="Liang的风险平价观">
-<meta property="og:description" content="Keep Walking">
+<meta property="og:description" content="这周读了一篇论文《基于LASSO和神经网络的量化交易智能系统构建》，借机看了一下Lasso的概念。做点笔记以备复习。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/ridge.PNG">
+<meta property="og:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/lasso.PNG">
+<meta property="og:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/lasso_ridge.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/lasso-reduce.png">
+<meta property="og:updated_time" content="2019-09-08T10:05:13.758Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Liang的风险平价观">
-<meta name="twitter:description" content="Keep Walking">
-  <link rel="canonical" href="http://yoursite.com/archives/2018/08/">
+<meta name="twitter:title" content="Lasso Regression Notes">
+<meta name="twitter:description" content="这周读了一篇论文《基于LASSO和神经网络的量化交易智能系统构建》，借机看了一下Lasso的概念。做点笔记以备复习。">
+<meta name="twitter:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/ridge.PNG">
+  <link rel="canonical" href="http://yoursite.com/2019/09/08/lasso-regression-notes/">
 
 
 <script id="page-configurations">
@@ -72,13 +78,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
+    isPost: true,
     isPage: false,
-    isArchive: true
+    isArchive: false
   };
 </script>
 
-  <title>归档 | Liang的风险平价观</title>
+  <title>Lasso Regression Notes | Liang的风险平价观</title>
   <meta name="generator" content="Hexo 3.9.0">
   
 
@@ -182,21 +188,6 @@
 
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
 </nav>
 </div>
     </header>
@@ -214,66 +205,137 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        
-        
-        
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/lasso-regression-notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Liang">
+      <meta itemprop="description" content="Keep Walking">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liang的风险平价观">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Lasso Regression Notes
+
           
-        
-        <span class="collection-header">嗯..! 目前共计 7 篇日志。 继续努力。</span>
-      </div>
-      
+        </h1>
 
-      
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
 
-  
-  
+              
+                
+              
 
-  
+              <time title="创建时间：2019-09-08 17:48:58 / 修改时间：18:05:13" itemprop="dateCreated datePublished" datetime="2019-09-08T17:48:58+08:00">2019-09-08</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
     
-    <div class="collection-year">
-      <h1 class="collection-header">2018</h1>
-    </div>
-  
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>这周读了一篇论文《基于LASSO和神经网络的量化交易智能系统构建》，借机看了一下Lasso的概念。做点笔记以备复习。</p>
+<a id="more"></a>
 
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2018/08/16/How-did-I-prepare-CFA-level-II/" itemprop="url">
-            <span itemprop="name">CFA Level II 准备过程 【2018年6月】</span>
-          </a>
-        
-      </h2>
+<p>Lasso 全称Least absolute shrinkage and selection operator。主要的作用是regularization，也就是防止overfitting。通常用在linear regression和logistic regression里。说到regularization，另一种方式是ridge regression。两种表现形式如下：</p>
+<ul>
+<li>Ridge:<img src="/2019/09/08/lasso-regression-notes/ridge.PNG"></li>
+</ul>
+<ul>
+<li>Lasso:<img src="/2019/09/08/lasso-regression-notes/lasso.PNG"></li>
+</ul>
+<p>Ridge和Lasso最重要的区别是，Ridge regression只能将不相关variables的beta减小至接近0；而Lasso regression则可以将beta减小至0。另外，需要注意的是Ridge Regression是无偏的，而Lasso则是有偏的（biased）。</p>
+<p>那为何要用lasso呢？由于Lasso的特性–能够将无关variables的beta减少至0，因此它具有feature selection的能力。它能自动识别出哪些variables对模型的预测起到作用。</p>
+<p>下面这副图解释了为何Lasso能将无关variables的beta减少至0。</p>
+<img src="/2019/09/08/lasso-regression-notes/lasso_ridge.png">
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-08-16T00:00:00+08:00"
-              content="2018-08-16">
-          08-16
-        </time>
-      </div>
+<p>左边是Ridge regression，右边是Lasso regression。等高线的中点β hat代表了最优拟合点，但是，这个点通常是会造成overfitting的。为了避免overfitting，必须对beta的取值做出限制。也就是蓝色的区域。由图可见，Lasso区别Ridge的地方在于Lasso的beta取值范围是一个正方形，而Ridge则是圆形。在加入了regularization后的最优点一定落在红色等高线和蓝色区域相切的位置。而Lasso的切点一般会是正方形的顶点。也就是说，某些variables的beta取值为0。因此，Lasso具有feature selection的能力。</p>
+<p>在看下图：</p>
+<img src="/2019/09/08/lasso-regression-notes/lasso-reduce.png">
 
-    </header>
-  </article>
-
-
-
+<p>横轴代表了λ（hyper parameter）的取值范围，纵轴代表了variables的数量。从图上可以看到，在λ取值较小的时候，所有的variables都包括在了模型内，而随着λ的增加，模型里的variables不断减少。因此，当遇到variables非常多的情况（模型复杂），Lasso是可以帮助识别出哪些variables对模型影响最大。</p>
+<p>如何确定λ的值？通常使用cross validation的方式。根据不同的λ在cross validation set上所得到的误差来确定合理的值。</p>
 
     </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/uploads/wx.jpg" alt="Liang wechat" style="width: 200px; max-width: 100%;">
+  <div>欢迎订阅我的微信公众号！</div>
+</div>
+
+      
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/08/25/How-did-I-prepare-CFA-level-III/" rel="next" title="CFA Level III 准备过程 【2019年6月】">
+                  <i class="fa fa-chevron-left"></i> CFA Level III 准备过程 【2019年6月】
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
   </div>
   
   
   
+  </article>
 
-  
-
+  </div>
 
 
           </div>
@@ -292,6 +354,11 @@
 
   <aside class="sidebar">
     <div class="sidebar-inner">
+        
+        
+        
+        
+      
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc" data-target="post-toc-wrap">
