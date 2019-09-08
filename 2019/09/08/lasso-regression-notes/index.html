@@ -65,7 +65,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/lasso.PNG">
 <meta property="og:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/lasso_ridge.png">
 <meta property="og:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/lasso-reduce.png">
-<meta property="og:updated_time" content="2019-09-08T10:05:13.758Z">
+<meta property="og:updated_time" content="2019-09-08T11:55:56.545Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lasso Regression Notes">
 <meta name="twitter:description" content="这周读了一篇论文《基于LASSO和神经网络的量化交易智能系统构建》，借机看了一下Lasso的概念。做点笔记以备复习。">
@@ -239,7 +239,7 @@
                 
               
 
-              <time title="创建时间：2019-09-08 17:48:58 / 修改时间：18:05:13" itemprop="dateCreated datePublished" datetime="2019-09-08T17:48:58+08:00">2019-09-08</time>
+              <time title="创建时间：2019-09-08 17:48:58 / 修改时间：19:55:56" itemprop="dateCreated datePublished" datetime="2019-09-08T17:48:58+08:00">2019-09-08</time>
             </span>
           
             
@@ -292,6 +292,7 @@
 
 <p>横轴代表了λ（hyper parameter）的取值范围，纵轴代表了variables的数量。从图上可以看到，在λ取值较小的时候，所有的variables都包括在了模型内，而随着λ的增加，模型里的variables不断减少。因此，当遇到variables非常多的情况（模型复杂），Lasso是可以帮助识别出哪些variables对模型影响最大。</p>
 <p>如何确定λ的值？通常使用cross validation的方式。根据不同的λ在cross validation set上所得到的误差来确定合理的值。</p>
+<p>最后还是要吐槽一下国内博士的水平。个人觉得这篇论文质量不怎么样，也许是期刊《投资研究》本身水平不行？该博士第一步用linear regression + lasso 来选择feature（各种股票技术指标），第二步，这些通过lasso筛选出来的featrue被用于神经网络。最后得出的结论是lasso + 神经网络在预测股市涨跌方面的效果最好，sharpe ratio最高。我能看到的一个明显的逻辑上的问题是lasso是用在linear regression上的，也就是说这一步feature selection体现的线性相关性。而神经网络可用于非线性关系的发掘。那么在第一步中筛选出来的是线性显著的技术指标，这一步很可能把非线性的关系给过滤掉了。然后在第二步中，把这些线性显著的技术指标在输入给神经网络，那是希望从已知的线性关系中进一步发掘非线性关系？！觉得逻辑上挺混乱的。</p>
 
     </div>
 
