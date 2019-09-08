@@ -65,7 +65,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/lasso.PNG">
 <meta property="og:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/lasso_ridge.png">
 <meta property="og:image" content="http://yoursite.com/2019/09/08/lasso-regression-notes/lasso-reduce.png">
-<meta property="og:updated_time" content="2019-09-08T11:55:56.545Z">
+<meta property="og:updated_time" content="2019-09-08T12:16:28.512Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lasso Regression Notes">
 <meta name="twitter:description" content="这周读了一篇论文《基于LASSO和神经网络的量化交易智能系统构建》，借机看了一下Lasso的概念。做点笔记以备复习。">
@@ -239,7 +239,7 @@
                 
               
 
-              <time title="创建时间：2019-09-08 17:48:58 / 修改时间：19:55:56" itemprop="dateCreated datePublished" datetime="2019-09-08T17:48:58+08:00">2019-09-08</time>
+              <time title="创建时间：2019-09-08 17:48:58 / 修改时间：20:16:28" itemprop="dateCreated datePublished" datetime="2019-09-08T17:48:58+08:00">2019-09-08</time>
             </span>
           
             
@@ -286,7 +286,7 @@
 <p>下面这副图解释了为何Lasso能将无关variables的beta减少至0。</p>
 <img src="/2019/09/08/lasso-regression-notes/lasso_ridge.png">
 
-<p>左边是Ridge regression，右边是Lasso regression。等高线的中点β hat代表了最优拟合点，但是，这个点通常是会造成overfitting的。为了避免overfitting，必须对beta的取值做出限制。也就是蓝色的区域。由图可见，Lasso区别Ridge的地方在于Lasso的beta取值范围是一个正方形，而Ridge则是圆形。在加入了regularization后的最优点一定落在红色等高线和蓝色区域相切的位置。而Lasso的切点一般会是正方形的顶点。也就是说，某些variables的beta取值为0。因此，Lasso具有feature selection的能力。</p>
+<p>右边是Ridge regression，左边是Lasso regression。等高线的中点β hat代表了最优拟合点，但是，这个点通常是会造成overfitting的。为了避免overfitting，必须对beta的取值做出限制。也就是蓝色的区域。由图可见，Lasso区别Ridge的地方在于Lasso的beta取值范围是一个正方形，而Ridge则是圆形。在加入了regularization后的最优点一定落在红色等高线和蓝色区域相切的位置。而Lasso的切点一般会是正方形的顶点。也就是说，某些variables的beta取值为0。因此，Lasso具有feature selection的能力。</p>
 <p>在看下图：</p>
 <img src="/2019/09/08/lasso-regression-notes/lasso-reduce.png">
 
