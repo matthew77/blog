@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="我终于想到自己应该滚过来更新了。实在是因为考完CFA以后，整个人生好像没有了明确的目标，导致自己什么都想做，结果什么都做不好。这段时间自己的状态一直保持低迷，原因肯定是对自己各种的放纵。前阵子，德约科维奇又拿下来澳网的冠军，我就顺便看了一本他的自传，印象最深的是极度的自律。在拿到某次冠军后（好像也是澳网），他说他想吃一块巧克力庆祝以下（因为平时绝对不会碰这种东西，怕影响状态），结果就吃了一小口。只">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AdaBoost Example">
+<meta property="og:url" content="http://yoursite.com/2020/02/23/AdaBoost-Example/index.html">
+<meta property="og:site_name" content="Liang的风险平价观">
+<meta property="og:description" content="我终于想到自己应该滚过来更新了。实在是因为考完CFA以后，整个人生好像没有了明确的目标，导致自己什么都想做，结果什么都做不好。这段时间自己的状态一直保持低迷，原因肯定是对自己各种的放纵。前阵子，德约科维奇又拿下来澳网的冠军，我就顺便看了一本他的自传，印象最深的是极度的自律。在拿到某次冠军后（好像也是澳网），他说他想吃一块巧克力庆祝以下（因为平时绝对不会碰这种东西，怕影响状态），结果就吃了一小口。只">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-02-26T08:08:50.977Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AdaBoost Example">
+<meta name="twitter:description" content="我终于想到自己应该滚过来更新了。实在是因为考完CFA以后，整个人生好像没有了明确的目标，导致自己什么都想做，结果什么都做不好。这段时间自己的状态一直保持低迷，原因肯定是对自己各种的放纵。前阵子，德约科维奇又拿下来澳网的冠军，我就顺便看了一本他的自传，印象最深的是极度的自律。在拿到某次冠军后（好像也是澳网），他说他想吃一块巧克力庆祝以下（因为平时绝对不会碰这种东西，怕影响状态），结果就吃了一小口。只">
+  <link rel="canonical" href="http://yoursite.com/2020/02/23/AdaBoost-Example/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>AdaBoost Example | Liang的风险平价观</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Liang的风险平价观</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/23/AdaBoost-Example/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Liang">
+      <meta itemprop="description" content="Keep Walking">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liang的风险平价观">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">AdaBoost Example
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-02-23 22:08:03" itemprop="dateCreated datePublished" datetime="2020-02-23T22:08:03+08:00">2020-02-23</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-26 16:08:50" itemprop="dateModified" datetime="2020-02-26T16:08:50+08:00">2020-02-26</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我终于想到自己应该滚过来更新了。实在是因为考完CFA以后，整个人生好像没有了明确的目标，导致自己什么都想做，结果什么都做不好。这段时间自己的状态一直保持低迷，原因肯定是对自己各种的放纵。前阵子，德约科维奇又拿下来澳网的冠军，我就顺便看了一本他的自传，印象最深的是极度的自律。在拿到某次冠军后（好像也是澳网），他说他想吃一块巧克力庆祝以下（因为平时绝对不会碰这种东西，怕影响状态），结果就吃了一小口。只有能做到这样的自律，才能取得不平凡的成绩。</p>
+<p>说了一堆废话，还是言归正传。前段时间正好用到random forrest就想顺便把AdaBoost也看一下，李航《统计学习方法》里有一个例子，但是我怎么都没看懂（智商不够用，顺便吐槽一下这本书，虽然很多人推荐，但我一直没觉得这本书好在哪里），于是就到网上找例子，到油管上看视频，结果发现能把AdaBoost讲明白的例子几乎没有。后来不知道哪天突然开悟了，李航那本书上的例子竟然被我看明白了！</p>
+<a id="more"></a>
+
+<p>我就直接上例子了，AdaBoost具体的理论还请自行脑补。训练数据如下表：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>x</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+</tr>
+<tr>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+</tr>
+</tbody></table>
+<p>x是特征，y是label。显然根据特征x对y分类，分为2种类型1，-1。我一开始一直没搞明白评价分类结果依据什么？后来才理解了评价分类的依据是各训练数据的权值！我们知道Adaboost会将分类错误的训练数据的权值提高，这样，在下一次弱分类器的训练过程中就可以重点“关照”这些被分错的数据了。那么，也就有可能出现以下这种情况：某个弱分类器可能错误率很高但却被采纳了，因为它可能将权重更高的训练数据进行准确地分类。参见以下训练过程</p>
+<h3 id="m-1-训练第一个弱分类器"><a href="#m-1-训练第一个弱分类器" class="headerlink" title="m=1 (训练第一个弱分类器)"></a>m=1 (训练第一个弱分类器)</h3><p>对于第一个弱分类器而言，每个训练数据的权值w都是一样的，即1/N（初始情况下的默认值），N表示训练数据量。就本例而言，N=10，每个训练数据的权值w为0.1，在此前提下可以训练出一个最优的弱分类器：</p>
+<p>$$<br>    G_1(x) =<br>    \begin{cases}<br>    1,  &amp; \text{x $&lt;$ 2.5} \\<br>    -1, &amp; \text{x $&gt;$ 2.5} \\<br>    \end{cases}<br>$$</p>
+<p>切分点为x=2.5，因为误差率（分错权值加总）最低，注意这里需要强调的是选择弱分类器的依据是误差率最低的那个，而不是分对的数量最多的那个（当然，权值相同的时候分对数量最高则代表误差率最低），我一开始没看明白就是在这里犯糊涂了。那么有3个数据被错误分类了（x=6，7，8），由于w都为0.1，因此误差率$e_1$（分错权值加总）=0.3。这个误差率是当前权值（w）下最小的。</p>
+<p>计算第一个弱分类器的系数（权重），套用公式了，$ \alpha_1 = \frac{1}{2}log\frac{1-e_1}{e_1} $ = 0.5*ln((1-0.3)/0.3) = 0.4236 ； 直观的理解就是如果这个分类器的误差率越低，则在一系列弱分类器的组合里所占的权重越高。</p>
+<p>更新训练数据的权值，也就是将分对的数据的权值调低，而将分错的数据的权值调高，计算权值的公式为：$w_{m+1, i} = w_{m, i}exp(-\alpha_m y_i G_m(x_i))$，计算结果如下：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>$w_1$</td>
+<td>0.1</td>
+<td>0.1</td>
+<td>0.1</td>
+<td>0.1</td>
+<td>0.1</td>
+<td>0.1</td>
+<td>0.1</td>
+<td>0.1</td>
+<td>0.1</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td>$G_1(x)$</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>$ \alpha_1 $</td>
+<td>0.4236</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>$w_2$ without normalized</td>
+<td>0.06547</td>
+<td>0.06547</td>
+<td>0.06547</td>
+<td>0.06547</td>
+<td>0.06547</td>
+<td>0.06547</td>
+<td>0.15275</td>
+<td>0.15275</td>
+<td>0.15275</td>
+<td>0.06547</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>0.9165</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>$w_2$ normalized</td>
+<td>0.07143</td>
+<td>0.07143</td>
+<td>0.07143</td>
+<td>0.07143</td>
+<td>0.07143</td>
+<td>0.07143</td>
+<td>0.16667</td>
+<td>0.16667</td>
+<td>0.16667</td>
+<td>0.07143</td>
+</tr>
+</tbody></table>
+<p>以计算第一个$w_2$为例，原来的$w_2=0.1, \alpha=0.4236, y=1, G_1(x_1)=1$，也就是分类正确，那么可得: 0.1 * exp(-0.4236 * 1 * 1) = 0.06547<br>，标准化后为0.07143（$w_2$ 需要标准化，也就是$w_2$的sum为1，表中的Z为所有w的加总，那么normalized w = w without normalized / Z），因此权重降低了！。而对$x_7, x_8, x_9$来说，由于分错了，因此权重升高了。至此第一个弱分类器训练完成，可得：<br>$$<br>f_1(x) = 0.4236G_1(x)<br>$$</p>
+<h3 id="m-2-训练第二个弱分类器"><a href="#m-2-训练第二个弱分类器" class="headerlink" title="m=2 (训练第二个弱分类器)"></a>m=2 (训练第二个弱分类器)</h3><p>通过训练可得x=8.5最为最佳切分点，因为误差率最小，即：<br>$$<br>    G_2(x) =<br>    \begin{cases}<br>    1,  &amp; \text{x $&lt;$ 8.5} \\<br>    -1, &amp; \text{x $&gt;$ 8.5}<br>    \end{cases}<br>$$<br>$G_2(x)$的误差率为$e_2 = 0.2143$。因为当以8.5为切分点的时候，4，5，6被错误分类了，而他们对应的权重$w_2$ 分别为：0.07143，0.07143，0.07143，即 0.07143 * 3 = 0.2143。如果选择8.5以外的切分点，误差率都比0.2143高。</p>
+<p>同样的计算$\alpha_2 = 0.5*LN((1-0.2143)/0.2143) = 0.6496$</p>
+<p>其余数据参见下表：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>$w_2$</td>
+<td></td>
+<td>0.07143</td>
+<td>0.07143</td>
+<td>0.07143</td>
+<td>0.07143</td>
+<td>0.07143</td>
+<td>0.07143</td>
+<td>0.16667</td>
+<td>0.16667</td>
+<td>0.16667</td>
+</tr>
+<tr>
+<td>$G_2(x)$</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>$ \alpha_2 $</td>
+<td>0.6496</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>$w_3$ without normalized</td>
+<td>0.0373</td>
+<td>0.0373</td>
+<td>0.0373</td>
+<td>0.1368</td>
+<td>0.1368</td>
+<td>0.1368</td>
+<td>0.0870</td>
+<td>0.0870</td>
+<td>0.0870</td>
+<td>0.0373</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>0.8207</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>$w_3$ normalized</td>
+<td>0.0455</td>
+<td>0.0455</td>
+<td>0.0455</td>
+<td>0.1667</td>
+<td>0.1667</td>
+<td>0.1667</td>
+<td>0.1061</td>
+<td>0.1061</td>
+<td>0.1061</td>
+<td>0.0455</td>
+</tr>
+</tbody></table>
+<p>至此第二个弱分类器训练完成，可得：<br>$$<br>f_2(x) = 0.4236G_1(x) + 0.6496G_2(x)<br>$$</p>
+<p>如果，此时将数据喂给$f_2(x)$，可得以下结果：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>x</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+</tr>
+<tr>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>$f_2(x)$</td>
+<td>1.0732</td>
+<td>1.0732</td>
+<td>1.0732</td>
+<td>0.226</td>
+<td>0.226</td>
+<td>0.226</td>
+<td>0.226</td>
+<td>0.226</td>
+<td>0.226</td>
+<td>-1.0732</td>
+</tr>
+<tr>
+<td>$sign(f_2(x))$</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+</tr>
+</tbody></table>
+<p>由y同$sign(f_2(x))$比较可知，一共有3个误分类点：4，5，6。</p>
+<h3 id="m-3-训练第三个弱分类器"><a href="#m-3-训练第三个弱分类器" class="headerlink" title="m=3 (训练第三个弱分类器)"></a>m=3 (训练第三个弱分类器)</h3><p>通过训练可得x=5.5最为最佳切分点，因为误差率最小，即：<br>$$<br>    G_3(x) =<br>    \begin{cases}<br>    1,  &amp; \text{x $&gt;$ 5.5} \\<br>    -1, &amp; \text{x $&lt;$ 5.5}<br>    \end{cases}<br>$$<br>$G_3(x)$的误差率为$e_3 = 0.1818$。因为当以5.5为切分点的时候1, 2, 3, 10被错误分类了，而他们对应的权重$w_3$ 分别为：0.0455, 0.0455, 0.0455, 0.0455，即 0.0455 * 4 = 0.1818。</p>
+<p>同样的计算$\alpha_3 = 0.5*LN((1-0.1818)/0.0.1818) = 0.7520$</p>
+<p>至此第三个弱分类器训练完成，可得：<br>$$<br>f_3(x) = 0.4236G_1(x) + 0.6496G_2(x) + 0.7520G_3(x)<br>$$</p>
+<p>如果，此时将数据喂给$f_3(x)$，可得以下结果：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>x</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+</tr>
+<tr>
+<td>y</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>$f_3(x)$</td>
+<td>0.3212</td>
+<td>0.3212</td>
+<td>0.3212</td>
+<td>-0.526</td>
+<td>-0.526</td>
+<td>-0.526</td>
+<td>0.978</td>
+<td>0.978</td>
+<td>0.978</td>
+<td>-0.3212</td>
+</tr>
+<tr>
+<td>$sign(f_3(x))$</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+<td>-1</td>
+<td>-1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>-1</td>
+</tr>
+</tbody></table>
+<p>由y同$sign(f_3(x))$比较可知已经无错误分类点！因此，可以认为达到了精度要求，无需再进一步训练。</p>
+<p>以上就是对李航《统计学习方法》里关于AdaBoost例子的详细解释，作此笔记以备今后复习。</p>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/uploads/wx.jpg" alt="Liang wechat" style="width: 200px; max-width: 100%;">
+  <div>欢迎订阅我的微信公众号！</div>
+</div>
+
+      
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/08/lasso-regression-notes/" rel="next" title="Lasso Regression Notes">
+                  <i class="fa fa-chevron-left"></i> Lasso Regression Notes
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#m-1-训练第一个弱分类器"><span class="nav-number">1.</span> <span class="nav-text">m=1 (训练第一个弱分类器)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#m-2-训练第二个弱分类器"><span class="nav-number">2.</span> <span class="nav-text">m=2 (训练第二个弱分类器)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#m-3-训练第三个弱分类器"><span class="nav-number">3.</span> <span class="nav-text">m=3 (训练第三个弱分类器)</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Liang</p>
+  <div class="site-description" itemprop="description">Keep Walking</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+        
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/ecmkit" title="Weibo &rarr; https://weibo.com/ecmkit" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Liang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+    
+  
+
+  
+
+  
+
+</body>
+</html>
