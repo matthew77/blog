@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="Vanishing Gradients这里只使用numpy来实现一个neural network，而非借助pytorch这样的框架，如此，可以更好的帮助我理解neural network以及vanishing gradients.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vanishing gradients">
+<meta property="og:url" content="http://yoursite.com/2020/06/02/vanishing-gradients/index.html">
+<meta property="og:site_name" content="Liang的风险平价观">
+<meta property="og:description" content="Vanishing Gradients这里只使用numpy来实现一个neural network，而非借助pytorch这样的框架，如此，可以更好的帮助我理解neural network以及vanishing gradients.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2020/06/02/vanishing-gradients/1.svg">
+<meta property="og:image" content="http://yoursite.com/2020/06/02/vanishing-gradients/2.svg">
+<meta property="og:image" content="http://yoursite.com/2020/06/02/vanishing-gradients/8.jpg">
+<meta property="og:image" content="http://yoursite.com/2020/06/02/vanishing-gradients/3.svg">
+<meta property="og:image" content="http://yoursite.com/2020/06/02/vanishing-gradients/4.svg">
+<meta property="og:image" content="http://yoursite.com/2020/06/02/vanishing-gradients/5.svg">
+<meta property="og:image" content="http://yoursite.com/2020/06/02/vanishing-gradients/6.svg">
+<meta property="og:image" content="http://yoursite.com/2020/06/02/vanishing-gradients/7.svg">
+<meta property="og:updated_time" content="2020-06-02T09:37:34.701Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vanishing gradients">
+<meta name="twitter:description" content="Vanishing Gradients这里只使用numpy来实现一个neural network，而非借助pytorch这样的框架，如此，可以更好的帮助我理解neural network以及vanishing gradients.">
+<meta name="twitter:image" content="http://yoursite.com/2020/06/02/vanishing-gradients/1.svg">
+  <link rel="canonical" href="http://yoursite.com/2020/06/02/vanishing-gradients/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>vanishing gradients | Liang的风险平价观</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Liang的风险平价观</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/02/vanishing-gradients/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Liang">
+      <meta itemprop="description" content="Keep Walking">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liang的风险平价观">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">vanishing gradients
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-02 17:13:32 / 修改时间：17:37:34" itemprop="dateCreated datePublished" datetime="2020-06-02T17:13:32+08:00">2020-06-02</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Financial-Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Financial Machine Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Vanishing-Gradients"><a href="#Vanishing-Gradients" class="headerlink" title="Vanishing Gradients"></a>Vanishing Gradients</h1><p>这里只使用numpy来实现一个neural network，而非借助pytorch这样的框架，如此，可以更好的帮助我理解neural network以及vanishing gradients.</p>
+<a id="more"></a>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">%matplotlib inline</span><br><span class="line">plt.rcParams[<span class="string">'figure.figsize'</span>] = (<span class="number">10.0</span>, <span class="number">8.0</span>) <span class="comment"># set default size of plots</span></span><br><span class="line">plt.rcParams[<span class="string">'image.interpolation'</span>] = <span class="string">'nearest'</span></span><br><span class="line">plt.rcParams[<span class="string">'image.cmap'</span>] = <span class="string">'gray'</span></span><br><span class="line"></span><br><span class="line">%load_ext autoreload</span><br><span class="line">%autoreload <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># generate random data -- not linearly separable</span></span><br><span class="line">np.random.seed(<span class="number">0</span>)</span><br><span class="line">N = <span class="number">100</span> <span class="comment"># number of points per class</span></span><br><span class="line">D = <span class="number">2</span> <span class="comment"># dimensionality (向量维度)</span></span><br><span class="line">K = <span class="number">3</span> <span class="comment"># number of classes</span></span><br><span class="line">X = np.zeros((N*K, D))</span><br><span class="line">num_train_examples = X.shape[<span class="number">0</span>]</span><br><span class="line">y = np.zeros(N*K, dtype=<span class="string">'uint8'</span>)  <span class="comment"># 无符号整数</span></span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> range(K):</span><br><span class="line">    ix = range(N*j, N*(j+<span class="number">1</span>))</span><br><span class="line">    r = np.linspace(<span class="number">0.0</span>, <span class="number">1</span>, N) <span class="comment"># radius, evenly spaced numbers</span></span><br><span class="line">    t = np.linspace(j*<span class="number">4</span>, (j+<span class="number">1</span>)*<span class="number">4</span>, N) + np.random.randn(N)*<span class="number">0.2</span> <span class="comment"># theta</span></span><br><span class="line">    X[ix] = np.c_[r*np.sin(t), r*np.cos(t)] <span class="comment"># 变成2列的matrix</span></span><br><span class="line">    y[ix] = j</span><br><span class="line">fig = plt.figure()</span><br><span class="line">plt.scatter(X[:,<span class="number">0</span>], X[:,<span class="number">1</span>], c=y, s=<span class="number">40</span>, cmap=plt.cm.Spectral)</span><br><span class="line">plt.xlim([<span class="number">-1</span>,<span class="number">1</span>])</span><br><span class="line">plt.ylim([<span class="number">-1</span>,<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+<p><img src="1.svg" alt="svg"></p>
+<p>sigmoid 函数的值在0,1之间，尤其是在输入值的绝对值很大的情况下，两端会无限接近0或1，因此变得很扁平，由此，对应的梯度（Gradient）就会无限逼近0。这就导致了所谓的梯度消失（vanishing gradients）的现象。因为梯度消失使得神经网络无法进行有效的学习（因为每次迭代对参数W的修正几乎都是0）。</p>
+<p>而另一方面，relu函数不会出现因为输入参数变大而输出变得不敏感。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(x)</span>:</span></span><br><span class="line">    x = <span class="number">1</span>/(<span class="number">1</span>+np.exp(-x))</span><br><span class="line">    <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid_grad</span><span class="params">(x)</span>:</span> <span class="comment"># sigmoid函数的导数</span></span><br><span class="line">    <span class="keyword">return</span> (x)*(<span class="number">1</span>-x)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">relu</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> np.maximum(<span class="number">0</span>,x)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># plot the 2 function</span></span><br><span class="line">x = np.linspace(<span class="number">-3</span>,<span class="number">3</span>,<span class="number">100</span>)</span><br><span class="line">y_sigmoid = sigmoid(x)</span><br><span class="line">y_relu = relu(x)</span><br><span class="line"></span><br><span class="line">plt.plot(x, y_sigmoid, <span class="string">'b-'</span>, x, y_relu, <span class="string">'r-'</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="2.svg" alt="svg"></p>
+<p>接下来让我们看一下2种不同的非线性函数（sigmoid和relu）对神经网络在训练时的影响。以下，我们会创建一个简单的3层神经网路（2 hidden layers）。 通过使用sigmoid和relu我们可以比较在训练过程中的区别。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># function to train a 3 layer neural net with either relu or sigmoid nonlinearity via vanilla grad decent.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">three_layer_net</span><span class="params">(NONLINEARITY, X, y, model, step_size, reg)</span>:</span></span><br><span class="line">    <span class="comment"># param init</span></span><br><span class="line">    h = model[<span class="string">'h'</span>]</span><br><span class="line">    h2 = model[<span class="string">'h2'</span>]</span><br><span class="line">    W1 = model[<span class="string">'W1'</span>]</span><br><span class="line">    W2 = model[<span class="string">'W2'</span>]</span><br><span class="line">    W3 = model[<span class="string">'W3'</span>]</span><br><span class="line">    b1 = model[<span class="string">'b1'</span>]</span><br><span class="line">    b2 = model[<span class="string">'b2'</span>]</span><br><span class="line">    b3 = model[<span class="string">'b3'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># some hyperparameters</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># gradient descent loop</span></span><br><span class="line">    num_examples = X.shape[<span class="number">0</span>]</span><br><span class="line">    plot_array_1 = []</span><br><span class="line">    plot_array_2 = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">50000</span>):</span><br><span class="line">        <span class="comment"># forward prop</span></span><br><span class="line">        <span class="comment"># 假设有X的维度[N, M], 即有N条training 数据，每条数据有M个feature</span></span><br><span class="line">        <span class="keyword">if</span> NONLINEARITY == <span class="string">'RELU'</span>:</span><br><span class="line">            <span class="comment"># 从X到hidden layer 1, X=[N*2], W1=[2*50] --&gt; hidden layer=[N*50]</span></span><br><span class="line">            hidden_layer = relu(np.dot(X,W1) + b1)  </span><br><span class="line">            <span class="comment"># 从 hidden layer 1 到 layer2. hidden 1 = [N*50], W2=[50*50]--&gt;hidden2 = [N*50]</span></span><br><span class="line">            hidden_layer2 = relu(np.dot(hidden_layer, W2) + b2)  </span><br><span class="line">            <span class="comment"># 从 hidden 2 到 最总output layer， hidden 2 = [1*50], W3=[50*3] --&gt; output = [3] </span></span><br><span class="line">            scores = np.dot(hidden_layer2, W3) + b3  <span class="comment"># scores的维度是[N,3]</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">elif</span> NONLINEARITY == <span class="string">'SIGM'</span>:</span><br><span class="line">            hidden_layer = sigmoid(np.dot(X,W1) + b1)  <span class="comment"># 从X到hidden layer 1</span></span><br><span class="line">            hidden_layer2 = sigmoid(np.dot(hidden_layer, W2) + b2)  <span class="comment"># 从 hidden layer 1 到 layer2</span></span><br><span class="line">            scores = np.dot(hidden_layer2, W3) + b3</span><br><span class="line"></span><br><span class="line">        exp_scores = np.exp(scores) <span class="comment"># [N*K], K=3</span></span><br><span class="line">        <span class="comment"># keepdims=True 意思是np.sum被sum的维度变为1，另一个维度保持不变。</span></span><br><span class="line">        probs = exp_scores / np.sum(exp_scores, axis=<span class="number">1</span>, keepdims=<span class="keyword">True</span>) <span class="comment"># normalize，行方向sum</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># compute the loss: average cross-entropy loss and regularization</span></span><br><span class="line">        corect_logprobs = -np.log(probs[range(num_examples), y]) <span class="comment"># y的取值范围0，1，2。结果[N*1]</span></span><br><span class="line">        data_loss = np.sum(corect_logprobs)/num_examples</span><br><span class="line">        <span class="comment"># regularization项</span></span><br><span class="line">        reg_loss = <span class="number">0.5</span>*reg*np.sum(W1*W1) + <span class="number">0.5</span>*reg*np.sum(W2*W2)+<span class="number">0.5</span>*reg*np.sum(W3*W3)</span><br><span class="line">        loss = data_loss + reg_loss</span><br><span class="line">        <span class="comment"># if i % 1000 == 0:</span></span><br><span class="line">        <span class="comment">#     print("iteration &#123;0&#125;: loss &#123;1&#125;".format(i, loss))</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># comput the gradient on scores</span></span><br><span class="line">        dscores = probs  <span class="comment">#  -- [N*K]</span></span><br><span class="line">        dscores[range(num_examples), y] -= <span class="number">1</span>  <span class="comment"># error value -- [N*K]</span></span><br><span class="line">        dscores /= num_examples</span><br><span class="line"></span><br><span class="line">        <span class="comment"># backprop here</span></span><br><span class="line">        <span class="comment"># 从output layer back prop 到 hidden layer2, 由于该层没有nonlinearity</span></span><br><span class="line">        <span class="comment"># 即 hidden2*W3 = s, ds/dW3 = hidden2 (local gradient), 因此back prop error</span></span><br><span class="line">        <span class="comment"># 只需要将error * local gradient，即hidden2.</span></span><br><span class="line">        dW3 = (hidden_layer2.T).dot(dscores)  <span class="comment"># [50*N] * [N*3] = [50*3]</span></span><br><span class="line">        db3 = np.sum(dscores, axis=<span class="number">0</span>, keepdims=<span class="keyword">True</span>) <span class="comment"># [3]</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> NONLINEARITY == <span class="string">'RELU'</span>:</span><br><span class="line">            <span class="comment"># backprop Relu nonlinearity here</span></span><br><span class="line">            dhidden2 = np.dot(dscores, W3.T)</span><br><span class="line">            dhidden2[hidden_layer2 &lt;= <span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">            dW2 = np.dot(hidden_layer.T, dhidden2)</span><br><span class="line">            plot_array_2.append(np.sum(np.abs(dW2))/np.sum(np.abs(dW2.shape)))</span><br><span class="line">            db2 = np.sum(dhidden2, axis=<span class="number">0</span>)</span><br><span class="line">            dhidden = np.dot(dhidden2, W2.T)</span><br><span class="line">            dhidden[hidden_layer &lt;= <span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">elif</span> NONLINEARITY == <span class="string">'SIGM'</span>:</span><br><span class="line">            <span class="comment"># backprop sigmoid nonlinearity there</span></span><br><span class="line">            <span class="comment"># hidden layer 2 是 sigmoid的输出，因此需要乘以一个local gradiant</span></span><br><span class="line">            dhidden2 = dscores.dot(W3.T)*sigmoid_grad(hidden_layer2) </span><br><span class="line">            dW2 = (hidden_layer.T).dot(dhidden2)</span><br><span class="line">            plot_array_2.append(np.sum(np.abs(dW2))/np.sum(np.abs(dW2.shape)))</span><br><span class="line">            db2 = np.sum(dhidden2, axis=<span class="number">0</span>)</span><br><span class="line">            dhidden = dhidden2.dot(W2.T)*sigmoid_grad(hidden_layer)</span><br><span class="line"></span><br><span class="line">        dW1 = np.dot(X.T, dhidden)</span><br><span class="line">        plot_array_1.append(np.sum(np.abs(dW1))/np.sum(np.abs(dW1.shape)))</span><br><span class="line">        db1 = np.sum(dhidden, axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># add regularization</span></span><br><span class="line">        dW3 += reg * W3</span><br><span class="line">        dW2 += reg * W2</span><br><span class="line">        dW1 += reg * W1</span><br><span class="line"></span><br><span class="line">        <span class="comment"># option to return loss, grads, </span></span><br><span class="line">        <span class="comment"># grads = &#123;&#125;</span></span><br><span class="line">        <span class="comment"># grads['W1'] = dW1</span></span><br><span class="line">        <span class="comment"># grads['W2'] = dW2</span></span><br><span class="line">        <span class="comment"># grads['W3'] = dW3</span></span><br><span class="line">        <span class="comment"># grads['b1'] = db1</span></span><br><span class="line">        <span class="comment"># grads['b2'] = db2</span></span><br><span class="line">        <span class="comment"># grads['b3'] = db3</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># update grads</span></span><br><span class="line">        W1 += -step_size * dW1</span><br><span class="line">        b1 += -step_size * db1</span><br><span class="line">        W2 += -step_size * dW2</span><br><span class="line">        b2 += -step_size * db2        </span><br><span class="line">        W3 += -step_size * dW3</span><br><span class="line">        b3 += -step_size * db3</span><br><span class="line">    <span class="comment"># evaluate training set accuracy， 使用training出来的W1，W2,W3,b1,b2,b3</span></span><br><span class="line">    <span class="comment"># 来计算结果。</span></span><br><span class="line">    <span class="keyword">if</span> NONLINEARITY == <span class="string">'RELU'</span>:</span><br><span class="line">        hidden_layer = relu(np.dot(X, W1) + b1)</span><br><span class="line">        hidden_layer2 = relu(np.dot(hidden_layer, W2) + b2)</span><br><span class="line">    <span class="keyword">elif</span> NONLINEARITY == <span class="string">'SIGM'</span>:</span><br><span class="line">        hidden_layer = sigmoid(np.dot(X, W1) + b1)</span><br><span class="line">        hidden_layer2 = sigmoid(np.dot(hidden_layer, W2) + b2)</span><br><span class="line"></span><br><span class="line">    scores = np.dot(hidden_layer2, W3) + b3</span><br><span class="line">    predicted_class = np.argmax(scores, axis=<span class="number">1</span>)  <span class="comment"># 找出每一行的最大值的index</span></span><br><span class="line">    print(<span class="string">'training accuracy: &#123;0&#125;'</span>.format(np.mean(predicted_class==y)))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> plot_array_1, plot_array_2, W1, W2, W3, b1, b2, b3</span><br></pre></td></tr></table></figure>
+
+<p>关于back propagation 的计算参见下图。 其实就是对chain rule的应用。</p>
+<img src="/2020/06/02/vanishing-gradients/8.jpg">
+
+<h3 id="Train-net-with-sigmoid-nonlinearity-first"><a href="#Train-net-with-sigmoid-nonlinearity-first" class="headerlink" title="Train net with sigmoid nonlinearity first"></a>Train net with sigmoid nonlinearity first</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Initialize toy model, train sigmoid net </span></span><br><span class="line"></span><br><span class="line">N = <span class="number">100</span>  <span class="comment"># number of points per class</span></span><br><span class="line">D = <span class="number">2</span>  <span class="comment"># dimensionality</span></span><br><span class="line">K = <span class="number">3</span>  <span class="comment"># number of classes</span></span><br><span class="line">h = <span class="number">50</span>  <span class="comment"># hidden layer 1 size</span></span><br><span class="line">h2 = <span class="number">50</span>  <span class="comment"># hidden layer 2 size</span></span><br><span class="line">num_train_examples = X.shape[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">model = &#123;&#125;</span><br><span class="line">model[<span class="string">'h'</span>] = h</span><br><span class="line">model[<span class="string">'h2'</span>] = h2</span><br><span class="line">model[<span class="string">'W1'</span>] = <span class="number">0.1</span> * np.random.randn(D, h)</span><br><span class="line">model[<span class="string">'b1'</span>] = np.zeros((<span class="number">1</span>,h))</span><br><span class="line">model[<span class="string">'W2'</span>] = <span class="number">0.1</span> * np.random.randn(h, h2)</span><br><span class="line">model[<span class="string">'b2'</span>] = np.zeros((<span class="number">1</span>,h2))</span><br><span class="line">model[<span class="string">'W3'</span>] = <span class="number">0.1</span> * np.random.randn(h2, K)</span><br><span class="line">model[<span class="string">'b3'</span>] = np.zeros((<span class="number">1</span>,K))</span><br><span class="line"></span><br><span class="line">(sigm_array_1, sigm_array_2, s_W1, s_W2, s_W3, s_b1, s_b2, s_b3) = three_layer_net(<span class="string">'SIGM'</span>, X, y, model, step_size=<span class="number">1e-1</span>, reg=<span class="number">1e-3</span>)</span><br></pre></td></tr></table></figure>
+
+<p>training accuracy: 0.97</p>
+<h3 id="Now-train-net-with-ReLU-nonlinearity"><a href="#Now-train-net-with-ReLU-nonlinearity" class="headerlink" title="Now train net with ReLU nonlinearity"></a>Now train net with ReLU nonlinearity</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Re-initialize model, train relu net</span></span><br><span class="line">model = &#123;&#125;</span><br><span class="line">model[<span class="string">'h'</span>] = h</span><br><span class="line">model[<span class="string">'h2'</span>] = h2</span><br><span class="line">model[<span class="string">'W1'</span>] = <span class="number">0.1</span> * np.random.randn(D, h)</span><br><span class="line">model[<span class="string">'b1'</span>] = np.zeros((<span class="number">1</span>,h))</span><br><span class="line">model[<span class="string">'W2'</span>] = <span class="number">0.1</span> * np.random.randn(h, h2)</span><br><span class="line">model[<span class="string">'b2'</span>] = np.zeros((<span class="number">1</span>,h2))</span><br><span class="line">model[<span class="string">'W3'</span>] = <span class="number">0.1</span> * np.random.randn(h2, K)</span><br><span class="line">model[<span class="string">'b3'</span>] = np.zeros((<span class="number">1</span>,K))</span><br><span class="line"></span><br><span class="line">(relu_array_1, relu_array_2, r_W1, r_W2, r_W3, r_b1, r_b2, r_b3) = three_layer_net(<span class="string">'RELU'</span>, X, y, model, step_size=<span class="number">1e-1</span>, reg=<span class="number">1e-3</span>)</span><br></pre></td></tr></table></figure>
+
+<p>training accuracy: 0.9933333333333333</p>
+<h2 id="The-Vanishing-Gradient-Issue-–-梯度消失的问题"><a href="#The-Vanishing-Gradient-Issue-–-梯度消失的问题" class="headerlink" title="The Vanishing Gradient Issue – 梯度消失的问题"></a>The Vanishing Gradient Issue – 梯度消失的问题</h2><p>我们可以对某一hidden层W的梯度（dW）进行加总，用这个简单的指标来衡量学习的速度，显然，sum(dW)越大，说明神经网络的学习速度越快。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(np.array(sigm_array_1))</span><br><span class="line">plt.plot(np.array(sigm_array_2))</span><br><span class="line">plt.title(<span class="string">'Sum of magnitudes of gradients -- SIGM weights'</span>)</span><br><span class="line">plt.legend((<span class="string">"sigm first layer"</span>, <span class="string">"sigm second layer"</span>))</span><br></pre></td></tr></table></figure>
+
+<p><img src="3.svg" alt="svg"></p>
+<p>由上图可见，第二层的梯度显著大于第一层。说明在进行back prop的时候，hidden层越多，那么排在最前的hidden层对应的梯度（dW）就会变得越来越小。直观的讲，因为chain rule的原因，hidden层越多，则chain rule里乘的local gradient越多，而另一方面，由于nonlinearity使用的是sigmod，sigmoid grad = δ*(1-δ)，输出必在[0,1]之间。所以local gradient的值都落在[0，1]，那么随着hidden层的增加，排在最前的hidden层对应的梯度（dW）就会变得越来越小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(np.array(relu_array_1))</span><br><span class="line">plt.plot(np.array(relu_array_2))</span><br><span class="line">plt.title(<span class="string">'Sum of magnitudes of gradients -- ReLU weights'</span>)</span><br><span class="line">plt.legend((<span class="string">"relu first layer"</span>, <span class="string">"relu second layer"</span>))</span><br></pre></td></tr></table></figure>
+
+<p><img src="4.svg" alt="svg"></p>
+<p>由上图可见，ReLU收敛的速度比sigmoid快很多，而且收敛后就很稳定。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># overlaying the 2 plots to compare</span></span><br><span class="line">plt.plot(np.array(sigm_array_1))</span><br><span class="line">plt.plot(np.array(sigm_array_2))</span><br><span class="line">plt.plot(np.array(relu_array_1))</span><br><span class="line">plt.plot(np.array(relu_array_2))</span><br><span class="line">plt.title(<span class="string">'Sum of magnitudes of gradients -- hidden layer neurons'</span>)</span><br><span class="line">plt.legend((<span class="string">"sigm first layer"</span>, <span class="string">"sigm second layer"</span>, <span class="string">"relu first layer"</span>, <span class="string">"relu second layer"</span>))</span><br></pre></td></tr></table></figure>
+
+<p><img src="5.svg" alt="svg"></p>
+<p>上图可以更明显的看到，ReLU的收敛速度快，一开始的gradient更高。</p>
+<p>最后，看看2种分类器的表现，由于ReLU训练速度更快，因此用同样的epochs，ReLU表现的更好。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># plot the classifiers -- SIGMOID</span></span><br><span class="line">h = <span class="number">0.02</span></span><br><span class="line">x_min, x_max = X[:, <span class="number">0</span>].min() - <span class="number">1</span>, X[:, <span class="number">0</span>].max() + <span class="number">1</span></span><br><span class="line">y_min, y_max = X[:, <span class="number">1</span>].min() - <span class="number">1</span>, X[:, <span class="number">1</span>].max() + <span class="number">1</span></span><br><span class="line">xx, yy = np.meshgrid(np.arange(x_min, x_max, h),</span><br><span class="line">                     np.arange(y_min, y_max, h))</span><br><span class="line">Z = np.dot(sigmoid(np.dot(sigmoid(np.dot(np.c_[xx.ravel(), yy.ravel()], s_W1) + s_b1), s_W2) + s_b2), s_W3) + s_b3</span><br><span class="line">Z = np.argmax(Z, axis=<span class="number">1</span>)</span><br><span class="line">Z = Z.reshape(xx.shape)</span><br><span class="line">fig = plt.figure()</span><br><span class="line">plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral, alpha=<span class="number">0.8</span>)</span><br><span class="line">plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>], c=y, s=<span class="number">40</span>, cmap=plt.cm.Spectral)</span><br><span class="line">plt.xlim(xx.min(), xx.max())</span><br><span class="line">plt.ylim(yy.min(), yy.max())</span><br></pre></td></tr></table></figure>
+
+<p><img src="6.svg" alt="svg"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># plot the classifiers-- RELU</span></span><br><span class="line">h = <span class="number">0.02</span></span><br><span class="line">x_min, x_max = X[:, <span class="number">0</span>].min() - <span class="number">1</span>, X[:, <span class="number">0</span>].max() + <span class="number">1</span></span><br><span class="line">y_min, y_max = X[:, <span class="number">1</span>].min() - <span class="number">1</span>, X[:, <span class="number">1</span>].max() + <span class="number">1</span></span><br><span class="line">xx, yy = np.meshgrid(np.arange(x_min, x_max, h),</span><br><span class="line">                     np.arange(y_min, y_max, h))</span><br><span class="line">Z = np.dot(relu(np.dot(relu(np.dot(np.c_[xx.ravel(), yy.ravel()], r_W1) + r_b1), r_W2) + r_b2), r_W3) + r_b3</span><br><span class="line">Z = np.argmax(Z, axis=<span class="number">1</span>)</span><br><span class="line">Z = Z.reshape(xx.shape)</span><br><span class="line">fig = plt.figure()</span><br><span class="line">plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral, alpha=<span class="number">0.8</span>)</span><br><span class="line">plt.scatter(X[:, <span class="number">0</span>], X[:, <span class="number">1</span>], c=y, s=<span class="number">40</span>, cmap=plt.cm.Spectral)</span><br><span class="line">plt.xlim(xx.min(), xx.max())</span><br><span class="line">plt.ylim(yy.min(), yy.max())</span><br></pre></td></tr></table></figure>
+
+<p><img src="7.svg" alt="svg"></p>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/uploads/wx.jpg" alt="Liang wechat" style="width: 200px; max-width: 100%;">
+  <div>欢迎订阅我的微信公众号！</div>
+</div>
+
+      
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/03/28/bars-part-1/" rel="next" title="Bars part 1">
+                  <i class="fa fa-chevron-left"></i> Bars part 1
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Vanishing-Gradients"><span class="nav-number">1.</span> <span class="nav-text">Vanishing Gradients</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Train-net-with-sigmoid-nonlinearity-first"><span class="nav-number">1.0.1.</span> <span class="nav-text">Train net with sigmoid nonlinearity first</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Now-train-net-with-ReLU-nonlinearity"><span class="nav-number">1.0.2.</span> <span class="nav-text">Now train net with ReLU nonlinearity</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Vanishing-Gradient-Issue-–-梯度消失的问题"><span class="nav-number">1.1.</span> <span class="nav-text">The Vanishing Gradient Issue – 梯度消失的问题</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Liang</p>
+  <div class="site-description" itemprop="description">Keep Walking</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        
+        
+          
+        
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+        
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/ecmkit" title="Weibo &rarr; https://weibo.com/ecmkit" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Liang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+<script src="/js/next-boot.js?v=7.3.0"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
