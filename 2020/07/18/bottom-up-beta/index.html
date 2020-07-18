@@ -54,21 +54,18 @@
   };
 </script>
 
-  <meta name="description" content="所谓的Risk Premium（以下简写成RP）是值市场的预期收益(expected return)减去无风险收益率（risk free rate）$ r_f $。RP是估值的关键，当对某只股票进行估值的时候，你首先需要确定其required return（或称discount rate）r。而$ r = r_f + \beta*RP $。那么中国市场的RP是多少呢？作为emerging mark">
+  <meta name="description" content="Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)=R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="中国股票市场的风险溢价">
-<meta property="og:url" content="http://yoursite.com/2020/07/14/cn-market-rp/index.html">
+<meta property="og:title" content="Bottom-up Beta方法">
+<meta property="og:url" content="http://yoursite.com/2020/07/18/bottom-up-beta/index.html">
 <meta property="og:site_name" content="Liang的风险平价观">
-<meta property="og:description" content="所谓的Risk Premium（以下简写成RP）是值市场的预期收益(expected return)减去无风险收益率（risk free rate）$ r_f $。RP是估值的关键，当对某只股票进行估值的时候，你首先需要确定其required return（或称discount rate）r。而$ r = r_f + \beta*RP $。那么中国市场的RP是多少呢？作为emerging mark">
+<meta property="og:description" content="Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)=R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2020/07/14/cn-market-rp/irp.PNG">
-<meta property="og:image" content="http://yoursite.com/2020/07/14/cn-market-rp/which_to_use.PNG">
-<meta property="og:updated_time" content="2020-07-14T14:02:02.274Z">
+<meta property="og:updated_time" content="2020-07-18T14:30:29.853Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="中国股票市场的风险溢价">
-<meta name="twitter:description" content="所谓的Risk Premium（以下简写成RP）是值市场的预期收益(expected return)减去无风险收益率（risk free rate）$ r_f $。RP是估值的关键，当对某只股票进行估值的时候，你首先需要确定其required return（或称discount rate）r。而$ r = r_f + \beta*RP $。那么中国市场的RP是多少呢？作为emerging mark">
-<meta name="twitter:image" content="http://yoursite.com/2020/07/14/cn-market-rp/irp.PNG">
-  <link rel="canonical" href="http://yoursite.com/2020/07/14/cn-market-rp/">
+<meta name="twitter:title" content="Bottom-up Beta方法">
+<meta name="twitter:description" content="Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)=R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。">
+  <link rel="canonical" href="http://yoursite.com/2020/07/18/bottom-up-beta/">
 
 
 <script id="page-configurations">
@@ -82,7 +79,7 @@
   };
 </script>
 
-  <title>中国股票市场的风险溢价 | Liang的风险平价观</title>
+  <title>Bottom-up Beta方法 | Liang的风险平价观</title>
   <meta name="generator" content="Hexo 3.9.0">
   
 
@@ -220,7 +217,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/14/cn-market-rp/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/18/bottom-up-beta/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Liang">
@@ -232,7 +229,7 @@
       <meta itemprop="name" content="Liang的风险平价观">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">中国股票市场的风险溢价
+        <h1 class="post-title" itemprop="name headline">Bottom-up Beta方法
 
           
         </h1>
@@ -248,7 +245,7 @@
                 
               
 
-              <time title="创建时间：2020-07-14 21:11:41 / 修改时间：22:02:02" itemprop="dateCreated datePublished" datetime="2020-07-14T21:11:41+08:00">2020-07-14</time>
+              <time title="创建时间：2020-07-18 21:03:53 / 修改时间：22:30:29" itemprop="dateCreated datePublished" datetime="2020-07-18T21:03:53+08:00">2020-07-18</time>
             </span>
           
             
@@ -280,164 +277,200 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>所谓的Risk Premium（以下简写成RP）是值市场的预期收益(expected return)减去无风险收益率（risk free rate）$ r_f $。RP是估值的关键，当对某只股票进行估值的时候，你首先需要确定其required return（或称discount rate）r。而$ r = r_f + \beta*RP $。那么中国市场的RP是多少呢？作为emerging market，中国市场的RP是否就比成熟市场高呢？</p>
+        <p>Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)=R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。 </p>
 <a id="more"></a>
 
-<p>RP的确定通常有2种方式。Historical Premium 和 Implied Premium。Historical Premium其实就是根据历史数据计算市场的平均收益率（算数或几何平均）。这里以沪深300指数来代表中国股票市场整体。那么，先来看看Historical Premium是多少？参见下表：</p>
+<p>那么该如何获取beta呢？一种方式就是通过linear regression。将independent variables:$ R_m, R_f $ 以及dependent variable E(R) 通过linear regression便可获取参数beta了。但是，很多终端包括在网上找到的所有例子，在计算beta时不考虑$R_f$，直接通过$ E(R) = \beta*(R_m) $ 来确定beta；这种做法可能有一定的道理，由于$R_f$本身很小，比如国内10年期国债的yield在3%左右，如果以weekly return计算的话，对应的return才0.0577%，而国外的$R_f$就更不用说了，因此可以近似忽略。另外，如何选择risk free rate本身又是一件不太简单的事情。例如，对于成熟市场来说如美国来说，就可以有多种选择，除了国债外（10年期或其他？）还有Overnight Index Swap (OIS)等。</p>
+<p>接下来通过linear regression方法来计算腾讯的beta。因为腾讯在香港上市，因此，market return使用恒生指数。$ R_f $使用香港政府10年期国债。仿照Bloomberg计算beta的方法，使用最近2年的weekly return数据。我自己计算获得的结果是：</p>
+<ul>
+<li>不包含$ R_f $，使用regression 计算得出的beta = 1.219</li>
+<li>包含$ R_f $，使用regression 计算得出的beta = 1.22</li>
+<li>直接使用公式：$Covariance(market_{rt}, stock_{rt}) / Var(market_{rt})$，计算得出的beta = 1.231</li>
+</ul>
+<p>可见，risk free rate对于beta的影响确实很小。另外，我在Choice终端上，使用同样的周期得到的结果是1.2123。而yahoo finance上，5 年，月return显示的beta是1.02，我用yahoo的数据自己算了一下，发现它的结果是不对的！应该是1.2471，接近我上面的计算结果。看来大网站的数据也不能相信。</p>
+<p>当然，本文不是讨论regression beta如何计算，从上面可以看出来，单个股票的beta其实是一个含有大量噪音的数据，如果直接就这么用，那心里肯定没底，十有八九这个beta的值是有问题的。因此，有一种“bottom-up Betas”的方法可以比较好的消除单只股票的beta的噪音。</p>
+<p>什么是“bottom-up beta”？就是根据目标公司所在的行业，在这些行业里找到同目标公司相似的一堆公司，用这些公司的beta计算平均值获得一个比较准确的beta。bottom-up beta的一大好处就是，当你找到足够多的样本公司，你估算出来的目标公司beta的standaerd error会大大降低。另一个好处就是即使当目标公司没有很多历史数据的情况下，你一样可以通过bottom-up beta计算得到目标公司的beta。</p>
+<p>以下是bottom-up beta的具体计算方法：</p>
+<ol>
+<li>确定目标公司所处的行业，目标公司有可能是单一行业，也有可能是跨多个行业。</li>
+<li>在每个行业里找到相似的公司，当然多多益善。如果是跨行业的公司，则需要分别在每个行业里面找到相似的公司，并获得这些公司的beta。然后分别按行业计算这些公司beta的平均值。</li>
+<li>计算unlevered beta。$ \beta_u = \beta_r / (1 + (1-tax) D/E) $ 。其中D/E是debt to equity ratio，这里指相似公司的平均D/E。</li>
+<li>确定目标公司在各业务上的比重，通常可以按照销售收入或opterating income来确定比重。当然最理想的方式是估算各业务的价值，以价值来确定比重。</li>
+<li>计算目标公司unlevered beta的加权平均值。个业务unlevered beta来自第3步，权重来自第4步。</li>
+<li>最后计算levered beta，$ \beta_{bottomup} = \beta_u (1+ (1-tax) (D/E))$，这里的D/E是目标公司的D/E。</li>
+</ol>
+<p>方法讲完了，接下来就以腾讯控股为例来确定她的bottom-up beta。按照以上第1步，先确定腾讯所在行业即她涉及哪些业务。腾讯的收入包括如下几块：</p>
+<ul>
+<li>网络游戏</li>
+<li>数字内容，包括：视频（传统+短视频），音乐，阅读</li>
+<li>网络广告</li>
+<li>金融科技</li>
+<li>云及企业服务</li>
+</ul>
+<p>而从GICS分类来看腾讯属于：信息技术-软件与服务-信息技术服务-互联网服务与基础设施。显然这样的分类不能体现腾讯的全部业务。一种比较仔细的做法是根据腾讯的业务，分别找到对应的公司。这里，我就比较粗粒度的找到一些我觉得相关的在香港上市的公司，见下表：</p>
 <table>
 <thead>
 <tr>
-<th>时间</th>
-<th>开盘</th>
-<th>收盘</th>
-<th>收益</th>
+<th>证券代码</th>
+<th>证券名称</th>
+<th>所属GICS行业</th>
+<th>Beta</th>
+<th>总市值（亿元）</th>
+<th>D/E</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>2005/12/30</td>
-<td>994.76</td>
-<td>923.45</td>
-<td>-7.17%</td>
+<td>09988.HK</td>
+<td>阿里巴巴-SW</td>
+<td>非日常生活消费品-零售业-互联网与直销零售-互联网与直销零售</td>
+<td>0.9181</td>
+<td>51,250.7415</td>
+<td>0.493</td>
 </tr>
 <tr>
-<td>2006/12/29</td>
-<td>926.56</td>
-<td>2041.05</td>
-<td>121.02%</td>
+<td>03690.HK</td>
+<td>美团点评-W</td>
+<td>信息技术-软件与服务-软件-应用软件</td>
+<td>0.8307</td>
+<td>11,231.8189</td>
+<td>0.339</td>
 </tr>
 <tr>
-<td>2007/12/28</td>
-<td>2073.25</td>
-<td>5338.27</td>
-<td>161.55%</td>
+<td>01810.HK</td>
+<td>小米集团-W</td>
+<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
+<td>1.1003</td>
+<td>3,733.3914</td>
+<td>1.070</td>
 </tr>
 <tr>
-<td>2008/12/31</td>
-<td>5349.76</td>
-<td>1817.72</td>
-<td>-65.95%</td>
+<td>00268.HK</td>
+<td>金蝶国际</td>
+<td>信息技术-软件与服务-软件-应用软件</td>
+<td>1.5451</td>
+<td>598.9131</td>
+<td>0.370</td>
 </tr>
 <tr>
-<td>2009/12/31</td>
-<td>1848.33</td>
-<td>3575.68</td>
-<td>96.71%</td>
+<td>08083.HK</td>
+<td>中国有赞</td>
+<td>非日常生活消费品-零售业-互联网与直销零售-互联网与直销零售</td>
+<td>1.1385</td>
+<td>282.5032</td>
+<td>1.693</td>
 </tr>
 <tr>
-<td>2010/12/31</td>
-<td>3592.47</td>
-<td>3128.26</td>
-<td>-12.51%</td>
+<td>02013.HK</td>
+<td>微盟集团</td>
+<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
+<td>1.9174</td>
+<td>252.0400</td>
+<td>0.660</td>
 </tr>
 <tr>
-<td>2011/12/30</td>
-<td>3155.56</td>
-<td>2345.74</td>
-<td>-25.01%</td>
+<td>00136.HK</td>
+<td>恒腾网络</td>
+<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
+<td>0.7934</td>
+<td>182.7986</td>
+<td>0.347</td>
 </tr>
 <tr>
-<td>2012/12/31</td>
-<td>2361.5</td>
-<td>2522.95</td>
-<td>7.55%</td>
+<td>01686.HK</td>
+<td>新意网集团</td>
+<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
+<td>1.1249</td>
+<td>136.7236</td>
+<td>2.696</td>
 </tr>
 <tr>
-<td>2013/12/31</td>
-<td>2551.81</td>
-<td>2330.03</td>
-<td>-7.65%</td>
+<td>00777.HK</td>
+<td>网龙</td>
+<td>信息技术-软件与服务-软件-应用软件</td>
+<td>1.4445</td>
+<td>127.7308</td>
+<td>0.447</td>
 </tr>
 <tr>
-<td>2014/12/31</td>
-<td>2323.43</td>
-<td>3533.71</td>
-<td>51.66%</td>
+<td>00799.HK</td>
+<td>IGG</td>
+<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
+<td>1.5530</td>
+<td>93.0871</td>
+<td>0.272</td>
 </tr>
 <tr>
-<td>2015/12/31</td>
-<td>3566.09</td>
-<td>3731</td>
-<td>5.58%</td>
+<td>01089.HK</td>
+<td>乐游科技控股</td>
+<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
+<td>0.6488</td>
+<td>92.4880</td>
+<td>0.282</td>
 </tr>
 <tr>
-<td>2016/12/30</td>
-<td>3725.86</td>
-<td>3310.08</td>
-<td>-11.28%</td>
+<td>00302.HK</td>
+<td>中手游</td>
+<td>信息技术-软件与服务-软件-应用软件</td>
+<td>1.0677</td>
+<td>77.5940</td>
+<td>0.403</td>
 </tr>
 <tr>
-<td>2017/12/29</td>
-<td>3313.95</td>
-<td>4030.86</td>
-<td>21.78%</td>
+<td>01675.HK</td>
+<td>亚信科技</td>
+<td>信息技术-软件与服务-软件-应用软件</td>
+<td>0.4815</td>
+<td>71.0940</td>
+<td>0.244</td>
 </tr>
 <tr>
-<td>2018/12/28</td>
-<td>4045.21</td>
-<td>3010.65</td>
-<td>-25.31%</td>
+<td>01357.HK</td>
+<td>美图公司</td>
+<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
+<td>1.3548</td>
+<td>68.5665</td>
+<td>0.236</td>
 </tr>
 <tr>
-<td>2019/12/31</td>
-<td>3017.07</td>
-<td>4096.58</td>
-<td>36.07%</td>
+<td>01137.HK</td>
+<td>香港电视</td>
+<td>通讯服务-媒体与娱乐-娱乐-电影与娱乐</td>
+<td>1.1290</td>
+<td>56.4704</td>
+<td>0.656</td>
 </tr>
 <tr>
-<td>2020/07/14</td>
-<td>4121.35</td>
-<td>4806.69</td>
-<td>17.33%</td>
+<td>01806.HK</td>
+<td>汇付天下</td>
+<td>金融-综合金融-综合金融服务-其它综合性金融服务</td>
+<td>0.8373</td>
+<td>39.5487</td>
+<td>3.959</td>
+</tr>
+<tr>
+<td>BIDU.O</td>
+<td>百度</td>
+<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
+<td>1.4500</td>
+<td>423.1467</td>
+<td>0.751</td>
+</tr>
+<tr>
+<td>NTES.O</td>
+<td>网易</td>
+<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
+<td>0.7400</td>
+<td>631.9686</td>
+<td>0.599</td>
 </tr>
 </tbody></table>
-<p>一共才16条数据，数据样本很小，未必能揭示真实的RP。如果以算数平均计算，可得沪深300的预期收益是：22.77%。而以几何平均计算，预期收益是：10.35%，几何平均更合理，通常来说几何平均是会小于算数平均。对于无风险收益率来说，选取10年期国债的收益率：3.06%，由此可得RP=10.35%-3.06% = 7.29%。看上去好像还蛮不错的哦！</p>
-<p>当然，使用historical premium的问题也很明显，你需要有大量的历史数据，对于成熟市场，如果美国股市，可以得到相对可靠的数据（其实方差也很大），而对于中国这样的emerging market，historical premium的准确性更是值得怀疑。另外一个问题，历史数据只能反应历史，而很多新的变化就无法体现在结果中，就好比看着后视镜开车。</p>
-<p>Implied Premium，在计算过程中使用了“未来数据”，将最新的预期加入计算，因此更加能反应未来的变化。那么，如何计算implied premium呢？简单来说就是根据dividend discount model (DDM) 来推算出r–required return, 我们知道DDM的简单形式可以写成：<br>$$<br>P = D_1/(r-g)<br>$$<br>其中，P对应现在的指数，D1=下一年的分红，g=收入增长率。那么，如果知道P，D1，g就可以推算出r来了。而D1，g都是预测值，是对未来的预期。通过这种方式计算出来的r对估值具有更好的效果。</p>
-<p>接下来还是以沪深300为例来计算Implied Premium。在本例中使用两段式的DDM， 即一开始的5年为高速增长期，5年以后为稳定增长期。输入参数如下：</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>值</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>当前指数</td>
-<td>4806.69</td>
-<td>这个很容获取，直接填上最新的指数值，我这里填的式2020/7/14日沪深300的收盘价</td>
-</tr>
-<tr>
-<td>分红和回购率</td>
-<td>2.07%</td>
-<td>这个要花一点功夫了，不得不说中证指数有限公司工作很粗糙，照理这些数据应该提供的，我在他们网站上找了好久也没找到，而S&amp;P以及恒生指数都提供这些数据的。最后只能自己计算了，将300只成分股一个一个数据汇集起来。最终的结果也符合直觉，国内红率不是很高，尤其对应这几天的大涨，分红率就更低了。</td>
-</tr>
-<tr>
-<td>今后5年收入增加率</td>
-<td>14.364%</td>
-<td>这个数据也挺难弄。我从Choice终端上查找一致性预期获得的。原始数据是今后2年复合增长率21.9%，但是感觉这数据太高了。有可能是疫情的原因。我自己作了调整。</td>
-</tr>
-<tr>
-<td>五年以后增长率</td>
-<td>3.06%</td>
-<td>这个值代表了永续增长率，我取和无风险收益保持一致</td>
-</tr>
-<tr>
-<td>10年期国债收益率</td>
-<td>3.06%</td>
-<td>无风险收益率</td>
-</tr>
-</tbody></table>
-<p>然后，利用MS Excel的规划求解就能得到implied risk premium，参见下图：</p>
-<img src="/2020/07/14/cn-market-rp/irp.PNG">
-
-<p>expected dividend是根据今后5年收入增长率推算得到。terminal value根据DDM公式计算得到。应用规划求解，可变单元格的值设置为Implied Risk Premium，最后的结果为3.49%，同historical premium的7.29%比低了好多啊！！！至于说哪个值更加符合市场实际情况呢？我个人觉得3.49%似乎比较符合直观感受。我大哀股如同绞肉机，说直白一点，就是收益和风险不对称，股民承担了很高的风险却为了不太理想的收益。</p>
-<p>为何implied premium会那么低？首先，分红+回购比例很低！这也导致了terminal value很低，而另一方面，指数本身又很高。这就进一步解释了高风险低收益的市场状况。假设市场跌去50%，而分红绝对值保持不变，那么implied premium就变成了6.81%，相对来说就改善了很多。</p>
-<p>所以，implied premium能从风险收益比较的角度来提供我们观察市场的一种方法。那么，究竟该使用historical premium还是implied premium呢？</p>
-<p>下表是Damodaran教授提供的美国市场的数据：</p>
-<img src="/2020/07/14/cn-market-rp/which_to_use.PNG">
-
-<p>显然implied premium效果好很多了。不过需要指出的一点，implied premium需要高质量的预期数据，例如今后几年的盈利增长率，分红率。获得高质量的一致性预期数据就显得尤为重要。当然还需要指出的是implied premium并没有一个客观正确的值，每个人可以有自己预期，并得到对应的值，就好像每个人对市场都可以有自己的看法一样。RP是一项很关键的数据，后面的股票估值直接需要RP的参与。我打算每周都会更新implied risk premium。</p>
+<p>以上数据来自东方财富Choice数据。</p>
+<p>一共12家上市公司。在查找这些公司的时候首先我考虑市值，毕竟腾讯的体量摆在那里，找对应的公司市值也不能太小，否则就没有参考意义了；另外，还得考虑上市时间，像网易，京东这样的公司虽然比较匹配，但是上市时间实在太短，历史数据太少，因此也没参考意义，我就直接拿美股的数据过来了（虽然跨市场，但只要样本足够多，通过大数定律还是可以得到比较准确的结果）。</p>
+<p>有了参照数据，很容易就得到了beta的平均值：1.115。然后计算unlevered beta，需要先获得相似公司的D/E，我这里将所有相关公司的detb和equity分别加总，再用这两个总和求得D/E = 0.573。然后还需要确定tax rate，根据国家政策，高新技术企业税率是15%，代入这些数据可得：</p>
+<p>$\beta_u$ = 1.115/(1+(1-0.15) * 0.573) = 0.75</p>
+<p>最后，为了获取腾讯的bottom-up beta，我们还需要确定腾讯的D/E，根据腾讯的财报，可得到她的D/E = 0.976。那么，对应的beta应该为：</p>
+<p>$\beta_{bottomup}$ = 0.75*(1+(1-0.15)*0.976) = 1.372</p>
+<p>这就是腾讯的beta。那么，将这个bottom-up beta同腾讯的regressison beta（=1.22）比大了一点（12.5%）。但1.372也是有一定道理的，因为，从D/E比来看，网易，百度，阿里都比腾讯低。因此，我个人觉得1.372这个值还是比较靠谱。确定beta作为股票估值的重要的一步到此完成。</p>
 
     </div>
 
@@ -460,8 +493,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2020/06/02/vanishing-gradients/" rel="next" title="vanishing gradients">
-                  <i class="fa fa-chevron-left"></i> vanishing gradients
+                <a href="/2020/07/14/cn-market-rp/" rel="next" title="中国股票市场的风险溢价">
+                  <i class="fa fa-chevron-left"></i> 中国股票市场的风险溢价
                 </a>
               
             </div>
@@ -469,10 +502,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2020/07/18/bottom-up-beta/" rel="prev" title="Bottom-up Beta方法">
-                  Bottom-up Beta方法 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
