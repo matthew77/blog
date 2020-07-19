@@ -1,92 +1,63 @@
 <!DOCTYPE html>
-
-
-
-
-
 <html lang="zh-CN">
 <head>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
-  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    version: '7.3.0',
-    exturl: false,
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    },
-    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    translation: {
-      copy_button: '复制',
-      copy_success: '复制成功',
-      copy_failure: '复制失败'
-    }
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.keepswalking.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
 
-  <meta name="description" content="Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)=R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。">
+  <meta name="description" content="Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)&#x3D;R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bottom-up Beta方法 -- 试算腾讯的beta">
-<meta property="og:url" content="http://yoursite.com/2020/07/18/bottom-up-beta/index.html">
+<meta property="og:url" content="https://www.keepswalking.com/2020/07/18/bottom-up-beta/index.html">
 <meta property="og:site_name" content="Liang的风险平价观">
-<meta property="og:description" content="Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)=R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-07-18T14:41:43.366Z">
+<meta property="og:description" content="Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)&#x3D;R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-18T13:03:53.000Z">
+<meta property="article:modified_time" content="2020-07-19T07:19:24.049Z">
+<meta property="article:author" content="Liang">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bottom-up Beta方法 -- 试算腾讯的beta">
-<meta name="twitter:description" content="Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)=R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。">
-  <link rel="alternate" href="/atom.xml" title="Liang的风险平价观" type="application/atom+xml">
-  <link rel="canonical" href="http://yoursite.com/2020/07/18/bottom-up-beta/">
+
+<link rel="canonical" href="https://www.keepswalking.com/2020/07/18/bottom-up-beta/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
   <title>Bottom-up Beta方法 -- 试算腾讯的beta | Liang的风险平价观</title>
-  <meta name="generator" content="Hexo 3.9.0">
   
 
 
-
-
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4c923ee16dc6e5fc66d82e7f36f2a2ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -103,7 +74,6 @@
   .use-motion .post-body,
   .use-motion .collection-header { opacity: initial; }
 
-  .use-motion .logo,
   .use-motion .site-title,
   .use-motion .site-subtitle {
     opacity: initial;
@@ -113,89 +83,71 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</noscript>
 
+<link rel="alternate" href="/atom.xml" title="Liang的风险平价观" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Liang的风险平价观</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Liang的风险平价观</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
   </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
-      
-      
-      
-        
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
-      
-    
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-categories">
-      
-    
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-archives">
-      
-    
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-about">
-      
-    
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
   </ul>
-
-    
-
 </nav>
+
+
+
+
 </div>
     </header>
 
@@ -206,66 +158,59 @@
   </div>
 
 
-    <main id="main" class="main">
+    <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          <div id="content" class="content">
+          
+
+          <div class="content post posts-expand">
             
 
-  <div id="posts" class="posts-expand">
-      <article itemscope itemtype="http://schema.org/Article">
+    
   
   
-  
-  <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/18/bottom-up-beta/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.keepswalking.com/2020/07/18/bottom-up-beta/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="Liang">
       <meta itemprop="description" content="Keep Walking">
-      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Liang的风险平价观">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Bottom-up Beta方法 -- 试算腾讯的beta
-
-          
+        <h1 class="post-title" itemprop="name headline">
+          Bottom-up Beta方法 -- 试算腾讯的beta
         </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              
-                
-              
-
-              <time title="创建时间：2020-07-18 21:03:53 / 修改时间：22:41:43" itemprop="dateCreated datePublished" datetime="2020-07-18T21:03:53+08:00">2020-07-18</time>
+              <time title="创建时间：2020-07-18 21:03:53" itemprop="dateCreated datePublished" datetime="2020-07-18T21:03:53+08:00">2020-07-18</time>
             </span>
-          
-            
-
-            
-          
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-19 15:19:24" itemprop="dateModified" datetime="2020-07-19T15:19:24+08:00">2020-07-19</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Valuation/" itemprop="url" rel="index"><span itemprop="name">Valuation</span></a></span>
-
-                
-                
-              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Valuation/" itemprop="url" rel="index"><span itemprop="name">Valuation</span></a>
+                </span>
             </span>
-          
 
           
 
@@ -280,13 +225,12 @@
       
         <p>Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)=R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。 </p>
 <a id="more"></a>
-
 <p>那么该如何获取beta呢？一种方式就是通过linear regression。将independent variables:$ R_m, R_f $ 以及dependent variable E(R) 通过linear regression便可获取参数beta了。但是，很多终端包括在网上找到的所有例子，在计算beta时不考虑$R_f$，直接通过$ E(R) = \beta*(R_m) $ 来确定beta；这种做法可能有一定的道理，由于$R_f$本身很小，比如国内10年期国债的yield在3%左右，如果以weekly return计算的话，对应的return才0.0577%，而国外的$R_f$就更不用说了，因此可以近似忽略。另外，如何选择risk free rate本身又是一件不太简单的事情。例如，对于成熟市场来说如美国来说，就可以有多种选择，除了国债外（10年期或其他？）还有Overnight Index Swap (OIS)等。</p>
 <p>接下来通过linear regression方法来计算腾讯的beta。因为腾讯在香港上市，因此，market return使用恒生指数。$ R_f $使用香港政府10年期国债。仿照Bloomberg计算beta的方法，使用最近2年的weekly return数据。我自己计算获得的结果是：</p>
 <ul>
 <li>不包含$ R_f $，使用regression 计算得出的beta = 1.219</li>
 <li>包含$ R_f $，使用regression 计算得出的beta = 1.22</li>
-<li>直接使用公式：$Covariance(market_{rt}, stock_{rt}) / Var(market_{rt})$，计算得出的beta = 1.231</li>
+<li>直接使用公式：$Covariance(market<em>{rt}, stock</em>{rt}) / Var(market_{rt})$，计算得出的beta = 1.231</li>
 </ul>
 <p>可见，risk free rate对于beta的影响确实很小。另外，我在Choice终端上，使用同样的周期得到的结果是1.2123。而yahoo finance上，5 年，月return显示的beta是1.02，我用yahoo的数据自己算了一下，发现它的结果是不对的！应该是1.2471，接近我上面的计算结果。看来大网站的数据也不能相信。</p>
 <p>当然，本文不是讨论regression beta如何计算，从上面可以看出来，单个股票的beta其实是一个含有大量噪音的数据，如果直接就这么用，那心里肯定没底，十有八九这个beta的值是有问题的。因此，有一种“bottom-up Betas”的方法可以比较好的消除单只股票的beta的噪音。</p>
@@ -309,6 +253,7 @@
 <li>云及企业服务</li>
 </ul>
 <p>而从GICS分类来看腾讯属于：信息技术-软件与服务-信息技术服务-互联网服务与基础设施。显然这样的分类不能体现腾讯的全部业务。一种比较仔细的做法是根据腾讯的业务，分别找到对应的公司。这里，我就比较粗粒度的找到一些我觉得相关的在香港上市的公司，见下表：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -320,7 +265,8 @@
 <th>D/E</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>09988.HK</td>
 <td>阿里巴巴-SW</td>
 <td>非日常生活消费品-零售业-互联网与直销零售-互联网与直销零售</td>
@@ -464,7 +410,9 @@
 <td>631.9686</td>
 <td>0.599</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>以上数据来自东方财富Choice数据。</p>
 <p>一共12家上市公司。在查找这些公司的时候首先我考虑市值，毕竟腾讯的体量摆在那里，找对应的公司市值也不能太小，否则就没有参考意义了；另外，还得考虑上市时间，像网易，京东这样的公司虽然比较匹配，但是上市时间实在太短，历史数据太少，因此也没参考意义，我就直接拿美股的数据过来了（虽然跨市场，但只要样本足够多，通过大数定律还是可以得到比较准确的结果）。</p>
 <p>有了参照数据，很容易就得到了beta的平均值：1.115。然后计算unlevered beta，需要先获得相似公司的D/E，我这里将所有相关公司的detb和equity分别加总，再用这两个总和求得D/E = 0.573。然后还需要确定tax rate，根据国家政策，高新技术企业税率是15%，代入这些数据可得：</p>
@@ -478,73 +426,100 @@
     
     
     
-        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
-  <img id="wechat_subscriber_qcode" src="/uploads/wx.jpg" alt="Liang wechat" style="width: 200px; max-width: 100%;">
-  <div>欢迎订阅我的微信公众号！</div>
-</div>
-
-      
         
-      
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
 
         
 
-          <div class="post-nav">
-            <div class="post-nav-next post-nav-item">
-              
-                <a href="/2020/07/14/cn-market-rp/" rel="next" title="中国股票市场的风险溢价">
-                  <i class="fa fa-chevron-left"></i> 中国股票市场的风险溢价
-                </a>
-              
-            </div>
 
-            <span class="post-nav-divider"></span>
-
-            <div class="post-nav-prev post-nav-item">
-              
-            </div>
-          </div>
         
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/14/cn-market-rp/" rel="prev" title="中国股票市场的风险溢价">
+      <i class="fa fa-chevron-left"></i> 中国股票市场的风险溢价
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
     
-  </div>
-  
-  
-  
   </article>
+  
+  
+  
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
   
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
   </div>
 
   <aside class="sidebar">
     <div class="sidebar-inner">
-        
-        
-        
-        
-      
 
       <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+        <li class="sidebar-nav-toc">
           文章目录
         </li>
-        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+        <li class="sidebar-nav-overview">
           站点概览
         </li>
       </ul>
@@ -559,76 +534,31 @@
   <p class="site-author-name" itemprop="name">Liang</p>
   <div class="site-description" itemprop="description">Keep Walking</div>
 </div>
-  <nav class="site-state motion-element">
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        
           <a href="/archives/">
         
           <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
-    
-      
-      
       <div class="site-state-item site-state-categories">
-        
-          
             <a href="/categories/">
           
-        
-        
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
         <span class="site-state-item-count">7</span>
-        <span class="site-state-item-name">分类</span>
-        </a>
+        <span class="site-state-item-name">分类</span></a>
       </div>
-    
-      
-      
       <div class="site-state-item site-state-tags">
-        
-        
-        
-          
-        
         <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">标签</span>
-        
       </div>
-    
   </nav>
-  <div class="feed-link motion-element">
-    <a href="/atom.xml" rel="alternate">
-      <i class="fa fa-rss"></i>RSS
-    </a>
-  </div>
+</div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-      
-      
-        
-      
-      
-        
-      
-        <a href="https://weibo.com/ecmkit" title="Weibo &rarr; https://weibo.com/ecmkit" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+        <a href="https://weibo.com/ecmkit" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ecmkit" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
       </span>
-    
   </div>
 
 
@@ -643,17 +573,23 @@
       </div>
     </main>
 
-    <footer id="footer" class="footer">
+    <footer class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Liang</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
 
         
 
@@ -664,120 +600,100 @@
 
 
 
-
-
-
-
-        
       </div>
     </footer>
   </div>
 
   
-  <script src="/lib/jquery/index.js?v=3.4.1"></script>
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
-<script src="/js/schemes/muse.js?v=7.3.0"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/js/next-boot.js?v=7.3.0"></script>
+<script src="/js/utils.js"></script>
 
-
-
-  
+<script src="/js/motion.js"></script>
 
 
+<script src="/js/schemes/muse.js"></script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+<script src="/js/next-boot.js"></script>
 
 
 
 
   
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
-    
+
+  
       
-<script type="text/x-mathjax-config">
 
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
 <script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
 </script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
 
     
-  
-
-  
 
   
 

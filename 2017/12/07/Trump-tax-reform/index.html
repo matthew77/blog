@@ -1,95 +1,66 @@
 <!DOCTYPE html>
-
-
-
-
-
 <html lang="zh-CN">
 <head>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
-  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    version: '7.3.0',
-    exturl: false,
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    },
-    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    translation: {
-      copy_button: '复制',
-      copy_success: '复制成功',
-      copy_failure: '复制失败'
-    }
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.keepswalking.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
 
   <meta name="description" content="每次市场上出现一些热点事件后，通常都是众说风云，自己看了这些新闻，以及网上大V们的论述之后往往觉得是一头雾水，也没有办法分清楚谁对谁错。最近想想，觉得其实自己有武器却没有利用起来啊，毕竟也是学过宏观经济学的人，教材里面清清楚楚的把分析框架提供给我了，而我却视而不见，反倒是迷失在各种标题党中。想想觉得自己也是蛮愚蠢的。情愿相信不可靠的消息和评论，却不依靠教材上提供的可靠的框架。经常听见说教材上的东西">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Trump税改的宏观分析">
-<meta property="og:url" content="http://yoursite.com/2017/12/07/Trump-tax-reform/index.html">
+<meta property="og:url" content="https://www.keepswalking.com/2017/12/07/Trump-tax-reform/index.html">
 <meta property="og:site_name" content="Liang的风险平价观">
 <meta property="og:description" content="每次市场上出现一些热点事件后，通常都是众说风云，自己看了这些新闻，以及网上大V们的论述之后往往觉得是一头雾水，也没有办法分清楚谁对谁错。最近想想，觉得其实自己有武器却没有利用起来啊，毕竟也是学过宏观经济学的人，教材里面清清楚楚的把分析框架提供给我了，而我却视而不见，反倒是迷失在各种标题党中。想想觉得自己也是蛮愚蠢的。情愿相信不可靠的消息和评论，却不依靠教材上提供的可靠的框架。经常听见说教材上的东西">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2017/12/07/Trump-tax-reform/IS-LM.png">
-<meta property="og:image" content="http://yoursite.com/2017/12/07/Trump-tax-reform/AS-AD.png">
-<meta property="og:updated_time" content="2017-12-07T13:25:05.320Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.keepswalking.com/2017/12/07/Trump-tax-reform/IS-LM.png">
+<meta property="og:image" content="https://www.keepswalking.com/2017/12/07/Trump-tax-reform/AS-AD.png">
+<meta property="article:published_time" content="2017-12-07T13:21:53.000Z">
+<meta property="article:modified_time" content="2017-12-07T13:25:05.320Z">
+<meta property="article:author" content="Liang">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Trump税改的宏观分析">
-<meta name="twitter:description" content="每次市场上出现一些热点事件后，通常都是众说风云，自己看了这些新闻，以及网上大V们的论述之后往往觉得是一头雾水，也没有办法分清楚谁对谁错。最近想想，觉得其实自己有武器却没有利用起来啊，毕竟也是学过宏观经济学的人，教材里面清清楚楚的把分析框架提供给我了，而我却视而不见，反倒是迷失在各种标题党中。想想觉得自己也是蛮愚蠢的。情愿相信不可靠的消息和评论，却不依靠教材上提供的可靠的框架。经常听见说教材上的东西">
-<meta name="twitter:image" content="http://yoursite.com/2017/12/07/Trump-tax-reform/IS-LM.png">
-  <link rel="alternate" href="/atom.xml" title="Liang的风险平价观" type="application/atom+xml">
-  <link rel="canonical" href="http://yoursite.com/2017/12/07/Trump-tax-reform/">
+<meta name="twitter:image" content="https://www.keepswalking.com/2017/12/07/Trump-tax-reform/IS-LM.png">
+
+<link rel="canonical" href="https://www.keepswalking.com/2017/12/07/Trump-tax-reform/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
   <title>Trump税改的宏观分析 | Liang的风险平价观</title>
-  <meta name="generator" content="Hexo 3.9.0">
   
 
 
-
-
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4c923ee16dc6e5fc66d82e7f36f2a2ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -106,7 +77,6 @@
   .use-motion .post-body,
   .use-motion .collection-header { opacity: initial; }
 
-  .use-motion .logo,
   .use-motion .site-title,
   .use-motion .site-subtitle {
     opacity: initial;
@@ -116,89 +86,71 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</noscript>
 
+<link rel="alternate" href="/atom.xml" title="Liang的风险平价观" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Liang的风险平价观</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Liang的风险平价观</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
   </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
-      
-      
-      
-        
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
-      
-    
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-categories">
-      
-    
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-archives">
-      
-    
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-about">
-      
-    
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
   </ul>
-
-    
-
 </nav>
+
+
+
+
 </div>
     </header>
 
@@ -209,66 +161,53 @@
   </div>
 
 
-    <main id="main" class="main">
+    <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          <div id="content" class="content">
+          
+
+          <div class="content post posts-expand">
             
 
-  <div id="posts" class="posts-expand">
-      <article itemscope itemtype="http://schema.org/Article">
+    
   
   
-  
-  <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/07/Trump-tax-reform/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.keepswalking.com/2017/12/07/Trump-tax-reform/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="Liang">
       <meta itemprop="description" content="Keep Walking">
-      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Liang的风险平价观">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Trump税改的宏观分析
-
-          
+        <h1 class="post-title" itemprop="name headline">
+          Trump税改的宏观分析
         </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-
-              
-                
               
 
               <time title="创建时间：2017-12-07 21:21:53 / 修改时间：21:25:05" itemprop="dateCreated datePublished" datetime="2017-12-07T21:21:53+08:00">2017-12-07</time>
             </span>
-          
-            
-
-            
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Macro/" itemprop="url" rel="index"><span itemprop="name">Macro</span></a></span>
-
-                
-                
-              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Macro/" itemprop="url" rel="index"><span itemprop="name">Macro</span></a>
+                </span>
             </span>
-          
 
           
 
@@ -283,11 +222,9 @@
       
         <p>每次市场上出现一些热点事件后，通常都是众说风云，自己看了这些新闻，以及网上大V们的论述之后往往觉得是一头雾水，也没有办法分清楚谁对谁错。最近想想，觉得其实自己有武器却没有利用起来啊，毕竟也是学过宏观经济学的人，教材里面清清楚楚的把分析框架提供给我了，而我却视而不见，反倒是迷失在各种标题党中。想想觉得自己也是蛮愚蠢的。情愿相信不可靠的消息和评论，却不依靠教材上提供的可靠的框架。经常听见说教材上的东西都是过时的，没有实际作用的，我自己也很轻易就相信了。但是，稍微分析一下：首先：教材上的东西都是经典，是经过时间积累下来的精华部分，如果没有用怎么会写进教材呢？其次，这些经典理论的作者都是大家，比我要聪明无数倍了，我没有理由不去使用他们。最后，反省一下我看了那么多所谓大V的文章有收获和进步么？</p>
 <a id="more"></a>
-
 <p>Trump的税改于2017/12/02日在参议院通过。税改的主要目的就是减税，而减税作为一项财政政策，会对宏观经济，包括：GDP，利率，汇率，通胀，股市造成哪些影响呢？接下来就根据教材上提供的框架来一一分析之。</p>
-<p>宏观分析的时间纬度是一个非常重要的着眼点，很多时候大家为了某些观点争论不休，其原因可能就是考察的时间纬度不同。拿长期的观点和短期的观点进行比较显然会造成各说各的。那么，首先从短期的时间纬度进行分析，从短期来看，需求决定了产出（短期究竟是多久？答案是不一定，有可能几个月，也有可能几年，主要看决定长期的因素–price level有没有开始发生改变，如果price level开始改变，那么短期的作用也就over了）。刚才提到了减税是一项财政政策，能刺激需求端。使用短期的分析框架：IS-LM模型，如下图所示：</p>
-<img src="/2017/12/07/Trump-tax-reform/IS-LM.png">
-
+<p>宏观分析的时间纬度是一个非常重要的着眼点，很多时候大家为了某些观点争论不休，其原因可能就是考察的时间纬度不同。拿长期的观点和短期的观点进行比较显然会造成各说各的。那么，首先从短期的时间纬度进行分析，从短期来看，需求决定了产出（短期究竟是多久？答案是不一定，有可能几个月，也有可能几年，主要看决定长期的因素—price level有没有开始发生改变，如果price level开始改变，那么短期的作用也就over了）。刚才提到了减税是一项财政政策，能刺激需求端。使用短期的分析框架：IS-LM模型，如下图所示：</p>
+<img src="/2017/12/07/Trump-tax-reform/IS-LM.png" class="">
 <p>从上图可见，因为短期内由于减税，消费者的可支配收入增加，进而增加消费，通过乘数效应进一步增加产出。也就是说IS curve右移至IS’。那么，在来看LM curve，从美联储的货币政策来看，当前处在加息通道中，那么从保守的角度来说，LM保持不变，而如果美联储在2018年继续加息的话，其实LM是该向上平移的。由此，我们从IS-LM模型可知：产出（GDP）会比当前增加，而利率会上升，而利率上升会导致货币升值，也就是美元汇率也上涨。</p>
 <p>接下来分析一下减税的长期情况。这里有一个概念叫做“natural level of output”。从短期来看output是可以偏离natural level of output的，但是长期来说是要回归的，因为price level是会做出调整的。之所以会调整是因为，劳动力市场本身也存在一个natrual rate of umemployement，由于短期的财政政策的刺激导致失业率低于这个natrual rate, 使得工资上升，从而导致物价上升。从长期角度来说，可以使用AS-AD模型进行分析。影响AS curve主要有以下这些因素：</p>
 <ul>
@@ -297,8 +234,7 @@
 </ul>
 <p>另外，还要提一下财政赤字，此次降税如果没有伴随财政紧缩，所以会造成财政赤字上升。财政赤字的上升会影响消费者的预期从而影响到AD curve。但是，现在似乎大家都不关心这事情，一则是因为相信Trump的供给侧改革会成功，要么就是今朝有酒今朝醉，因此，财政赤字对AD curve的影响不明朗。</p>
 <p>综上，工资水平使得AS curve轻微向上平移，原油价格使得AS curve轻微向上平移，汇率使得AS curve轻微向下平移。总体来说，AS会向上，但是程度很小。如下图所示：</p>
-<img src="/2017/12/07/Trump-tax-reform/AS-AD.png">
-
+<img src="/2017/12/07/Trump-tax-reform/AS-AD.png" class="">
 <p>再从open economy的角度来分析：减税会刺激国内的需求，但是这些新增的需求并非会全部购买国内的商品和服务，有部分会去购买国外的产品和服务，所以进口增加而出口不变，因此贸易赤字增加，另外，对国内的产出（GDP）的刺激效果也相应的减弱了。之前在短期情况的分析可知利率会走高，汇率也会走高而通胀保持稳定，那么美国的金融市场会比较有吸引力。为了保证减税的效果，从美国的角度来说，还是希望美元不要太强势。</p>
 <p>综合以上的分析，可得出美国会在一段时间内维持一个高于natural level of output。也就是相对高的增长，而通胀相对比较温和。所以可以得到以下这些结论：</p>
 <ul>
@@ -314,77 +250,103 @@
     
     
     
-        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
-  <img id="wechat_subscriber_qcode" src="/uploads/wx.jpg" alt="Liang wechat" style="width: 200px; max-width: 100%;">
-  <div>欢迎订阅我的微信公众号！</div>
-</div>
-
-      
         
-      
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
 
         
 
-          <div class="post-nav">
-            <div class="post-nav-next post-nav-item">
-              
-                <a href="/2017/10/16/rp-benchmark-index/" rel="next" title="风险评价策略（Risk Parity)基准指数">
-                  <i class="fa fa-chevron-left"></i> 风险评价策略（Risk Parity)基准指数
-                </a>
-              
-            </div>
 
-            <span class="post-nav-divider"></span>
-
-            <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2018/08/16/How-did-I-prepare-CFA-level-II/" rel="prev" title="CFA Level II 准备过程 【2018年6月】">
-                  CFA Level II 准备过程 【2018年6月】 <i class="fa fa-chevron-right"></i>
-                </a>
-              
-            </div>
-          </div>
         
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/10/16/rp-benchmark-index/" rel="prev" title="风险评价策略（Risk Parity)基准指数">
+      <i class="fa fa-chevron-left"></i> 风险评价策略（Risk Parity)基准指数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/08/16/How-did-I-prepare-CFA-level-II/" rel="next" title="CFA Level II 准备过程 【2018年6月】">
+      CFA Level II 准备过程 【2018年6月】 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
     
-  </div>
-  
-  
-  
   </article>
+  
+  
+  
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
   
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
   </div>
 
   <aside class="sidebar">
     <div class="sidebar-inner">
-        
-        
-        
-        
-      
 
       <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+        <li class="sidebar-nav-toc">
           文章目录
         </li>
-        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+        <li class="sidebar-nav-overview">
           站点概览
         </li>
       </ul>
@@ -399,76 +361,31 @@
   <p class="site-author-name" itemprop="name">Liang</p>
   <div class="site-description" itemprop="description">Keep Walking</div>
 </div>
-  <nav class="site-state motion-element">
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        
           <a href="/archives/">
         
           <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
-    
-      
-      
       <div class="site-state-item site-state-categories">
-        
-          
             <a href="/categories/">
           
-        
-        
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
         <span class="site-state-item-count">7</span>
-        <span class="site-state-item-name">分类</span>
-        </a>
+        <span class="site-state-item-name">分类</span></a>
       </div>
-    
-      
-      
       <div class="site-state-item site-state-tags">
-        
-        
-        
-          
-        
         <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">标签</span>
-        
       </div>
-    
   </nav>
-  <div class="feed-link motion-element">
-    <a href="/atom.xml" rel="alternate">
-      <i class="fa fa-rss"></i>RSS
-    </a>
-  </div>
+</div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-      
-      
-        
-      
-      
-        
-      
-        <a href="https://weibo.com/ecmkit" title="Weibo &rarr; https://weibo.com/ecmkit" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+        <a href="https://weibo.com/ecmkit" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ecmkit" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
       </span>
-    
   </div>
 
 
@@ -483,17 +400,23 @@
       </div>
     </main>
 
-    <footer id="footer" class="footer">
+    <footer class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Liang</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
 
         
 
@@ -504,66 +427,43 @@
 
 
 
-
-
-
-
-        
       </div>
     </footer>
   </div>
 
   
-  <script src="/lib/jquery/index.js?v=3.4.1"></script>
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
-<script src="/js/schemes/muse.js?v=7.3.0"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/js/next-boot.js?v=7.3.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
+<script src="/js/utils.js"></script>
 
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+<script src="/js/motion.js"></script>
 
 
-
-  
-
+<script src="/js/schemes/muse.js"></script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<script src="/js/next-boot.js"></script>
 
 
 
 
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
 

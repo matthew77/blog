@@ -1,94 +1,65 @@
 <!DOCTYPE html>
-
-
-
-
-
 <html lang="zh-CN">
 <head>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
-  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
-
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    version: '7.3.0',
-    exturl: false,
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    },
-    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    translation: {
-      copy_button: '复制',
-      copy_success: '复制成功',
-      copy_failure: '复制失败'
-    }
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.keepswalking.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
 
   <meta name="description" content="6月份考完CFA leve I 就打算用R实现一个Risk Parity的策略，原本觉得很快就能搞定，但是没想到越写东西越多，细节的问题不断浮出水面，直到最近才完成了大部分的功能。写了1000多行的R代码，本篇就是梳理自己在编程过程中碰到的一些问题和想法。如果想了解Risk Parity量化的方法可以参考之前的《Risk Parity 量化入门》">
 <meta property="og:type" content="article">
 <meta property="og:title" content="风险评价策略（Risk Parity)基准指数">
-<meta property="og:url" content="http://yoursite.com/2017/10/16/rp-benchmark-index/index.html">
+<meta property="og:url" content="https://www.keepswalking.com/2017/10/16/rp-benchmark-index/index.html">
 <meta property="og:site_name" content="Liang的风险平价观">
 <meta property="og:description" content="6月份考完CFA leve I 就打算用R实现一个Risk Parity的策略，原本觉得很快就能搞定，但是没想到越写东西越多，细节的问题不断浮出水面，直到最近才完成了大部分的功能。写了1000多行的R代码，本篇就是梳理自己在编程过程中碰到的一些问题和想法。如果想了解Risk Parity量化的方法可以参考之前的《Risk Parity 量化入门》">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2017/10/16/rp-benchmark-index/rp_ts.jpg">
-<meta property="og:updated_time" content="2017-10-16T13:12:09.203Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.keepswalking.com/2017/10/16/rp-benchmark-index/rp_ts.jpg">
+<meta property="article:published_time" content="2017-10-16T13:09:07.000Z">
+<meta property="article:modified_time" content="2017-10-16T13:12:09.203Z">
+<meta property="article:author" content="Liang">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风险评价策略（Risk Parity)基准指数">
-<meta name="twitter:description" content="6月份考完CFA leve I 就打算用R实现一个Risk Parity的策略，原本觉得很快就能搞定，但是没想到越写东西越多，细节的问题不断浮出水面，直到最近才完成了大部分的功能。写了1000多行的R代码，本篇就是梳理自己在编程过程中碰到的一些问题和想法。如果想了解Risk Parity量化的方法可以参考之前的《Risk Parity 量化入门》">
-<meta name="twitter:image" content="http://yoursite.com/2017/10/16/rp-benchmark-index/rp_ts.jpg">
-  <link rel="alternate" href="/atom.xml" title="Liang的风险平价观" type="application/atom+xml">
-  <link rel="canonical" href="http://yoursite.com/2017/10/16/rp-benchmark-index/">
+<meta name="twitter:image" content="https://www.keepswalking.com/2017/10/16/rp-benchmark-index/rp_ts.jpg">
+
+<link rel="canonical" href="https://www.keepswalking.com/2017/10/16/rp-benchmark-index/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
   };
 </script>
 
   <title>风险评价策略（Risk Parity)基准指数 | Liang的风险平价观</title>
-  <meta name="generator" content="Hexo 3.9.0">
   
 
 
-
-
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4c923ee16dc6e5fc66d82e7f36f2a2ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
@@ -105,7 +76,6 @@
   .use-motion .post-body,
   .use-motion .collection-header { opacity: initial; }
 
-  .use-motion .logo,
   .use-motion .site-title,
   .use-motion .site-subtitle {
     opacity: initial;
@@ -115,89 +85,71 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</noscript>
 
+<link rel="alternate" href="/atom.xml" title="Liang的风险平价观" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Liang的风险平价观</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Liang的风险平价观</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
   </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
-      
-      
-      
-        
+  <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
-      
-    
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-categories">
-      
-    
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-archives">
-      
-    
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
-      
-      
-      
-        
         <li class="menu-item menu-item-about">
-      
-    
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
   </ul>
-
-    
-
 </nav>
+
+
+
+
 </div>
     </header>
 
@@ -208,66 +160,53 @@
   </div>
 
 
-    <main id="main" class="main">
+    <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          <div id="content" class="content">
+          
+
+          <div class="content post posts-expand">
             
 
-  <div id="posts" class="posts-expand">
-      <article itemscope itemtype="http://schema.org/Article">
+    
   
   
-  
-  <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/16/rp-benchmark-index/">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.keepswalking.com/2017/10/16/rp-benchmark-index/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="Liang">
       <meta itemprop="description" content="Keep Walking">
-      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Liang的风险平价观">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">风险评价策略（Risk Parity)基准指数
-
-          
+        <h1 class="post-title" itemprop="name headline">
+          风险评价策略（Risk Parity)基准指数
         </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-
-              
-                
               
 
               <time title="创建时间：2017-10-16 21:09:07 / 修改时间：21:12:09" itemprop="dateCreated datePublished" datetime="2017-10-16T21:09:07+08:00">2017-10-16</time>
             </span>
-          
-            
-
-            
-          
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Risk-Parity/" itemprop="url" rel="index"><span itemprop="name">Risk Parity</span></a></span>
-
-                
-                
-              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Risk-Parity/" itemprop="url" rel="index"><span itemprop="name">Risk Parity</span></a>
+                </span>
             </span>
-          
 
           
 
@@ -280,9 +219,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>6月份考完CFA leve I 就打算用R实现一个Risk Parity的策略，原本觉得很快就能搞定，但是没想到越写东西越多，细节的问题不断浮出水面，直到最近才完成了大部分的功能。写了1000多行的R代码，本篇就是梳理自己在编程过程中碰到的一些问题和想法。如果想了解Risk Parity量化的方法可以参考之前的《<a href="http://www.keepswalking.com/2017/07/23/risk-parity-quantitative-fundamental/" target="_blank" rel="noopener">Risk Parity 量化入门</a>》</p>
-<a id="more"></a>
-
+        <p>6月份考完CFA leve I 就打算用R实现一个Risk Parity的策略，原本觉得很快就能搞定，但是没想到越写东西越多，细节的问题不断浮出水面，直到最近才完成了大部分的功能。写了1000多行的R代码，本篇就是梳理自己在编程过程中碰到的一些问题和想法。如果想了解Risk Parity量化的方法可以参考之前的《<a href="http://www.keepswalking.com/2017/07/23/risk-parity-quantitative-fundamental/">Risk Parity 量化入门</a>》<br><a id="more"></a></p>
 <h2 id="最根本的想法：为什么要实现一个Risk-Parity，或为什么Risk-Parity能实现收益？"><a href="#最根本的想法：为什么要实现一个Risk-Parity，或为什么Risk-Parity能实现收益？" class="headerlink" title="最根本的想法：为什么要实现一个Risk Parity，或为什么Risk Parity能实现收益？"></a>最根本的想法：为什么要实现一个Risk Parity，或为什么Risk Parity能实现收益？</h2><p>我自己主要是参考了Ray Dalio关于全天候基金的一些介绍，觉得很有道理。主要有以下几点：</p>
 <ul>
 <li>长期来看，beta也就是资产的收益一定是超过现金的。</li>
@@ -328,7 +265,7 @@
 </ul>
 </li>
 </ul>
-<p>还是要提一句数据收集，没想到花掉那么多精力，之前也没有考虑指数是否是total return。随着测试的开始，渐渐意识到这个问题。而我自己也没有什么好的数据终端（花不起这个钱啊！）好在investing.com上的数据还比较全面。后来又发现了<a href="http://www.spindices.com这个网站，他是标普的一个关于指数汇编的网站，提供了非常全面的指数品种，还能下载数据，不过普通用户只能回溯10年的数据。看来以后花钱买数据的必然的了。回测的过程中发现了很多数据上的问题，需要自己不断地对数据进行修正，数据的准备和清理觉绝对是一件耗时耗精力的事情，远远超出了自己的预期。" target="_blank" rel="noopener">www.spindices.com这个网站，他是标普的一个关于指数汇编的网站，提供了非常全面的指数品种，还能下载数据，不过普通用户只能回溯10年的数据。看来以后花钱买数据的必然的了。回测的过程中发现了很多数据上的问题，需要自己不断地对数据进行修正，数据的准备和清理觉绝对是一件耗时耗精力的事情，远远超出了自己的预期。</a></p>
+<p>还是要提一句数据收集，没想到花掉那么多精力，之前也没有考虑指数是否是total return。随着测试的开始，渐渐意识到这个问题。而我自己也没有什么好的数据终端（花不起这个钱啊！）好在investing.com上的数据还比较全面。后来又发现了www.spindices.com这个网站，他是标普的一个关于指数汇编的网站，提供了非常全面的指数品种，还能下载数据，不过普通用户只能回溯10年的数据。看来以后花钱买数据的必然的了。回测的过程中发现了很多数据上的问题，需要自己不断地对数据进行修正，数据的准备和清理觉绝对是一件耗时耗精力的事情，远远超出了自己的预期。</p>
 <h2 id="资金管理"><a href="#资金管理" class="headerlink" title="资金管理"></a>资金管理</h2><p>本系统使用一个很简单的资金管理模型：1倍恒定杠杆（1份本金+1份融资）。也就是在任何情况下保持1倍左右的杠杆。从资金管理的角度来看，重点关注是否会爆仓。那么1倍杠杆爆仓会发生在所持的portfolio瞬时下跌50%。这种可能性从一个交易日的时间窗口来看几乎是不可能发生的。因为portfolio本身是分散投资的，包括了债券、股票和商品。另外由于是恒定1倍杠杆的算法，当资产价格下跌，导致超过1倍杠杆时就会触发系统卖出所持资产保证杠杆维持在1倍。</p>
 <h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p>以下罗列一些实现上的细节：</p>
 <ul>
@@ -340,9 +277,7 @@
 <li>将所有国外的资产价格换算成RMB（CNY），因为，在计算correlation的时候，必须用同种货币才有意义。</li>
 </ul>
 <h2 id="下一个阶段需要做哪些方面的改进？"><a href="#下一个阶段需要做哪些方面的改进？" class="headerlink" title="下一个阶段需要做哪些方面的改进？"></a>下一个阶段需要做哪些方面的改进？</h2><p>目前我最希望能加入的是timing model，也就择时调整个资产的比重。一个直观的想法是，如果债券处在高位了，那么我希望在Risk Parity里面减少债券的比重。同样，如果商品处在低位，那么我希望能增加该品种的比重。看了一些资料，目前的方向是引入momentum/trend following的方法，对各个品种的比重进行调整。当然也有很多的细节问题需要考虑，比如：当某个品种加速上冲的时候，也往往是最后一波行情了，比如2015年6月份的股灾。那么，这个时候，momentum/trend following并不能指出这种风险。这就需要设计一个指标，根据历史数据的统计加入判断，比如乖离率的统计。具体我也没有想清楚。有时候觉得，既然是一个benchmark，就不应加入这些目的是为了增加alpha的东西。而这些可以加入到我自己的真实的投资组合当中去。</p>
-<h2 id="回测演示"><a href="#回测演示" class="headerlink" title="回测演示"></a>回测演示</h2><p>最后就显示一下自己做的Risk Parity benchmark index的资金曲线。如下图所示：</p>
-<img src="/2017/10/16/rp-benchmark-index/rp_ts.jpg">
-
+<h2 id="回测演示"><a href="#回测演示" class="headerlink" title="回测演示"></a>回测演示</h2><p>最后就显示一下自己做的Risk Parity benchmark index的资金曲线。如下图所示：<br><img src="/2017/10/16/rp-benchmark-index/rp_ts.jpg" class=""></p>
 <p>红色是1倍杠杆的净值曲线，黑色是S&amp;P500 total return并换算成人民币。下面针对回测结果做一下说明和总结：</p>
 <ul>
 <li>首先，还是有点出乎意外，竟然能和S&amp;P500差不多打平，要知道我才用了1倍的杠杆。</li>
@@ -364,77 +299,103 @@
     
     
     
-        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
-  <img id="wechat_subscriber_qcode" src="/uploads/wx.jpg" alt="Liang wechat" style="width: 200px; max-width: 100%;">
-  <div>欢迎订阅我的微信公众号！</div>
-</div>
-
-      
         
-      
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
 
       <footer class="post-footer">
 
         
 
-          <div class="post-nav">
-            <div class="post-nav-next post-nav-item">
-              
-                <a href="/2017/07/26/How-did-I-prepare-CFA-level-I/" rel="next" title="随笔如何准备CFA Level I 【2017年6月】">
-                  <i class="fa fa-chevron-left"></i> 随笔如何准备CFA Level I 【2017年6月】
-                </a>
-              
-            </div>
 
-            <span class="post-nav-divider"></span>
-
-            <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2017/12/07/Trump-tax-reform/" rel="prev" title="Trump税改的宏观分析">
-                  Trump税改的宏观分析 <i class="fa fa-chevron-right"></i>
-                </a>
-              
-            </div>
-          </div>
         
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/07/26/How-did-I-prepare-CFA-level-I/" rel="prev" title="随笔如何准备CFA Level I 【2017年6月】">
+      <i class="fa fa-chevron-left"></i> 随笔如何准备CFA Level I 【2017年6月】
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/12/07/Trump-tax-reform/" rel="next" title="Trump税改的宏观分析">
+      Trump税改的宏观分析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
     
-  </div>
-  
-  
-  
   </article>
+  
+  
+  
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
   
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
   </div>
 
   <aside class="sidebar">
     <div class="sidebar-inner">
-        
-        
-        
-        
-      
 
       <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+        <li class="sidebar-nav-toc">
           文章目录
         </li>
-        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+        <li class="sidebar-nav-overview">
           站点概览
         </li>
       </ul>
@@ -442,7 +403,6 @@
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
           <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#最根本的想法：为什么要实现一个Risk-Parity，或为什么Risk-Parity能实现收益？"><span class="nav-number">1.</span> <span class="nav-text">最根本的想法：为什么要实现一个Risk Parity，或为什么Risk Parity能实现收益？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么不去追求alpha？"><span class="nav-number">2.</span> <span class="nav-text">为什么不去追求alpha？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Risk-Parity的组合里面该包括什么品种？"><span class="nav-number">3.</span> <span class="nav-text">Risk Parity的组合里面该包括什么品种？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#都有哪些资产入选到Risk-Parity基准指数里？"><span class="nav-number">4.</span> <span class="nav-text">都有哪些资产入选到Risk Parity基准指数里？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资金管理"><span class="nav-number">5.</span> <span class="nav-text">资金管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现细节"><span class="nav-number">6.</span> <span class="nav-text">实现细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下一个阶段需要做哪些方面的改进？"><span class="nav-number">7.</span> <span class="nav-text">下一个阶段需要做哪些方面的改进？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回测演示"><span class="nav-number">8.</span> <span class="nav-text">回测演示</span></a></li></ol></div>
-        
       </div>
       <!--/noindex-->
 
@@ -451,76 +411,31 @@
   <p class="site-author-name" itemprop="name">Liang</p>
   <div class="site-description" itemprop="description">Keep Walking</div>
 </div>
-  <nav class="site-state motion-element">
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        
           <a href="/archives/">
         
           <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
-    
-      
-      
       <div class="site-state-item site-state-categories">
-        
-          
             <a href="/categories/">
           
-        
-        
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
         <span class="site-state-item-count">7</span>
-        <span class="site-state-item-name">分类</span>
-        </a>
+        <span class="site-state-item-name">分类</span></a>
       </div>
-    
-      
-      
       <div class="site-state-item site-state-tags">
-        
-        
-        
-          
-        
         <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">标签</span>
-        
       </div>
-    
   </nav>
-  <div class="feed-link motion-element">
-    <a href="/atom.xml" rel="alternate">
-      <i class="fa fa-rss"></i>RSS
-    </a>
-  </div>
+</div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-      
-      
-        
-      
-      
-        
-      
-        <a href="https://weibo.com/ecmkit" title="Weibo &rarr; https://weibo.com/ecmkit" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+        <a href="https://weibo.com/ecmkit" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ecmkit" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
       </span>
-    
   </div>
 
 
@@ -535,17 +450,23 @@
       </div>
     </main>
 
-    <footer id="footer" class="footer">
+    <footer class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Liang</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.3.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
 
         
 
@@ -556,66 +477,43 @@
 
 
 
-
-
-
-
-        
       </div>
     </footer>
   </div>
 
   
-  <script src="/lib/jquery/index.js?v=3.4.1"></script>
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
-<script src="/js/schemes/muse.js?v=7.3.0"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/js/next-boot.js?v=7.3.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
+<script src="/js/utils.js"></script>
 
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+<script src="/js/motion.js"></script>
 
 
-
-  
-
+<script src="/js/schemes/muse.js"></script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<script src="/js/next-boot.js"></script>
 
 
 
 
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
 
