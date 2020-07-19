@@ -68,6 +68,7 @@
 <meta name="twitter:title" content="中国股票市场的风险溢价">
 <meta name="twitter:description" content="所谓的Risk Premium（以下简写成RP）是值市场的预期收益(expected return)减去无风险收益率（risk free rate）$ r_f $。RP是估值的关键，当对某只股票进行估值的时候，你首先需要确定其required return（或称discount rate）r。而$ r = r_f + \beta*RP $。那么中国市场的RP是多少呢？作为emerging mark">
 <meta name="twitter:image" content="http://yoursite.com/2020/07/14/cn-market-rp/irp.PNG">
+  <link rel="alternate" href="/atom.xml" title="Liang的风险平价观" type="application/atom+xml">
   <link rel="canonical" href="http://yoursite.com/2020/07/14/cn-market-rp/">
 
 
@@ -582,6 +583,11 @@
       </div>
     
   </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
       
@@ -720,7 +726,24 @@
   NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
     MathJax.Hub.Typeset();
   }, window.MathJax);
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
     
   
