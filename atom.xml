@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.keepswalking.com/"/>
-  <updated>2020-07-21T03:33:39.092Z</updated>
+  <updated>2020-07-27T03:42:46.796Z</updated>
   <id>https://www.keepswalking.com/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="https://www.keepswalking.com/2020/07/21/CN-implied-RP/"/>
     <id>https://www.keepswalking.com/2020/07/21/CN-implied-RP/</id>
     <published>2020-07-21T02:42:08.000Z</published>
-    <updated>2020-07-21T03:33:39.092Z</updated>
+    <updated>2020-07-27T03:42:46.796Z</updated>
     
-    <content type="html"><![CDATA[<p>说明：</p><ol><li>隐含风险溢价(Implied Equity Risk Premium)的具体计算参见：<a href="/2020/07/14/cn-market-rp/" title="中国股票市场的风险溢价">中国股票市场的风险溢价</a></li><li>市场参照对象为沪深300指数</li><li>每周更新</li></ol><a id="more"></a><div class="table-container"><table><thead><tr><th>时间</th><th>Implied RP</th><th>HS300点位</th><th>分红+回购%</th><th>今后5年growth%</th><th>无风险收益率%</th><th>永续增长率%</th><th>说明</th></tr></thead><tbody><tr><td>2020/7/17</td><td>5.34%</td><td>4544.7</td><td>2.08%</td><td>13.195%</td><td>2.95%</td><td>3.44%</td><td>- 无风险利率使用10年期国债利率<br>- 永续增长率使用10年国开债3.44%，认为中国5年后还是emerging market，因此永续增长率比无风险利率偏高一些<br>- 假设5年后的股息率提高至3.94%，即10年国开债+0.5%（当前10年国开债为3.44%）<br>- 5年逐步增长至目标分红率<br>目前Implied RP显示市场的估值有一些偏高</td></tr></tbody></table></div>]]></content>
+    <content type="html"><![CDATA[<p>说明：</p><ol><li>隐含风险溢价(Implied Equity Risk Premium)的具体计算参见：<a href="/2020/07/14/cn-market-rp/" title="中国股票市场的风险溢价">中国股票市场的风险溢价</a></li><li>市场参照对象为沪深300指数</li><li>每周更新</li></ol><a id="more"></a><div class="table-container"><table><thead><tr><th>时间</th><th>Implied RP</th><th>HS300点位</th><th>分红+回购%</th><th>今后5年growth%</th><th>无风险收益率%</th><th>永续增长率%</th><th>说明</th></tr></thead><tbody><tr><td>2020/7/24</td><td>5.56%</td><td>4505</td><td>94.52976</td><td>13.20%</td><td>2.86%</td><td>3.33%</td><td>Implied RP本周上升，因为周五大跌<br>分红不变，用值表示而非百分比<br>无风险利率这周下降9个基点</td></tr><tr><td>2020/7/17</td><td>5.34%</td><td>4544.7</td><td>2.08%</td><td>13.195%</td><td>2.95%</td><td>3.44%</td><td>- 无风险利率使用10年期国债利率<br>- 永续增长率使用10年国开债3.44%，认为中国5年后还是emerging market，因此永续增长率比无风险利率偏高一些<br>- 假设5年后的股息率提高至3.94%，即10年国开债+0.5%（当前10年国开债为3.44%）<br>- 5年逐步增长至目标分红率<br>目前Implied RP显示市场的估值有一些偏高</td></tr></tbody></table></div>]]></content>
     
     <summary type="html">
     
