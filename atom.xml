@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.keepswalking.com/"/>
-  <updated>2020-08-31T12:56:09.093Z</updated>
+  <updated>2020-09-04T10:24:55.996Z</updated>
   <id>https://www.keepswalking.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>基于FCFE重新计算中国市场隐含风险溢价</title>
+    <link href="https://www.keepswalking.com/2020/09/04/cn-market-implied-RP-with-FCFE/"/>
+    <id>https://www.keepswalking.com/2020/09/04/cn-market-implied-RP-with-FCFE/</id>
+    <published>2020-09-04T02:05:16.000Z</published>
+    <updated>2020-09-04T10:24:55.996Z</updated>
+    
+    <content type="html"><![CDATA[<p>原来根据分红数据来计算中国市场的隐含风险溢价，但是得出的结果不太合理。现在改用FCFE（free cash flow to equity）重新计算，所得结果为Implied Risk Premium = 7.37%。</p><a id="more"></a><p>之前根据Damodaran的方法计算了中国市场的隐含风险溢价（<a href="https://www.keepswalking.com/2020/07/14/cn-market-rp/">参考 https://www.keepswalking.com/2020/07/14/cn-market-rp/</a>），但是发现计算出来的风险溢价肯定是偏低的，和美国市场也差不多，也就是说我们这里的风险偏好极大，而且有点大到不合情理。所以只能通过拍脑袋，调高永续增长率，调高分红比例来拉高，但这样计算出来的风险溢价肯定不靠谱，因此就想办法改进计算方法。经过分析，发现原因所在，是因为，美国这样的成熟市场分红+回购是接近FCFE（free cash flow to equity）。因此，对于美国这样的成熟市场使用分红和回购就能获得比较准确的风险溢价。但是，在中国这样的发展中市场，分红和FCFE是有很大差别的。这个差别有多大？我们通过数据来说明：</p><ul><li>中证800指数在2020/8/31的股息率为1.63%</li><li>而同为中证800，在同一时间的FCFE率为4.058%</li></ul><p>显然对于中国市场，通过FCFE才能计算得到准确的隐含风险溢价。比较麻烦的是如何获取市场（中证800）的FCFE。下面我就罗列一下具体的改进和对应的数据。</p><p>首先是FCFE的计算，计算公式我使用的是：$ FCFE = NI-(1-DR)(FCInv-Dep)-(1-DR)WCInv $。使用该公式分别计算每一家中证800成分公司（金融机构除外）的FCFE。其中：</p><ul><li>NI为net income。采集数据的时候使用TTM方式获得最新net income。</li><li>DR为Debt to asset ratio。asset使用最新资产负债表季报数据。而Debt的计算使用了长期借款，短期借款，应付债券，租赁负债，应付短期债券这几个科目。</li><li>FCInv为fixed capital investment 即 CAPEX。根据现金流量表里：购建固定资产、无形资产和其他长期资产支付的现金，处置固定资产、无形资产和其他长期资产收回的现金净额这两个科目，并使用TTM方式获得最新的FCInv。</li><li>Dep为depreciation，根据资产负债表，固定资产—累计折旧，无形资产—累计摊销的期初和期末值来计算最新的折旧。</li><li>WCInv为change in non cash working capital investment，使用流动资产合计减货币资金获得current asset。使用流动负债合计减短期借款，减应付短期债券获得current liability。然后用current asset 减去 current liability。</li></ul><p>该公式假设公司的杠杆率是稳定的，因为需对近800家公司分别计算他们的自由现金流，作为一个整体，这个假设可认为是成立里的（law of large number）。</p><p>金融机构（包含银行和非银）的FCFE直接使用分红数据，没有分红的则认为FCFE为0</p><p>其实难点在收集整理数据。我使用Choice，但即使是付费的软件，还是发现有很多缺失的数据。整个数据的收集，清理大概花去一整天。</p><img src="/2020/09/04/cn-market-implied-RP-with-FCFE/fcfe.PNG" class=""><p>如上图所示，还需要以下这些输入：</p><ul><li>无风险利率，直接使用10年期国债的YTM。</li><li>一致性预期是通过卖方对中证800里成分公司未来三年的盈利预测计算获得。我通过加权平均得到一个增长率。但是，我不直接使用这个值，原因是像这样自底而上的增长率估算通常偏乐观。一般卖方总是给出偏乐观的预测。因此我做了处理，参见预期高速增长率。</li><li>GDP预期，是对中国GDP增长的预测，数据来自tradingeconomics.com。该值也是用来估计FCFE的增长率的。GDP作为一个宏观数据，来的更加客观。</li><li>预期高速增长率， 该值用于FCFE在近期的增长率。通过一致性预期和GDP增长率加权平均获得，权值分别是一致性预期占40%，GDP占60%。</li><li>永续增长率，直接使用无风险利率。</li></ul><p>在计算Implied Risk Premium的时候使用三段式DCF model，即高速增长阶段，过渡阶段和永续增长阶段。</p><p>最后，得到Implied Risk Premium = 7.37%，结合无风险利率可得discount rate=10.48%。个人认为这个值还是比较和合理的。相当于说长期来看中证800的收益率为10.48%。那么也从另一方面反应了当前股市的估值还算合理。当然，由于金融所占比重比较高，因此从更微观的角度来看，可能是一种结构性的分化，金融大盘股比较便宜，而中小盘（成长股）则比较贵了。但综合来看，这个风险溢价还是让我觉得A股的估值处在合理区间。</p><p>再来验证一下这个模型以及收集的数据是否合理。我测试了两个场景：</p><ul><li>市场跌30%，那么Implied Risk Premium = 10.21%，这个风险溢价比较有吸引力。</li><li>市场涨30%，那么Implied Risk Premium = 5.78%，这个风险溢价感觉上不足以补偿投资者承担的风险。要使得这个溢价上升至一个合理的水平，要么FCFE变大（企业有护城河，也就是中证800成分公司的质量变好），要么增长率变高（多数企业处于高速发展阶段，也就是总体经济变好，经济处于上升周期）。</li></ul><p>个人觉得这个模型给出的结果还是符合common sense的。接下来我每周都会更新中国市场的Implied Risk Premium。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;原来根据分红数据来计算中国市场的隐含风险溢价，但是得出的结果不太合理。现在改用FCFE（free cash flow to equity）重新计算，所得结果为Implied Risk Premium = 7.37%。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Valuation" scheme="https://www.keepswalking.com/categories/Valuation/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>招商银行估值（DDM法）</title>

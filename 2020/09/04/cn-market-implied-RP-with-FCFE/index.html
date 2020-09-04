@@ -20,19 +20,21 @@
     var CONFIG = {"hostname":"www.keepswalking.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)&#x3D;R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。">
+  <meta name="description" content="原来根据分红数据来计算中国市场的隐含风险溢价，但是得出的结果不太合理。现在改用FCFE（free cash flow to equity）重新计算，所得结果为Implied Risk Premium &#x3D; 7.37%。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Bottom-up Beta方法 -- 试算腾讯的beta">
-<meta property="og:url" content="https://www.keepswalking.com/2020/07/18/bottom-up-beta/index.html">
+<meta property="og:title" content="基于FCFE重新计算中国市场隐含风险溢价">
+<meta property="og:url" content="https://www.keepswalking.com/2020/09/04/cn-market-implied-RP-with-FCFE/index.html">
 <meta property="og:site_name" content="Liang的风险平价观">
-<meta property="og:description" content="Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)&#x3D;R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。">
+<meta property="og:description" content="原来根据分红数据来计算中国市场的隐含风险溢价，但是得出的结果不太合理。现在改用FCFE（free cash flow to equity）重新计算，所得结果为Implied Risk Premium &#x3D; 7.37%。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-07-18T13:03:53.000Z">
-<meta property="article:modified_time" content="2020-07-19T07:19:24.049Z">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/04/cn-market-implied-RP-with-FCFE/fcfe.PNG">
+<meta property="article:published_time" content="2020-09-04T02:05:16.000Z">
+<meta property="article:modified_time" content="2020-09-04T10:24:55.996Z">
 <meta property="article:author" content="Liang">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.keepswalking.com/2020/09/04/cn-market-implied-RP-with-FCFE/fcfe.PNG">
 
-<link rel="canonical" href="https://www.keepswalking.com/2020/07/18/bottom-up-beta/">
+<link rel="canonical" href="https://www.keepswalking.com/2020/09/04/cn-market-implied-RP-with-FCFE/">
 
 
 <script id="page-configurations">
@@ -45,7 +47,7 @@
   };
 </script>
 
-  <title>Bottom-up Beta方法 -- 试算腾讯的beta | Liang的风险平价观</title>
+  <title>基于FCFE重新计算中国市场隐含风险溢价 | Liang的风险平价观</title>
   
 
 
@@ -175,7 +177,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.keepswalking.com/2020/07/18/bottom-up-beta/">
+    <link itemprop="mainEntityOfPage" href="https://www.keepswalking.com/2020/09/04/cn-market-implied-RP-with-FCFE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -188,7 +190,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Bottom-up Beta方法 -- 试算腾讯的beta
+          基于FCFE重新计算中国市场隐含风险溢价
         </h1>
 
         <div class="post-meta">
@@ -197,16 +199,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-07-18 21:03:53" itemprop="dateCreated datePublished" datetime="2020-07-18T21:03:53+08:00">2020-07-18</time>
+              <time title="创建时间：2020-09-04 10:05:16 / 修改时间：18:24:55" itemprop="dateCreated datePublished" datetime="2020-09-04T10:05:16+08:00">2020-09-04</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-19 15:19:24" itemprop="dateModified" datetime="2020-07-19T15:19:24+08:00">2020-07-19</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -228,203 +224,42 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Beta是一个非常流行的个股风险度量尺度，通过大名鼎鼎的CAPM广为传播。当需要确定某个股的discount rate的时候最常用的方式就是通过CAPM：$ E(R)=R_f + \beta * (R_m-R_f) $ 。其中$R_m$ 是 expected market return。 </p>
+        <p>原来根据分红数据来计算中国市场的隐含风险溢价，但是得出的结果不太合理。现在改用FCFE（free cash flow to equity）重新计算，所得结果为Implied Risk Premium = 7.37%。</p>
 <a id="more"></a>
-<p>那么该如何获取beta呢？一种方式就是通过linear regression。将independent variables:$ R_m, R_f $ 以及dependent variable E(R) 通过linear regression便可获取参数beta了。但是，很多终端包括在网上找到的所有例子，在计算beta时不考虑$R_f$，直接通过$ E(R) = \beta*(R_m) $ 来确定beta；这种做法可能有一定的道理，由于$R_f$本身很小，比如国内10年期国债的yield在3%左右，如果以weekly return计算的话，对应的return才0.0577%，而国外的$R_f$就更不用说了，因此可以近似忽略。另外，如何选择risk free rate本身又是一件不太简单的事情。例如，对于成熟市场来说如美国来说，就可以有多种选择，除了国债外（10年期或其他？）还有Overnight Index Swap (OIS)等。</p>
-<p>接下来通过linear regression方法来计算腾讯的beta。因为腾讯在香港上市，因此，market return使用恒生指数。$ R_f $使用香港政府10年期国债。仿照Bloomberg计算beta的方法，使用最近2年的weekly return数据。我自己计算获得的结果是：</p>
+<p>之前根据Damodaran的方法计算了中国市场的隐含风险溢价（<a href="https://www.keepswalking.com/2020/07/14/cn-market-rp/">参考 https://www.keepswalking.com/2020/07/14/cn-market-rp/</a>），但是发现计算出来的风险溢价肯定是偏低的，和美国市场也差不多，也就是说我们这里的风险偏好极大，而且有点大到不合情理。所以只能通过拍脑袋，调高永续增长率，调高分红比例来拉高，但这样计算出来的风险溢价肯定不靠谱，因此就想办法改进计算方法。经过分析，发现原因所在，是因为，美国这样的成熟市场分红+回购是接近FCFE（free cash flow to equity）。因此，对于美国这样的成熟市场使用分红和回购就能获得比较准确的风险溢价。但是，在中国这样的发展中市场，分红和FCFE是有很大差别的。这个差别有多大？我们通过数据来说明：</p>
 <ul>
-<li>不包含$ R_f $，使用regression 计算得出的beta = 1.219</li>
-<li>包含$ R_f $，使用regression 计算得出的beta = 1.22</li>
-<li>直接使用公式：$Covariance(market<em>{rt}, stock</em>{rt}) / Var(market_{rt})$，计算得出的beta = 1.231</li>
+<li>中证800指数在2020/8/31的股息率为1.63%</li>
+<li>而同为中证800，在同一时间的FCFE率为4.058%</li>
 </ul>
-<p>可见，risk free rate对于beta的影响确实很小。另外，我在Choice终端上，使用同样的周期得到的结果是1.2123。而yahoo finance上，5 年，月return显示的beta是1.02，我用yahoo的数据自己算了一下，发现它的结果是不对的！应该是1.2471，接近我上面的计算结果。看来大网站的数据也不能相信。</p>
-<p>当然，本文不是讨论regression beta如何计算，从上面可以看出来，单个股票的beta其实是一个含有大量噪音的数据，如果直接就这么用，那心里肯定没底，十有八九这个beta的值是有问题的。因此，有一种“bottom-up Betas”的方法可以比较好的消除单只股票的beta的噪音。</p>
-<p>什么是“bottom-up beta”？就是根据目标公司所在的行业，在这些行业里找到同目标公司相似的一堆公司，用这些公司的beta计算平均值获得一个比较准确的beta。bottom-up beta的一大好处就是，当你找到足够多的样本公司，你估算出来的目标公司beta的standaerd error会大大降低。另一个好处就是即使当目标公司没有很多历史数据的情况下，你一样可以通过bottom-up beta计算得到目标公司的beta。</p>
-<p>以下是bottom-up beta的具体计算方法：</p>
-<ol>
-<li>确定目标公司所处的行业，目标公司有可能是单一行业，也有可能是跨多个行业。</li>
-<li>在每个行业里找到相似的公司，当然多多益善。如果是跨行业的公司，则需要分别在每个行业里面找到相似的公司，并获得这些公司的beta。然后分别按行业计算这些公司beta的平均值。</li>
-<li>计算unlevered beta。$ \beta_u = \beta_r / (1 + (1-tax) D/E) $ 。其中D/E是debt to equity ratio，这里指相似公司的平均D/E。</li>
-<li>确定目标公司在各业务上的比重，通常可以按照销售收入或opterating income来确定比重。当然最理想的方式是估算各业务的价值，以价值来确定比重。</li>
-<li>计算目标公司unlevered beta的加权平均值。个业务unlevered beta来自第3步，权重来自第4步。</li>
-<li>最后计算levered beta，$ \beta_{bottomup} = \beta_u (1+ (1-tax) (D/E))$，这里的D/E是目标公司的D/E。</li>
-</ol>
-<p>方法讲完了，接下来就以腾讯控股为例来确定她的bottom-up beta。按照以上第1步，先确定腾讯所在行业即她涉及哪些业务。腾讯的收入包括如下几块：</p>
+<p>显然对于中国市场，通过FCFE才能计算得到准确的隐含风险溢价。比较麻烦的是如何获取市场（中证800）的FCFE。下面我就罗列一下具体的改进和对应的数据。</p>
+<p>首先是FCFE的计算，计算公式我使用的是：$ FCFE = NI-(1-DR)(FCInv-Dep)-(1-DR)WCInv $。使用该公式分别计算每一家中证800成分公司（金融机构除外）的FCFE。其中：</p>
 <ul>
-<li>网络游戏</li>
-<li>数字内容，包括：视频（传统+短视频），音乐，阅读</li>
-<li>网络广告</li>
-<li>金融科技</li>
-<li>云及企业服务</li>
+<li>NI为net income。采集数据的时候使用TTM方式获得最新net income。</li>
+<li>DR为Debt to asset ratio。asset使用最新资产负债表季报数据。而Debt的计算使用了长期借款，短期借款，应付债券，租赁负债，应付短期债券这几个科目。</li>
+<li>FCInv为fixed capital investment 即 CAPEX。根据现金流量表里：购建固定资产、无形资产和其他长期资产支付的现金，处置固定资产、无形资产和其他长期资产收回的现金净额这两个科目，并使用TTM方式获得最新的FCInv。</li>
+<li>Dep为depreciation，根据资产负债表，固定资产—累计折旧，无形资产—累计摊销的期初和期末值来计算最新的折旧。</li>
+<li>WCInv为change in non cash working capital investment，使用流动资产合计减货币资金获得current asset。使用流动负债合计减短期借款，减应付短期债券获得current liability。然后用current asset 减去 current liability。</li>
 </ul>
-<p>而从GICS分类来看腾讯属于：信息技术-软件与服务-信息技术服务-互联网服务与基础设施。显然这样的分类不能体现腾讯的全部业务。一种比较仔细的做法是根据腾讯的业务，分别找到对应的公司。这里，我就比较粗粒度的找到一些我觉得相关的在香港上市的公司，见下表：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>证券代码</th>
-<th>证券名称</th>
-<th>所属GICS行业</th>
-<th>Beta</th>
-<th>总市值（亿元）</th>
-<th>D/E</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>09988.HK</td>
-<td>阿里巴巴-SW</td>
-<td>非日常生活消费品-零售业-互联网与直销零售-互联网与直销零售</td>
-<td>0.9181</td>
-<td>51,250.7415</td>
-<td>0.493</td>
-</tr>
-<tr>
-<td>03690.HK</td>
-<td>美团点评-W</td>
-<td>信息技术-软件与服务-软件-应用软件</td>
-<td>0.8307</td>
-<td>11,231.8189</td>
-<td>0.339</td>
-</tr>
-<tr>
-<td>01810.HK</td>
-<td>小米集团-W</td>
-<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
-<td>1.1003</td>
-<td>3,733.3914</td>
-<td>1.070</td>
-</tr>
-<tr>
-<td>00268.HK</td>
-<td>金蝶国际</td>
-<td>信息技术-软件与服务-软件-应用软件</td>
-<td>1.5451</td>
-<td>598.9131</td>
-<td>0.370</td>
-</tr>
-<tr>
-<td>08083.HK</td>
-<td>中国有赞</td>
-<td>非日常生活消费品-零售业-互联网与直销零售-互联网与直销零售</td>
-<td>1.1385</td>
-<td>282.5032</td>
-<td>1.693</td>
-</tr>
-<tr>
-<td>02013.HK</td>
-<td>微盟集团</td>
-<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
-<td>1.9174</td>
-<td>252.0400</td>
-<td>0.660</td>
-</tr>
-<tr>
-<td>00136.HK</td>
-<td>恒腾网络</td>
-<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
-<td>0.7934</td>
-<td>182.7986</td>
-<td>0.347</td>
-</tr>
-<tr>
-<td>01686.HK</td>
-<td>新意网集团</td>
-<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
-<td>1.1249</td>
-<td>136.7236</td>
-<td>2.696</td>
-</tr>
-<tr>
-<td>00777.HK</td>
-<td>网龙</td>
-<td>信息技术-软件与服务-软件-应用软件</td>
-<td>1.4445</td>
-<td>127.7308</td>
-<td>0.447</td>
-</tr>
-<tr>
-<td>00799.HK</td>
-<td>IGG</td>
-<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
-<td>1.5530</td>
-<td>93.0871</td>
-<td>0.272</td>
-</tr>
-<tr>
-<td>01089.HK</td>
-<td>乐游科技控股</td>
-<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
-<td>0.6488</td>
-<td>92.4880</td>
-<td>0.282</td>
-</tr>
-<tr>
-<td>00302.HK</td>
-<td>中手游</td>
-<td>信息技术-软件与服务-软件-应用软件</td>
-<td>1.0677</td>
-<td>77.5940</td>
-<td>0.403</td>
-</tr>
-<tr>
-<td>01675.HK</td>
-<td>亚信科技</td>
-<td>信息技术-软件与服务-软件-应用软件</td>
-<td>0.4815</td>
-<td>71.0940</td>
-<td>0.244</td>
-</tr>
-<tr>
-<td>01357.HK</td>
-<td>美图公司</td>
-<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
-<td>1.3548</td>
-<td>68.5665</td>
-<td>0.236</td>
-</tr>
-<tr>
-<td>01137.HK</td>
-<td>香港电视</td>
-<td>通讯服务-媒体与娱乐-娱乐-电影与娱乐</td>
-<td>1.1290</td>
-<td>56.4704</td>
-<td>0.656</td>
-</tr>
-<tr>
-<td>01806.HK</td>
-<td>汇付天下</td>
-<td>金融-综合金融-综合金融服务-其它综合性金融服务</td>
-<td>0.8373</td>
-<td>39.5487</td>
-<td>3.959</td>
-</tr>
-<tr>
-<td>BIDU.O</td>
-<td>百度</td>
-<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
-<td>1.4500</td>
-<td>423.1467</td>
-<td>0.751</td>
-</tr>
-<tr>
-<td>NTES.O</td>
-<td>网易</td>
-<td>信息技术-软件与服务-信息技术服务-互联网服务与基础设施</td>
-<td>0.7400</td>
-<td>631.9686</td>
-<td>0.599</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>以上数据来自东方财富Choice数据。</p>
-<p>一共12家上市公司。在查找这些公司的时候首先我考虑市值，毕竟腾讯的体量摆在那里，找对应的公司市值也不能太小，否则就没有参考意义了；另外，还得考虑上市时间，像网易，京东这样的公司虽然比较匹配，但是上市时间实在太短，历史数据太少，因此也没参考意义，我就直接拿美股的数据过来了（虽然跨市场，但只要样本足够多，通过大数定律还是可以得到比较准确的结果）。</p>
-<p>有了参照数据，很容易就得到了beta的平均值：1.115。然后计算unlevered beta，需要先获得相似公司的D/E，我这里将所有相关公司的detb和equity分别加总，再用这两个总和求得D/E = 0.573。然后还需要确定tax rate，根据国家政策，高新技术企业税率是15%，代入这些数据可得：</p>
-<p>$\beta_u$ = 1.115/(1+(1-0.15) * 0.573) = 0.75</p>
-<p>最后，为了获取腾讯的bottom-up beta，我们还需要确定腾讯的D/E，根据腾讯的财报，可得到她的D/E = 0.976。那么，对应的beta应该为：</p>
-<p>$\beta_{bottomup}$ = 0.75*(1+(1-0.15)*0.976) = 1.372</p>
-<p>这就是腾讯的beta。那么，将这个bottom-up beta同腾讯的regressison beta（=1.22）比大了一点（12.5%）。但1.372也是有一定道理的，因为，从D/E比来看，网易，百度，阿里都比腾讯低。因此，我个人觉得1.372这个值还是比较靠谱。确定beta作为股票估值的重要的一步到此完成。</p>
+<p>该公式假设公司的杠杆率是稳定的，因为需对近800家公司分别计算他们的自由现金流，作为一个整体，这个假设可认为是成立里的（law of large number）。</p>
+<p>金融机构（包含银行和非银）的FCFE直接使用分红数据，没有分红的则认为FCFE为0</p>
+<p>其实难点在收集整理数据。我使用Choice，但即使是付费的软件，还是发现有很多缺失的数据。整个数据的收集，清理大概花去一整天。</p>
+<img src="/2020/09/04/cn-market-implied-RP-with-FCFE/fcfe.PNG" class="">
+<p>如上图所示，还需要以下这些输入：</p>
+<ul>
+<li>无风险利率，直接使用10年期国债的YTM。</li>
+<li>一致性预期是通过卖方对中证800里成分公司未来三年的盈利预测计算获得。我通过加权平均得到一个增长率。但是，我不直接使用这个值，原因是像这样自底而上的增长率估算通常偏乐观。一般卖方总是给出偏乐观的预测。因此我做了处理，参见预期高速增长率。</li>
+<li>GDP预期，是对中国GDP增长的预测，数据来自tradingeconomics.com。该值也是用来估计FCFE的增长率的。GDP作为一个宏观数据，来的更加客观。</li>
+<li>预期高速增长率， 该值用于FCFE在近期的增长率。通过一致性预期和GDP增长率加权平均获得，权值分别是一致性预期占40%，GDP占60%。</li>
+<li>永续增长率，直接使用无风险利率。</li>
+</ul>
+<p>在计算Implied Risk Premium的时候使用三段式DCF model，即高速增长阶段，过渡阶段和永续增长阶段。</p>
+<p>最后，得到Implied Risk Premium = 7.37%，结合无风险利率可得discount rate=10.48%。个人认为这个值还是比较和合理的。相当于说长期来看中证800的收益率为10.48%。那么也从另一方面反应了当前股市的估值还算合理。当然，由于金融所占比重比较高，因此从更微观的角度来看，可能是一种结构性的分化，金融大盘股比较便宜，而中小盘（成长股）则比较贵了。但综合来看，这个风险溢价还是让我觉得A股的估值处在合理区间。</p>
+<p>再来验证一下这个模型以及收集的数据是否合理。我测试了两个场景：</p>
+<ul>
+<li>市场跌30%，那么Implied Risk Premium = 10.21%，这个风险溢价比较有吸引力。</li>
+<li>市场涨30%，那么Implied Risk Premium = 5.78%，这个风险溢价感觉上不足以补偿投资者承担的风险。要使得这个溢价上升至一个合理的水平，要么FCFE变大（企业有护城河，也就是中证800成分公司的质量变好），要么增长率变高（多数企业处于高速发展阶段，也就是总体经济变好，经济处于上升周期）。</li>
+</ul>
+<p>个人觉得这个模型给出的结果还是符合common sense的。接下来我每周都会更新中国市场的Implied Risk Premium。</p>
 
     </div>
 
@@ -469,13 +304,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/07/14/cn-market-rp/" rel="prev" title="中国股票市场的风险溢价">
-      <i class="fa fa-chevron-left"></i> 中国股票市场的风险溢价
+    <a href="/2020/08/30/valuation-cmbchina/" rel="prev" title="招商银行估值（DDM法）">
+      <i class="fa fa-chevron-left"></i> 招商银行估值（DDM法）
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/07/21/CN-implied-RP/" rel="next" title="A股市场隐含风险溢价(Implied Equity Risk Premium)">
-      A股市场隐含风险溢价(Implied Equity Risk Premium) <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
