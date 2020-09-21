@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.keepswalking.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="“2018年底，格力电器董事长兼总裁董明珠提出未来五年实现营业额6000亿元的目标”，董大姐挺会讲故事的。。。 估值结果：格力电器的内在价值大概为44.16元，而当前价格是56.55元，超过内在价值28%，个人觉得没啥安全边际。该内在价值同高瓴资本给出的价格比较接近。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="valuation gree">
+<meta property="og:url" content="https://www.keepswalking.com/2020/09/21/valuation-gree/index.html">
+<meta property="og:site_name" content="Liang的风险平价观">
+<meta property="og:description" content="“2018年底，格力电器董事长兼总裁董明珠提出未来五年实现营业额6000亿元的目标”，董大姐挺会讲故事的。。。 估值结果：格力电器的内在价值大概为44.16元，而当前价格是56.55元，超过内在价值28%，个人觉得没啥安全边际。该内在价值同高瓴资本给出的价格比较接近。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/21/valuation-gree/tucao1.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/21/valuation-gree/ebit.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/21/valuation-gree/change_in_wc.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/21/valuation-gree/fcff.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/21/valuation-gree/results.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/21/valuation-gree/no_2019.PNG">
+<meta property="article:published_time" content="2020-09-21T07:01:49.000Z">
+<meta property="article:modified_time" content="2020-09-21T08:01:37.609Z">
+<meta property="article:author" content="Liang">
+<meta property="article:tag" content="格力电器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.keepswalking.com/2020/09/21/valuation-gree/tucao1.PNG">
+
+<link rel="canonical" href="https://www.keepswalking.com/2020/09/21/valuation-gree/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>valuation gree | Liang的风险平价观</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4c923ee16dc6e5fc66d82e7f36f2a2ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Liang的风险平价观" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Liang的风险平价观</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-data">
+
+    <a href="/data/" rel="section"><i class="fa fa-database fa-fw"></i>数据</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.keepswalking.com/2020/09/21/valuation-gree/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Liang">
+      <meta itemprop="description" content="Keep Walking">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liang的风险平价观">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          valuation gree
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-21 15:01:49 / 修改时间：16:01:37" itemprop="dateCreated datePublished" datetime="2020-09-21T15:01:49+08:00">2020-09-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Valuation/" itemprop="url" rel="index"><span itemprop="name">Valuation</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>“2018年底，格力电器董事长兼总裁董明珠提出未来五年实现营业额6000亿元的目标”，董大姐挺会讲故事的。。。</p>
+<p>估值结果：格力电器的内在价值大概为44.16元，而当前价格是56.55元，超过内在价值28%，个人觉得没啥安全边际。该内在价值同高瓴资本给出的价格比较接近。</p>
+<a id="more"></a>
+<p>先来吐槽一下某头部券商的研报，参见下图：</p>
+<img src="/2020/09/21/valuation-gree/tucao1.PNG" class="">
+<p>永续阶段的ROE是23%。。。我挺无语的，永续阶段的ROE都差不多是腾讯控股现在的水平了。。。一般来说，永续阶段的ROE应该趋近于cost of equity，给个10%应该算挺高了。好了，吐槽完毕，言归正传。</p>
+<h2 id="故事叙述"><a href="#故事叙述" class="headerlink" title="故事叙述"></a>故事叙述</h2><p>从格力电器所处的生命周期来看，目前格力处于成熟增长阶段（Mature Growth）。 格力的主营业务是空调，2018年，我国空调每百户保有量仅111.1台，未来目标每百户保有量水平为204.5 台，还有 84.1%上涨空间。因此市场还有进一步发展的空间（数据来源申万宏源）。我毛估估达到这个保有量需要10年吧，<strong>差不多以每年6.3%的速度增长</strong>。</p>
+<p>主要竞争对手是美的，海尔，奥克斯。空调市场内部竞争激烈，2019年上半年，格力电器空调业务营收比美的高出了接近80亿元，但在今年上半年，美的暖通空调营收640亿元，超出了格力227亿元。主要原因在于格力疏于线上渠道的布局，而疫情恰恰对线下渠道冲击极大，转而有利于线上销售。</p>
+<p>从利好方面来看，格力正在实施渠道改革+股权激励。还有就是：“2018年底，格力电器董事长兼总裁董明珠提出未来五年实现营业额6000亿元的目标”，而2019年的营业收入为1,981.5亿元。还剩下4年要翻3倍，每年要实现30%的增长，呵呵了，大概把美的的空调业吃下来还能看到点希望。最后就是一直被大肆宣传的高瓴资本入主格力，我大致看了一下，高瓴资本管理的资产规模在4200多亿人民币，2019年12月2日公司控股股东格力集团与高瓴资本控制的珠海明骏签署股份转让协议，珠海明骏以 <strong>46.17元/股</strong>（相比较于底价44.17元/股溢价4.5%）的价格，受让格力集团持有的格力电器15%股权，合计转让价款为416.62 亿元。那差不多占到高瓴资本的10%，数目也不能算小。</p>
+<p>一致性预期显示：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>年份</th>
+<th>2020E</th>
+<th>2021E</th>
+<th>2022E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>营业总收入(百万元)</td>
+<td>181,178.81</td>
+<td>203,728.26</td>
+<td>222,818.10</td>
+</tr>
+<tr>
+<td>增长率(%)</td>
+<td>-9.64</td>
+<td>12.45</td>
+<td>9.37</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="无风险利率"><a href="#无风险利率" class="headerlink" title="无风险利率"></a>无风险利率</h2><p>10年期国债：<strong>3.12%</strong></p>
+<h2 id="市场风险溢价"><a href="#市场风险溢价" class="headerlink" title="市场风险溢价"></a>市场风险溢价</h2><p>对于中国市场，使用最新的Implied Risk Premium = 6.37%，参见：<a href="/2020/07/21/CN-implied-RP/" title="A股市场隐含风险溢价">A股市场隐含风险溢价</a>。</p>
+<p>由于格力有部分营收来自海外市场，因此需要考虑海外市场的Risk Premium。但是，格力的财报里面没有披露海外市场的营收细节，统一归为“外销”！再根据中报，内销占比76%，但是，这个数据由于受到疫情的影响，可能是偏低的。因此，我查看了2019，2018的年报数据，这个比例还是比较稳定。内销占比87%，外销13%。我觉得格力的海外市场份额会逐步扩大，因此我试用80%，20%。</p>
+<p>那么接下来的问题就是这些外销市场到底在哪里，我只能假设以东南亚为主了。那么由Damodaran的数据可得亚洲风险溢价的加权平均=7.29%，那么由下表：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>地区</th>
+<th>销售额</th>
+<th>Risk Premium</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中国</td>
+<td>80%</td>
+<td>6.37%</td>
+</tr>
+<tr>
+<td>亚洲（除中国）</td>
+<td>20%</td>
+<td>7.29%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>那么根据销售额加权平均可得格力电器对应的<strong>市场风险溢价为：6.55%</strong>。</p>
+<h2 id="Estimate-bottom-up-unlevered-beta"><a href="#Estimate-bottom-up-unlevered-beta" class="headerlink" title="Estimate bottom-up unlevered beta"></a>Estimate bottom-up unlevered beta</h2><p>在相似行业内，过滤出54家公司。我使用了2种行业分类，一种是申万行业，选择“家用电器”（一级行业）；另一个使用GICS行业，选择“非日常生活消费品-耐用消费品与服装-家庭耐用消费品-家用电器”。一个获得57家公司。<strong>beta中值=0.9228</strong>。</p>
+<p>然后，根据这些样本公司可以获得一下数据：</p>
+<ul>
+<li><strong>D/E 中值 = 0.107</strong></li>
+<li><strong>cash / firm value 中值 = 0.1</strong>，其中Firm value = Market value of Equity + Market value of Debt</li>
+<li>税率为25% （中国企业所得税）</li>
+</ul>
+<p>那么Unlevered beta = Regression beta / (1 + (1-tax rate) D/E) = 0.9228 / (1+(1-25%)0.107) = 0.854</p>
+<p>Cash-adjusted beta = Unlevered beta / (1 – Cash/ Firm Value) = 0.854 / (1 - 0.1) = 0.949</p>
+<h2 id="Estimate-market-value-of-equity-and-debt"><a href="#Estimate-market-value-of-equity-and-debt" class="headerlink" title="Estimate market value of equity and debt"></a>Estimate market value of equity and debt</h2><p>2020年中报第150页给出了有息债务的详情：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>报表项目</th>
+<th>金额（元）</th>
+<th>利率区间 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>短期借款</td>
+<td>20,437,330,880.32</td>
+<td>1.35%-3.35%</td>
+</tr>
+<tr>
+<td>向中央银行借款</td>
+<td>47,253,790.52</td>
+<td>2.25%</td>
+</tr>
+<tr>
+<td>吸收存款及同业存放</td>
+<td>228,625,054.88</td>
+<td>0.35%-4.13%</td>
+</tr>
+<tr>
+<td>拆入资金</td>
+<td>1,500,163,611.11</td>
+<td>2.25%-2.78%</td>
+</tr>
+<tr>
+<td>卖出回购金融资产款</td>
+<td>294,016,753.97</td>
+<td>2.08%</td>
+</tr>
+<tr>
+<td>长期借款</td>
+<td>1,233,576,700.78</td>
+<td>0.41%-6.18%</td>
+</tr>
+<tr>
+<td>其他流动负债</td>
+<td>3,008,591,296.02</td>
+<td>1.39%</td>
+</tr>
+<tr>
+<td>合计</td>
+<td>26,749,558,087.60</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>《表1》</p>
+<p>即26749.55809百万元</p>
+<p>equity = </p>
+<ul>
+<li>2020/9/9 收盘价 = 54.5</li>
+<li>总股本 = 6,015,730,878</li>
+</ul>
+<p>可得：327857.3329 百万元人民币</p>
+<p>因此，可得格力电器的<strong>D/E</strong> = 26749.55809 / 327857.3329 = <strong>0.0816</strong></p>
+<h2 id="Estimate-bottom-up-levered-beta"><a href="#Estimate-bottom-up-levered-beta" class="headerlink" title="Estimate bottom-up levered beta"></a>Estimate bottom-up levered beta</h2><p>由格力 D/E=0.0816， Cash-adjusted beta = 0.949 可得 <strong>levered beta</strong> = Cash-adjusted beta (1 + (1-tax rate) D/E) = 0.931 (1+(1-25%)0.0816) = <strong>1.007</strong></p>
+<h2 id="Estimate-pre-tax-cost-of-debt"><a href="#Estimate-pre-tax-cost-of-debt" class="headerlink" title="Estimate pre-tax cost of debt"></a>Estimate pre-tax cost of debt</h2><p>由《表1》做一些加工，下表中利率区间由中报直接给出：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>报表项目</th>
+<th>金额</th>
+<th>利率区间</th>
+<th>利率中值</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>短期借款</td>
+<td>20,437,330,880.32</td>
+<td>1.35%-3.35%</td>
+<td>2.35%</td>
+<td>76.40%</td>
+</tr>
+<tr>
+<td>向中央银行借款</td>
+<td>47,253,790.52</td>
+<td>2.25%</td>
+<td>2.25%</td>
+<td>0.18%</td>
+</tr>
+<tr>
+<td>吸收存款及同业存放</td>
+<td>228,625,054.88</td>
+<td>0.35%-4.13%</td>
+<td>2.24%</td>
+<td>0.85%</td>
+</tr>
+<tr>
+<td>拆入资金</td>
+<td>1,500,163,611.11</td>
+<td>2.25%-2.78%</td>
+<td>2.52%</td>
+<td>5.61%</td>
+</tr>
+<tr>
+<td>卖出回购金融资产款</td>
+<td>294,016,753.97</td>
+<td>2.08%</td>
+<td>2.08%</td>
+<td>1.10%</td>
+</tr>
+<tr>
+<td>长期借款</td>
+<td>1,233,576,700.78</td>
+<td>0.41%-6.18%</td>
+<td>3.30%</td>
+<td>4.61%</td>
+</tr>
+<tr>
+<td>其他流动负债</td>
+<td>3,008,591,296.02</td>
+<td>1.39%</td>
+<td>1.39%</td>
+<td>11.25%</td>
+</tr>
+<tr>
+<td>合计</td>
+<td>26,749,558,087.60</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>可见，格力电器大部分的有息债务为短期债务。由于财报里只给出了利率范围，我只能用利率中值作为估计值，最后根据加权平均可得格力电器的<strong>pre-tax costs of debt = 2.29%</strong>。</p>
+<h2 id="Estimate-a-tax-rate"><a href="#Estimate-a-tax-rate" class="headerlink" title="Estimate a tax rate"></a>Estimate a tax rate</h2><p>根据最近5年年报数据，<strong>effective tax rate = 15.5%</strong>。</p>
+<p>而<strong>marginal tax rate 应该为25%</strong>。</p>
+<h2 id="Estimate-a-cost-of-capital"><a href="#Estimate-a-cost-of-capital" class="headerlink" title="Estimate a cost of capital"></a>Estimate a cost of capital</h2><p>先计算cost of equity:</p>
+<ul>
+<li>levered beta = 1.007</li>
+<li>risk free rate = 3.12%</li>
+<li>equity risk premium = 6.55%</li>
+</ul>
+<p>可得 r = 3.12% + 1.007*6.55% = 9.71%</p>
+<p>由：</p>
+<ul>
+<li>pre-tax costs of debt = 2.29%</li>
+<li>Market value of equity = 327857.3329 百万元人民币</li>
+<li>Book value of debt = 26749.55809百万元人民币 （近似认为是market value）</li>
+<li>Tax rate = 25%</li>
+</ul>
+<p>可得WACC = 9.11%</p>
+<h2 id="资本化研发费用"><a href="#资本化研发费用" class="headerlink" title="资本化研发费用"></a>资本化研发费用</h2><p>首先一个问题是有没有必要对格力电器的研发费用进行资本化？对比腾讯来看，2019年腾讯的研发费用占销售额为8%，而格力电器的研发费用占比3%。对于格力这样的重资产公司，我觉得暂时可以不用考虑研发费用的资本化。</p>
+<h2 id="Estimate-an-adjusted-operating-income"><a href="#Estimate-an-adjusted-operating-income" class="headerlink" title="Estimate an adjusted operating income"></a>Estimate an adjusted operating income</h2><p>根据一致性预期：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>年份</th>
+<th>2020E</th>
+<th>2021E</th>
+<th>2022E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>营业总收入(百万元)</td>
+<td>181,178.81</td>
+<td>203,728.26</td>
+<td>222,818.10</td>
+</tr>
+<tr>
+<td>增长率(%)</td>
+<td>-9.64</td>
+<td>12.45</td>
+<td>9.37</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>注：以上数据是总收入，包括了利息收入还有手续费及佣金。</p>
+<p>个人觉得这个预期偏乐观，我自己的预期是，以2019年的销售额为基准（198,156.86<br>百万元，该数据不包括利息收入），<strong>到2021年才能回到这个水平。由于最近几年在多元化方面投入，接下来的3年得以在营收上保持较高速的增长：25%~15%，最后每年以6.3%的速度增长直至第10年</strong>。</p>
+<p>由财报上看到最近5年EBIT/Revenue维持在高位，平均在15.3%。但是，接下来面对美的的竞争，打折促销免不了，随着销售费用的上升，EBIT/Revenue肯定会下降。因此，推测，<strong>最近2年EBIT/Revenue分别为8%， 7%；之后3年回升到15.3%</strong>；然后逐渐回归到行业平均水平，大概在6%样子（数据来源Damodaran）。</p>
+<img src="/2020/09/21/valuation-gree/ebit.PNG" class="">
+<p>空调营收的占比在2019年为70%。格力电器有意拓展不同方向上的业务，包括生活电器，智能装备，但是目前的营收占比很小，以前也做过手机，但是失败了。如果说，格力电器能够在其他业务上实现突破，那么，营收的高增长和高EBIT/Revenue是有可能的。格力为了实现多元化应该会在兼并收购上增加投入，从现金流量表来看，近几年在投资这块确实增加了不少。</p>
+<h2 id="Estimate-net-capital-expenditures"><a href="#Estimate-net-capital-expenditures" class="headerlink" title="Estimate net capital expenditures"></a>Estimate net capital expenditures</h2><p>Net Capex 包括2部分：</p>
+<ul>
+<li>Capex，这部分包括如下科目：<ul>
+<li>处置固定资产、无形资产和其他长期资产收回的现金净额（-）</li>
+<li>购建固定资产、无形资产和其他长期资产支付的现金(+)</li>
+<li><strong>兼并收购</strong>，而这部分包括如下科目：<ul>
+<li>投资支付的现金(+)</li>
+<li>取得子公司及其他营业单位支付的现金净额(+)</li>
+<li>支付其他与投资活动有关的现金(+)</li>
+<li>收到其他与投资活动有关的现金(-)</li>
+<li>处置子公司及其他营业单位收到的现金净额(-)</li>
+<li>收回投资收到的现金(-)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>折旧摊销，这部分包括如下科目：<ul>
+<li>固定资产和投资性房地产折旧(+)</li>
+<li>无形资产摊销(+)</li>
+</ul>
+</li>
+</ul>
+<p>由于资本性支出和折旧摊销的数据是很难准确估计，尤其是关于兼并收购。根据过去10年的财务数据，我估计Capex/Revenue （不包括兼并收购） = 2.57%；并购/Revenue = 8.23%，两者合计即<strong>Capex/Revenue （包括兼并收购）= 10.8%</strong>。</p>
+<p>同时，根据近10年数据估计：<strong>Depreciation/Revenue = 1.28%</strong>。</p>
+<p>因此，可得<strong>net capex / Revenue = 10.8% - 1.28% = 9.53%</strong>。</p>
+<p>还是需要指出，这块数据的估计存在很大的变数，如果例如，格力电器加大多元化的力度，那么对应的资本开支肯定会大幅增加，这降导致自由现金流的减少，但与此同时，公司的增长速度可能变得更高。是否需要对Net Capex做调整需要后续数据的观察。</p>
+<h2 id="Estimate-non-cash-working-capital"><a href="#Estimate-non-cash-working-capital" class="headerlink" title="Estimate non-cash working capital"></a>Estimate non-cash working capital</h2><p>注意，这里其实是要估计non-cash working capital的change。同Capex一样，working capital也很难估计，每年的变化很大。因此，通过拉长时间做平滑处理。从change in working capital的历史数据看存在着明显的周期性！在去库存周期，如：13年至15年，change in working capital是大于零的，即working capital变大，也就是应收增加而应付减少，可以理解为给渠道供应商提供更多的信用。而在补库存周期，如：16年至19年，change in working capital是小于零的，即working capital变小，也就是应收减少而应付增加，可以理解为给收紧给渠道供应商的信用。</p>
+<img src="/2020/09/21/valuation-gree/change_in_wc.PNG" class="">
+<p>对于这样存在明显周期性特征的行业，只能通过平滑处理，我实在是没有能力估计接下来5到10年到底是什么周期。根据最近10年的数据，预测<strong>change in working capital 为 0.5%</strong>。</p>
+<h2 id="Estimate-Free-Cash-Flow-to-Firm"><a href="#Estimate-Free-Cash-Flow-to-Firm" class="headerlink" title="Estimate Free Cash Flow to Firm"></a>Estimate Free Cash Flow to Firm</h2><p>参见 Value the firm/stock</p>
+<h2 id="Estimate-a-historical-growth-rate-in-earnings"><a href="#Estimate-a-historical-growth-rate-in-earnings" class="headerlink" title="Estimate a historical growth rate in earnings"></a>Estimate a historical growth rate in earnings</h2><p>参见 Value the firm/stock</p>
+<h2 id="Estimate-growth-in-earnings-from-fundamentals"><a href="#Estimate-growth-in-earnings-from-fundamentals" class="headerlink" title="Estimate growth in earnings from fundamentals"></a>Estimate growth in earnings from fundamentals</h2><p>参见 Value the firm/stock</p>
+<h2 id="Choose-a-lenght-for-high-growth-period"><a href="#Choose-a-lenght-for-high-growth-period" class="headerlink" title="Choose a lenght for high growth period"></a>Choose a lenght for high growth period</h2><p>参见 Value the firm/stock</p>
+<h2 id="Choose-a-DCF-model"><a href="#Choose-a-DCF-model" class="headerlink" title="Choose a DCF model"></a>Choose a DCF model</h2><p>三段式：前5年为高增长期，后5年为过渡期，最后为永续增长期。永续增长率为设定为无风险利率</p>
+<h2 id="期权处理"><a href="#期权处理" class="headerlink" title="期权处理"></a>期权处理</h2><p>格力电器目前没有期权激励计划，但是通过回购股票用于股权激励。回购的股票不影响share outstanding。</p>
+<h2 id="Value-the-firm-stock"><a href="#Value-the-firm-stock" class="headerlink" title="Value the firm/stock"></a>Value the firm/stock</h2><p>参见下图：</p>
+<img src="/2020/09/21/valuation-gree/fcff.PNG" class="">
+<p><strong>以下的这些假设将直接影响到估值的结果</strong>：</p>
+<ul>
+<li>以2019年的销售额为基准（198,156.86百万元，该数据不包括利息收入），到2021年才能回到这个水平。（base year是指2020年中）</li>
+<li>第3，4，5年营销增长分别为：25%，20%，15%。主要是因为格力电器在兼并收购方面的资本性支出，以实现营收多元化。</li>
+<li>operating margin最近2年会比较低，原因是考虑到市场竞争加剧，最终趋向6%，包括永续阶段。</li>
+<li>Tax rate最近使用有效税率15.5%，后期趋向边际税率25%。</li>
+<li>Reinvestment包括net Capex和Change in working capital，具体假设参见相关章节。这块的变数也会比较多</li>
+</ul>
+<p>最终计算结果参见下图：</p>
+<img src="/2020/09/21/valuation-gree/results.PNG" class="">
+<ul>
+<li>格力的股权结构还是比较简单，没有期权或Restricted Stock Grants之类。</li>
+<li><strong>最终计算的结果是44.16元</strong>，而当前价格是56.55元（2020/9/21），超过内在价值28%，个人觉得没啥安全边际了。</li>
+<li>我计算出来的内在价值同高瓴资本给出的价格比较接近。</li>
+</ul>
+<p>最后吐槽一下格力电器的网站，上面的年报信息是不全的。比如没有2019年的年报，很多年报的链接是无效的，，，作为一个大公司这太不应该了！</p>
+<img src="/2020/09/21/valuation-gree/no_2019.PNG" class="">
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%A0%BC%E5%8A%9B%E7%94%B5%E5%99%A8/" rel="tag"># 格力电器</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/04/cn-market-implied-RP-with-FCFE/" rel="prev" title="基于FCFE重新计算中国市场隐含风险溢价">
+      <i class="fa fa-chevron-left"></i> 基于FCFE重新计算中国市场隐含风险溢价
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#故事叙述"><span class="nav-number">1.</span> <span class="nav-text">故事叙述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#无风险利率"><span class="nav-number">2.</span> <span class="nav-text">无风险利率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#市场风险溢价"><span class="nav-number">3.</span> <span class="nav-text">市场风险溢价</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-bottom-up-unlevered-beta"><span class="nav-number">4.</span> <span class="nav-text">Estimate bottom-up unlevered beta</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-market-value-of-equity-and-debt"><span class="nav-number">5.</span> <span class="nav-text">Estimate market value of equity and debt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-bottom-up-levered-beta"><span class="nav-number">6.</span> <span class="nav-text">Estimate bottom-up levered beta</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-pre-tax-cost-of-debt"><span class="nav-number">7.</span> <span class="nav-text">Estimate pre-tax cost of debt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-a-tax-rate"><span class="nav-number">8.</span> <span class="nav-text">Estimate a tax rate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-a-cost-of-capital"><span class="nav-number">9.</span> <span class="nav-text">Estimate a cost of capital</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资本化研发费用"><span class="nav-number">10.</span> <span class="nav-text">资本化研发费用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-an-adjusted-operating-income"><span class="nav-number">11.</span> <span class="nav-text">Estimate an adjusted operating income</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-net-capital-expenditures"><span class="nav-number">12.</span> <span class="nav-text">Estimate net capital expenditures</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-non-cash-working-capital"><span class="nav-number">13.</span> <span class="nav-text">Estimate non-cash working capital</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-Free-Cash-Flow-to-Firm"><span class="nav-number">14.</span> <span class="nav-text">Estimate Free Cash Flow to Firm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-a-historical-growth-rate-in-earnings"><span class="nav-number">15.</span> <span class="nav-text">Estimate a historical growth rate in earnings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Estimate-growth-in-earnings-from-fundamentals"><span class="nav-number">16.</span> <span class="nav-text">Estimate growth in earnings from fundamentals</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Choose-a-lenght-for-high-growth-period"><span class="nav-number">17.</span> <span class="nav-text">Choose a lenght for high growth period</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Choose-a-DCF-model"><span class="nav-number">18.</span> <span class="nav-text">Choose a DCF model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#期权处理"><span class="nav-number">19.</span> <span class="nav-text">期权处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Value-the-firm-stock"><span class="nav-number">20.</span> <span class="nav-text">Value the firm&#x2F;stock</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Liang</p>
+  <div class="site-description" itemprop="description">Keep Walking</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ecmkit" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ecmkit" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Liang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
