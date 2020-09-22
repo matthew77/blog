@@ -155,9 +155,9 @@
     <link href="https://www.keepswalking.com/2020/07/21/CN-implied-RP/"/>
     <id>https://www.keepswalking.com/2020/07/21/CN-implied-RP/</id>
     <published>2020-07-21T02:42:08.000Z</published>
-    <updated>2020-09-10T03:39:15.055Z</updated>
+    <updated>2020-09-22T05:40:07.080Z</updated>
     
-    <content type="html"><![CDATA[<p>说明：</p><ol><li>隐含风险溢价(Implied Equity Risk Premium)的具体计算参见：<a href="/2020/07/14/cn-market-rp/" title="中国股票市场的风险溢价">中国股票市场的风险溢价</a></li><li>市场参照对象为沪深300指数</li><li>每周更新</li></ol><a id="more"></a><div class="table-container"><table><thead><tr><th>时间</th><th>Implied RP</th><th>HS800点位</th><th>FCFE</th><th>高速增长率%</th><th>无风险收益率%</th><th>永续增长率%</th><th>说明</th></tr></thead><tbody><tr><td>2020/9/2</td><td>7.37%</td><td>5153.16</td><td>151.14</td><td>15.1%</td><td>3.11%</td><td>3.11%</td><td>计算方法从分红改为自由现金流<br>无风险利率持续走高，体现了对通胀的预期<br>5.45% 的RP说明市场风险偏好比较高，美股的RP大约在5.23%，A股明显偏贵</td></tr></tbody></table></div>]]></content>
+    <content type="html"><![CDATA[<p>说明：</p><ol><li>隐含风险溢价(Implied Equity Risk Premium)的具体计算参见：<a href="/2020/07/14/cn-market-rp/" title="中国股票市场的风险溢价">中国股票市场的风险溢价</a></li><li>市场参照对象为沪深300指数</li><li>每周更新</li></ol><a id="more"></a><div class="table-container"><table><thead><tr><th>时间</th><th>Implied RP</th><th>HS800点位</th><th>FCFE</th><th>高速增长率%</th><th>无风险收益率%</th><th>永续增长率%</th><th>说明</th></tr></thead><tbody><tr><td>2020/9/2</td><td>7.37%</td><td>5153.16</td><td>151.14</td><td>15.1%</td><td>3.11%</td><td>3.11%</td><td>计算方法从分红改为自由现金流<br>无风险利率持续走高，体现了对通胀的预期</td></tr></tbody></table></div>]]></content>
     
     <summary type="html">
     
