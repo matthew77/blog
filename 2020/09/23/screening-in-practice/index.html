@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.keepswalking.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文设计了一个能长期跑赢沪深300指数的screen。并通过回测观察了该screen在不同市场环境下的表现。对基于价值的股票投资有一定的指导意义。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个基于价值的screen（筛选器） -- 大概是最简单的量化投资">
+<meta property="og:url" content="https://www.keepswalking.com/2020/09/23/screening-in-practice/index.html">
+<meta property="og:site_name" content="Liang的风险平价观">
+<meta property="og:description" content="本文设计了一个能长期跑赢沪深300指数的screen。并通过回测观察了该screen在不同市场环境下的表现。对基于价值的股票投资有一定的指导意义。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/23/screening-in-practice/Multiple.jpg">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/23/screening-in-practice/zscore.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/23/screening-in-practice/backtest1.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/23/screening-in-practice/backtest2015.PNG">
+<meta property="article:published_time" content="2020-09-23T06:13:52.000Z">
+<meta property="article:modified_time" content="2020-09-29T03:14:26.048Z">
+<meta property="article:author" content="Liang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.keepswalking.com/2020/09/23/screening-in-practice/Multiple.jpg">
+
+<link rel="canonical" href="https://www.keepswalking.com/2020/09/23/screening-in-practice/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>一个基于价值的screen（筛选器） -- 大概是最简单的量化投资 | Liang的风险平价观</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4c923ee16dc6e5fc66d82e7f36f2a2ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Liang的风险平价观" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Liang的风险平价观</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-data">
+
+    <a href="/data/" rel="section"><i class="fa fa-database fa-fw"></i>数据</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.keepswalking.com/2020/09/23/screening-in-practice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Liang">
+      <meta itemprop="description" content="Keep Walking">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liang的风险平价观">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一个基于价值的screen（筛选器） -- 大概是最简单的量化投资
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-23 14:13:52" itemprop="dateCreated datePublished" datetime="2020-09-23T14:13:52+08:00">2020-09-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-29 11:14:26" itemprop="dateModified" datetime="2020-09-29T11:14:26+08:00">2020-09-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E7%AE%A1%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">量化投资组合管理</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文设计了一个能长期跑赢沪深300指数的screen。并通过回测观察了该screen在不同市场环境下的表现。对基于价值的股票投资有一定的指导意义。</p>
+<a id="more"></a>
+<p>量化的第一步通常是确定投资标的池，面对几千只股票，通过初步的筛选，哪些是符合标准并进入池子中。这步工作不太可能人工完成，因为数量实在太大。那么，接下来一个问题的我该如何设计一个screening？这就涉及到你的投资风格问题了，通常来说，有如下这些风格：</p>
+<ul>
+<li>价值股投资；格雷厄姆，巴菲特都是祖师爷。</li>
+<li>成长股投资；贵有贵的道理。。。</li>
+<li>趋势投资；顺势而为。</li>
+<li>逆向投资；人弃我取。</li>
+<li>跟投；别人投啥我投啥，比如跟踪外资策略。</li>
+<li>。。。</li>
+</ul>
+<p>我比较认同价值投资，因此就基于价值投资的理念，设计一个screening。顺便扯一下题外话，买P/E是100倍的股票未必就不是价值投资。价值投资的本质上还是看买入的价格是否低于内在价值，言归正传。既然目标是做一个价值投资的screen，那就来明确一下该目标背后的含义。我希望通过该screen，找到被错误定价的公司，即被低估的公司，价格便宜，但没有明显的负面因素造成这种低估，例如高风险，低增长，或低质量的增长（需要很高的资本投入等）。换句话说，<strong>我希望找到一组股票，在低价格乘数（multiples）区间交易（e.g.低P/E），公司风险低，有高的增长，并且增长的质量好</strong>。这么写出来是不是觉得在做梦啊？！Too good to be true！这就对了，凭啥赚钱那么容易？！你都觉得不可能了说明市场其实在大部分时间还是有效的！但是，虽然觉得概率低，试着找找看这样的股票也没啥坏处，指不定就真在地上找到了皮夹子。</p>
+<h2 id="Screen-维度"><a href="#Screen-维度" class="headerlink" title="Screen 维度"></a>Screen 维度</h2><p>接下来我就从下面几个维度开始设计screening：</p>
+<ul>
+<li>价格</li>
+<li>风险</li>
+<li>成长性</li>
+<li>成长质量</li>
+</ul>
+<h3 id="Screen-for-price"><a href="#Screen-for-price" class="headerlink" title="Screen for price"></a>Screen for price</h3><p>衡量价格一般用价格乘数，相关指标有很多，最常用的P/E，P/B。需要指出一个大原则，如下图所示：</p>
+<img src="/2020/09/23/screening-in-practice/Multiple.jpg" class="">
+<p>即分子与分母从财务角度必须一致，如果分子是equity value，那分母也必须是equity value。同样，如果分子是enterprise value，那分母也必须是enterprise value。举例来说，P/E 是满足一致性要求的，P（price）是equity value，E(earning, net income)也是equity value。</p>
+<p>由于不同行业有其自身的特征，比如有些行业杠杆率高，为了实现跨行业的可比性，我使用enterprise value 乘数： <strong>EV / EBIT</strong>。其中：</p>
+<ul>
+<li>EV = enterprise value = market value of equity + interest-bearing debt - cash</li>
+<li>EBIT，息税前利润。</li>
+</ul>
+<p>有了价格乘数，那么接下来一个问题是：如何算是便宜？可以有两种方式：</p>
+<ul>
+<li>绝对，设定一个具体的EV / EBIT 标准，超过了就算贵。</li>
+<li>相对，对所有股票EV / EBIT 进行排序，设定一个百分比，比如top 33% 算贵。</li>
+</ul>
+<p>我倾向使用相对方式进行screening。因为，格雷厄姆时代的标准放到今天可能就找不到股票了。</p>
+<h3 id="Screen-for-risk"><a href="#Screen-for-risk" class="headerlink" title="Screen for risk"></a>Screen for risk</h3><p>Risk 可以分为：</p>
+<ul>
+<li>Operating risk，主要是从公司经营角度出发，影响营收或公司正常用作的风险</li>
+<li>Financial risk, 从财务角度出发，例如债务</li>
+<li>Liquidity risk，主要从股票持有人变现角度出发，如买卖spread，公司停牌之类</li>
+</ul>
+<p>对于设计Screen来说，一般比较容易做的是：</p>
+<ul>
+<li>基于价格：如股票的beta，或是standard deviation for returns。</li>
+<li>基于会计：根据财务报表上的数据进行分析，例如公司偿债能力。</li>
+</ul>
+<p>从债务杠杆出发，选用<strong>book debt-to-equity ratio</strong>作为风险度量。当然，并非说债务高就一定不好。但是，“这个世界上没有无缘无故的狠”，便宜的股票通常在财务上面临压力，因此，在此前提下，债务越低越安全。之所以没有使用market value来计算debt-to-equity ratio是因为market value of equity其实是price的一种度量，而EV / EBIT已经度量了价格。</p>
+<p>除了考虑债务杠杆的绝对值，在加入债务杠杆的变化：</p>
+<p><strong>Change in book D/E = Current year’s D/E - prior year’s D/E</strong></p>
+<p>收入容易被操控，因此是一个需要小心的地方。如果net income大于cash flow from operatinos，那么就有可能是一个不好的信号。使用以下指标：</p>
+<p><strong>ACCRUAL = (NI-CFO)/TA</strong></p>
+<p>其中：</p>
+<ul>
+<li>NI = net income before extraordinary items</li>
+<li>CFO = cash flow from operations</li>
+<li>TA = total assets</li>
+</ul>
+<h3 id="Screen-for-growth"><a href="#Screen-for-growth" class="headerlink" title="Screen for growth"></a>Screen for growth</h3><p>对于增长我没有太多好的想法，使用一致性预期应该是一个不错的选择，但是，并非每只股票都有一致性预期，尤其是不受待见的问题股票。因此，我就简单用Revenue growth了：</p>
+<p><strong>Revenue growth = Current year’s Revenue / Prior years’s Revenue - 1</strong></p>
+<p>这里，我还想加入一个技术指标用来表示增长：Momentum，使用3个月的股票价格的return：</p>
+<p><strong>M3M = 3-Month price change</strong></p>
+<h3 id="Screen-for-quality-of-growth"><a href="#Screen-for-quality-of-growth" class="headerlink" title="Screen for quality of growth"></a>Screen for quality of growth</h3><p>我希望入围的公司不光有增长，而且增长的质量比较高。比如，不用靠很高的资本支出。对于这个Screen，我使用return on invested capital （ROIC）。</p>
+<p><strong>ROIC = EBIT(1-t) / (Book value of equity + book value of debt - cash)</strong></p>
+<p>进一步，不光考虑ROIC的绝对水平，还进一步考虑ROIC的变化：</p>
+<p><strong>Change in ROIC = Current year’s ROIC - prior year’s ROIC</strong></p>
+<p>总结一下，我用了一下这些条件对股票进行过滤：</p>
+<ul>
+<li>Price<ul>
+<li>EV / EBIT</li>
+</ul>
+</li>
+<li>Risk<ul>
+<li>book debt-to-equity ratio</li>
+<li>Change in book D/E</li>
+<li>ACCRUAL = (NI-CFO)/TA</li>
+</ul>
+</li>
+<li>Growth<ul>
+<li>Revenue growth</li>
+<li>M3M = 3-Month price change</li>
+</ul>
+</li>
+<li>Quality<ul>
+<li>ROIC</li>
+<li>Change in ROIC</li>
+</ul>
+</li>
+</ul>
+<p>一共8个过滤条件。</p>
+<h2 id="两种不同的过滤方式"><a href="#两种不同的过滤方式" class="headerlink" title="两种不同的过滤方式"></a>两种不同的过滤方式</h2><p>如何使用这8个条件进行筛选并获得目标股票池？一种方式是<strong>顺序过滤</strong>。根据重要性将条件排序。比如，我觉得股票是否便宜是最重要的，那么就将EV / EBIT排在第一位，用这个条件将所有股票进行排序，然后选择top 50%，然后接下来再用次重要的条件对入围的股票再进行排序，依次完成所有的条件。但是，这么做有几个问题：</p>
+<ul>
+<li>如果某两个或多个条件具有相同的重要性，你必须给定一个顺序，这样造成的结果就是会过滤掉你希望保留的股票。</li>
+<li>最后可能没有满足条件的股票，或结果集的数量太少了。</li>
+</ul>
+<p>为了解决以上问题，可以使用<strong>多条件并行过滤（simultaneous screening）</strong>的方法：</p>
+<ul>
+<li>首先将每个条件的值进行标准化处理 — Z-Score</li>
+<li>将各个条件的z-score值按照一定的权重加总</li>
+<li>根据加总后值进行排序，获得过滤结果</li>
+</ul>
+<p>这里需要注意的地方是：</p>
+<ul>
+<li>对条件值进行标准化处理可以有多种方法，我选用z-score。这步是必须的，否则不同的条件值之间的数量级会有很大的差别。汇总后，那些值很大的条件就会对结果产生更大的影响</li>
+<li>不同条件z-score的方向应该有相同的影响。比如，z-score大，代表有正面影响，反之则有负面影响</li>
+</ul>
+<h2 id="模型实现"><a href="#模型实现" class="headerlink" title="模型实现"></a>模型实现</h2><p>到了这步就要拿出我码农的本色！开始撸数据，写代码。目标就是计算出每只股票在对应条件上的z-score。其实，最大的挑战还是数据，包括获取数据，清理数据以及处理outlier。具体细节没必要放在这里（此处省略240行代码。。。）。我主要做以下工作：</p>
+<ul>
+<li>工具方面，基本就是python了，利用numpy，pandas来存储加工数据</li>
+<li>数据利用的是ricequant平台，不得不说，他们在数据的二次加工上做的挺完善，基本上你想要的股票基本面数据他们都提供了。这就极大简化了数据处理的工作，至于数据是否准确，还需要观察一段时间</li>
+<li>扫描全部A股。确保股票至少上市3年才进入我的筛选范围</li>
+<li>对于EBIT &lt; 0的股票不考虑，虽说EBIT &lt; 0不代表这支股票不好，但是，由于我这里的策略还是基于value，而EBIT &lt; 0 的股票有可能是成长型公司，或是公司经营出了问题。另外，如果EBIT &lt; 0，那么EV / EBIT就变得没有意义</li>
+<li>对于outlier，我的定义是z-score &gt; 3 或 z-score &lt; -3，发现outlier，我并不是简单做删除处理，而是将outlier设置成3或-3</li>
+<li>剔除了所有的金融股票，包括银行和非银，原因很简单，你很定义什么是他们的debt，就更不用说interesting bearing debt了，那该怎么计算他们的debt to equity ratio呢？</li>
+</ul>
+<p>下图所示是数据处理完的结果：</p>
+<img src="/2020/09/23/screening-in-practice/zscore.PNG" class="">
+<p>上半部分cleaned_df是所有股票的条件值的计算结果，下半部分则是将其转化成了z-score。至此z-score都已计算完成。</p>
+<h2 id="z-score权重"><a href="#z-score权重" class="headerlink" title="z-score权重"></a>z-score权重</h2><p>有了各个条件上z-core，那么接下来我需要加总求和。如何求和？也就是每个条件上z-score对应的权重是多少？这个权重该如何确定？</p>
+<p>最简单的方法：等权重求和了！虽说是简单粗暴，但是，等权重也是有一个明显的好处，那就避免了overfitting！因此是一个不错的benchmark，以后对z-score权重的优化都可以同这个等权重benchmark做比较。再强调一下，每个条件上的z-score在求和的时候必须保证同方向，因此求和操作应如下：</p>
+<p>SUM of Z-Score =  </p>
+<ul>
+<li><em>minus</em> EV / EBIT </li>
+<li><em>minus</em> book debt-to-equity ratio</li>
+<li><em>minus</em> Change in book D/E</li>
+<li><em>minus</em> (NI-CFO)/TA</li>
+<li><em>plus</em> Revenue growth</li>
+<li><em>plus</em> M3M</li>
+<li><em>plus</em> ROIC</li>
+<li><em>plus</em> Change in ROIC</li>
+</ul>
+<p>下表显示了排名前50的股票：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>z_score_sum</th>
+<th>symbol</th>
+<th>industry_code</th>
+<th>industry_name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>300677.XSHE</td>
+<td>10.716210</td>
+<td>英科医疗</td>
+<td>C29</td>
+<td>橡胶和塑料制品业</td>
+</tr>
+<tr>
+<td>002869.XSHE</td>
+<td>7.475962</td>
+<td>金溢科技</td>
+<td>C39</td>
+<td>计算机、通信和其他电子设备制造业</td>
+</tr>
+<tr>
+<td>600421.XSHG</td>
+<td>7.123312</td>
+<td>ST仰帆</td>
+<td>C34</td>
+<td>通用设备制造业</td>
+</tr>
+<tr>
+<td>002164.XSHE</td>
+<td>7.034439</td>
+<td>宁波东力</td>
+<td>C35</td>
+<td>专用设备制造业</td>
+</tr>
+<tr>
+<td>601020.XSHG</td>
+<td>6.866158</td>
+<td>华钰矿业</td>
+<td>B09</td>
+<td>有色金属矿采选业</td>
+</tr>
+<tr>
+<td>002838.XSHE</td>
+<td>6.495545</td>
+<td>道恩股份</td>
+<td>C29</td>
+<td>橡胶和塑料制品业</td>
+</tr>
+<tr>
+<td>300552.XSHE</td>
+<td>6.002087</td>
+<td>万集科技</td>
+<td>I65</td>
+<td>软件和信息技术服务业</td>
+</tr>
+<tr>
+<td>002124.XSHE</td>
+<td>5.956577</td>
+<td>天邦股份</td>
+<td>C13</td>
+<td>农副食品加工业</td>
+</tr>
+<tr>
+<td>603606.XSHG</td>
+<td>5.861706</td>
+<td>东方电缆</td>
+<td>C38</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>002289.XSHE</td>
+<td>5.485774</td>
+<td>ST宇顺</td>
+<td>C39</td>
+<td>计算机、通信和其他电子设备制造业</td>
+</tr>
+<tr>
+<td>000048.XSHE</td>
+<td>5.417372</td>
+<td>京基智农</td>
+<td>C13</td>
+<td>农副食品加工业</td>
+</tr>
+<tr>
+<td>002286.XSHE</td>
+<td>5.285237</td>
+<td>保龄宝</td>
+<td>C13</td>
+<td>农副食品加工业</td>
+</tr>
+<tr>
+<td>300464.XSHE</td>
+<td>4.960576</td>
+<td>星徽精密</td>
+<td>F52</td>
+<td>零售业</td>
+</tr>
+<tr>
+<td>603129.XSHG</td>
+<td>4.847436</td>
+<td>春风动力</td>
+<td>C37</td>
+<td>铁路、船舶、航空航天和其他运输设备制造业</td>
+</tr>
+<tr>
+<td>300056.XSHE</td>
+<td>4.837722</td>
+<td>中创环保</td>
+<td>C35</td>
+<td>专用设备制造业</td>
+</tr>
+<tr>
+<td>600652.XSHG</td>
+<td>4.782898</td>
+<td>ST游久</td>
+<td>I64</td>
+<td>互联网和相关服务</td>
+</tr>
+<tr>
+<td>002216.XSHE</td>
+<td>4.725449</td>
+<td>三全食品</td>
+<td>C14</td>
+<td>食品制造业</td>
+</tr>
+<tr>
+<td>300246.XSHE</td>
+<td>4.653786</td>
+<td>宝莱特</td>
+<td>C35</td>
+<td>专用设备制造业</td>
+</tr>
+<tr>
+<td>002714.XSHE</td>
+<td>4.440177</td>
+<td>牧原股份</td>
+<td>A03</td>
+<td>畜牧业</td>
+</tr>
+<tr>
+<td>600132.XSHG</td>
+<td>4.402648</td>
+<td>重庆啤酒</td>
+<td>C15</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>002030.XSHE</td>
+<td>4.378498</td>
+<td>达安基因</td>
+<td>C27</td>
+<td>医药制造业</td>
+</tr>
+<tr>
+<td>300274.XSHE</td>
+<td>4.367707</td>
+<td>阳光电源</td>
+<td>C38</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>002555.XSHE</td>
+<td>4.361072</td>
+<td>三七互娱</td>
+<td>I64</td>
+<td>互联网和相关服务</td>
+</tr>
+<tr>
+<td>002677.XSHE</td>
+<td>4.335123</td>
+<td>浙江美大</td>
+<td>C38</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>300103.XSHE</td>
+<td>4.327513</td>
+<td>达刚控股</td>
+<td>N77</td>
+<td>生态保护和环境治理业</td>
+</tr>
+<tr>
+<td>002312.XSHE</td>
+<td>4.320156</td>
+<td>三泰控股</td>
+<td>C26</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>601633.XSHG</td>
+<td>4.311244</td>
+<td>长城汽车</td>
+<td>C36</td>
+<td>汽车制造业</td>
+</tr>
+<tr>
+<td>300225.XSHE</td>
+<td>4.307500</td>
+<td>金力泰</td>
+<td>C26</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>300676.XSHE</td>
+<td>4.304628</td>
+<td>华大基因</td>
+<td>M74</td>
+<td>专业技术服务业</td>
+</tr>
+<tr>
+<td>603416.XSHG</td>
+<td>4.267281</td>
+<td>信捷电气</td>
+<td>C40</td>
+<td>仪器仪表制造业</td>
+</tr>
+<tr>
+<td>603338.XSHG</td>
+<td>4.231131</td>
+<td>浙江鼎力</td>
+<td>C35</td>
+<td>专用设备制造业</td>
+</tr>
+<tr>
+<td>300435.XSHE</td>
+<td>4.172462</td>
+<td>中泰股份</td>
+<td>D45</td>
+<td>燃气生产和供应业</td>
+</tr>
+<tr>
+<td>603906.XSHG</td>
+<td>4.095128</td>
+<td>龙蟠科技</td>
+<td>C26</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>002285.XSHE</td>
+<td>4.074116</td>
+<td>世联行</td>
+<td>K70</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>300411.XSHE</td>
+<td>4.064889</td>
+<td>金盾股份</td>
+<td>C34</td>
+<td>通用设备制造业</td>
+</tr>
+<tr>
+<td>000913.XSHE</td>
+<td>4.055015</td>
+<td>钱江摩托</td>
+<td>C37</td>
+<td>铁路、船舶、航空航天和其他运输设备制造业</td>
+</tr>
+<tr>
+<td>002735.XSHE</td>
+<td>4.049436</td>
+<td>王子新材</td>
+<td>C29</td>
+<td>橡胶和塑料制品业</td>
+</tr>
+<tr>
+<td>603877.XSHG</td>
+<td>3.998039</td>
+<td>太平鸟</td>
+<td>C18</td>
+<td>纺织服装、服饰业</td>
+</tr>
+<tr>
+<td>601216.XSHG</td>
+<td>3.992290</td>
+<td>君正集团</td>
+<td>C26</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>002706.XSHE</td>
+<td>3.991975</td>
+<td>良信电器</td>
+<td>C38</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>603787.XSHG</td>
+<td>3.990077</td>
+<td>新日股份</td>
+<td>C37</td>
+<td>铁路、船舶、航空航天和其他运输设备制造业</td>
+</tr>
+<tr>
+<td>000897.XSHE</td>
+<td>3.988275</td>
+<td>津滨发展</td>
+<td>K70</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>601012.XSHG</td>
+<td>3.951803</td>
+<td>隆基股份</td>
+<td>C30</td>
+<td>非金属矿物制品业</td>
+</tr>
+<tr>
+<td>603960.XSHG</td>
+<td>3.926110</td>
+<td>克来机电</td>
+<td>C35</td>
+<td>专用设备制造业</td>
+</tr>
+<tr>
+<td>002730.XSHE</td>
+<td>3.869764</td>
+<td>电光科技</td>
+<td>C35</td>
+<td>专用设备制造业</td>
+</tr>
+<tr>
+<td>002569.XSHE</td>
+<td>3.842822</td>
+<td>ST步森</td>
+<td>C18</td>
+<td>纺织服装、服饰业</td>
+</tr>
+<tr>
+<td>601069.XSHG</td>
+<td>3.841323</td>
+<td>西部黄金</td>
+<td>B09</td>
+<td>有色金属矿采选业</td>
+</tr>
+<tr>
+<td>002568.XSHE</td>
+<td>3.825067</td>
+<td>百润股份</td>
+<td>C15</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>300405.XSHE</td>
+<td>3.803350</td>
+<td>科隆股份</td>
+<td>C26</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>002833.XSHE</td>
+<td>3.783292</td>
+<td>弘亚数控</td>
+<td>C35</td>
+<td>专用设备制造业</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>新鲜出炉啊~~~这是根据2020年Q3财报产生的结果。</p>
+<h2 id="回测"><a href="#回测" class="headerlink" title="回测"></a>回测</h2><p>回测其实更为繁琐，借助RQAlpha框架，真的是极大的降低了工作量（此处又省略了296行代码。。。）。在本篇中，我只用最简单粗暴的方式进行回测，不做任何的优化。说一下我在回测过程中做了哪些处理：</p>
+<ul>
+<li>在构建portfolio时，直接用aggregate z-score为top 50的股票；也就是说没有太多考虑分散投资，在下一篇，我会根据行业构建一个相对分散投资的portfolio。</li>
+<li>使用等权重资金投资到每个股票，也就是说，有50只股票，将资金等分成50份，每份投资一只股票。如果以后做优化的话，可以考虑risk parity方法，或根据每只股票的预期收益，做MVO。我觉得sharpe ratio应该是可以提高不少。</li>
+<li>在回测的过程中考虑<strong>forward looking bias</strong>。由于国内财报的披露时间为：<ul>
+<li>1季报：每年4月1日——4月30日。</li>
+<li>2季报（中报）：每年7月1日——8月31日。</li>
+<li>3季报： 每年10月1日——10月31日<br>因此我在回测的过程中，定义获取财报的时间分别为：</li>
+<li>1季报：4月30日以后的第一个交易日。</li>
+<li>2季报（中报）：8月31日以后的第一个交易日。</li>
+<li>3季报： 10月31日以后的第一个交易日。</li>
+</ul>
+</li>
+<li>每年做3次rebalance，分别对应以上三个财报季。rebalance方式也是简单粗暴，第一步全部卖出，第二步再以等权重方式买入新入围的50只股票。因此将来，这步也是有很多的优化可以做。</li>
+<li>考虑了<strong>survival bias</strong>，比如，我从2015年6月12日开始回测，那我会以当时股票市场的全部股票作为我的pool，并以此进行screening（而非今天市场上的全部股票）。而当时的股票到今天可能已经退市了！因此用这种方式进行回测能避免survival bias。</li>
+</ul>
+<p>下面上结果，我先用2年时长进行回测（2018-9-25到2020-9-25）：</p>
+<img src="/2020/09/23/screening-in-practice/backtest1.PNG" class="">
+<ul>
+<li>基准是沪深300指数</li>
+<li>深红色是screen的净值曲线，蓝色是基准，黄色是超额收益</li>
+<li>2年的周期最后是跑赢了基准！但是，有超过1年多的时间是落后基准，这里想表达的意思是，使用这个screen（包括其他策略）需要有一个相对长期的预期，不能期望时时刻刻都能跑赢基准</li>
+<li>整体来说和沪深300的相关性很高，beta=0.9。screen的收益是46.66%，基准的收益是33.734%。作为未经任何优化的screen能取得这样的结果还是有点出乎我的意料</li>
+</ul>
+<p>然后，我想看看2015年股灾后的表现，用了一个很极端的场景：从2015-6-12开始回测，也就是<strong>从股灾的顶点开始</strong>，一直到2020-9-25。我想看看，这个策略在股灾巨幅下跌时的表现，以及需要多久能重新回到原点。如下图所示：</p>
+<img src="/2020/09/23/screening-in-practice/backtest2015.PNG" class="">
+<ul>
+<li>首先这段回测超过5年。从刚开始那段暴跌看，似乎screen也没有表现出抗跌的特点，但有意思的是，在其后的反弹过程中大幅跑赢了基准</li>
+<li>最终的结果看screen不仅收复了所有的下跌，还获得了7.288%的收益，而沪深300还亏损了13.88%！其实不能觉得5年多才7.288%，要知道这是很极端的情况，也就是你在泡沫的顶点开始投资！因此对screen的表现也觉得挺不错！</li>
+<li>还有一点比较有意思，就是沪深300代表的大盘股从2016年2月开始稳步上涨一直到2018年1月，而screen在这段时间一直没有表现，在行情结束时被反超。因此，要坚持策略也需要有个强大的内心！</li>
+<li>这里beta只有0.8，我觉得是一个好现象，长期来看同沪深300的相关性变低了</li>
+</ul>
+<p>聊一聊下一步打算，我会对这个screen做进一步的优化：</p>
+<ul>
+<li>在计算aggregate z-score时，不是简单粗暴的使用等权重</li>
+<li>在构建portfolio时，不是简单的选择aggregate z-score为top n的那些股票，而是考虑如何做好分散。因为排在前面的股票可能会集中在某几个行业，这样，你的portfolio就太集中了</li>
+<li>对screen做一些风格方面的调整，比如，我就想追求绝对便宜，那么可以试一下先根据 EV / EBIT 剔除掉最贵的50%的股票，然后在余下的50%里面做aggregate z-score</li>
+<li>rebalance时是否需要将股票全部换掉？可以考虑每次换出aggregate z-score最低的几只股票，并补充新的高分股票等等。。。</li>
+</ul>
+<p>这些测试我将放在下一篇。感觉本篇内容足够干货了! 等以上优化完成以后，我打算在雪球上以此建一个portfolio，作为benchmark长期跟踪，并能分享给有兴趣的朋友。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>最后，想谈谈使用各种类型的screen是否能击败市场获取超额收益。从经验上看是存在这个可能的，比如本文的screen，还有如Joel Greenblatt的神奇公式（更简单）长期也能跑赢SP500。但是，光是这样的跑赢是否足够，我们是否可以要求的更多？我比较认同Damodaran的观点，他认为作为一个投资者，你必须得有一些独特的东西（核心竞争力）才能在这个市场上获得超额收益。换句话说，就好像我们看公司会看它是不是有护城河，那么作为个人投资者，你需要考虑你的竞争优势在哪里。当格雷厄姆在1951年使用screen时，screen可以看作是一种竞争优势，因为：</p>
+<ul>
+<li><strong>首先，要做一个screen在当时并不容易</strong>。那个时代，要获取大量公司的财报，并且还得有自动化的工具来分析数据，对于普通投资者来说是一件相当苦难的事情，只有极少数实力强悍的投资者才具备这样的能力。</li>
+<li><strong>其次，是纪律性</strong>，投资者必须让自己远离各种诱惑和潮流，并始终如一的关注screen产生的股票。</li>
+<li><strong>第三，是耐心</strong>，投资者必须长期持有screen产生的股票才能获得理想的收益（这同本文的回测结果是相符的）</li>
+</ul>
+<p>今天，人们有各种途径获得股票数据，还有无数的分析工具。因此第一种优势几乎不存在了，（这里我想多说一句，在这一点上我不太认同，个人感觉，第一种优势在当今可能还是发挥着比较关键的作用，因为<strong>高质量的数据通常不会免费</strong>，所以仅此一点，就挡住了绝大部分的散户。其次是技术的使用，有多少投资人懂得python，甚至能熟练使用excel？）那么就剩下纪律和耐心作为你潜在的竞争优势。可以说，自动化的screening以及投资流程可以做到不需要人工介入，因此，这样一套系统从受到情绪化影响的角度来看，即使同最有纪律性且耐心的人来比，也明显胜出一大截！更直白的说，作为一个主动投资者，<strong>如果说所有你能拿得出手的东西仅仅是screen，那你基本不太可能打败机器</strong>。除了用screen武装自己外，你是否能赚到钱还取决于你在screen之后所做工作的质量。如果你在分析股票内在价值或定性研究方面有所专长，你也许能获取更高超额收益。</p>
+<p>参考文献：</p>
+<ul>
+<li>Joseph D. Piotroski. Value Investing: The use of historical financial statement information to separate winners from losers. Journal of accounting Research Vol. 38 Supplement 2000</li>
+<li>Ludwig B. Chincarini, Daehwan Kim. Quantitative Equity Portfolio Management . P89-179</li>
+<li>Aswath Damodaran. Passive Value investing  Screening for bargains. <a href="https://aswathdamodaran.blogspot.com/2012/06/passive-value-investing-screening-for.html" target="_blank" rel="noopener">https://aswathdamodaran.blogspot.com/2012/06/passive-value-investing-screening-for.html</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/21/valuation-gree/" rel="prev" title="格力电器估值">
+      <i class="fa fa-chevron-left"></i> 格力电器估值
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Screen-维度"><span class="nav-number">1.</span> <span class="nav-text">Screen 维度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Screen-for-price"><span class="nav-number">1.1.</span> <span class="nav-text">Screen for price</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Screen-for-risk"><span class="nav-number">1.2.</span> <span class="nav-text">Screen for risk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Screen-for-growth"><span class="nav-number">1.3.</span> <span class="nav-text">Screen for growth</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Screen-for-quality-of-growth"><span class="nav-number">1.4.</span> <span class="nav-text">Screen for quality of growth</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两种不同的过滤方式"><span class="nav-number">2.</span> <span class="nav-text">两种不同的过滤方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型实现"><span class="nav-number">3.</span> <span class="nav-text">模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#z-score权重"><span class="nav-number">4.</span> <span class="nav-text">z-score权重</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回测"><span class="nav-number">5.</span> <span class="nav-text">回测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Liang</p>
+  <div class="site-description" itemprop="description">Keep Walking</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ecmkit" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ecmkit" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Liang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
