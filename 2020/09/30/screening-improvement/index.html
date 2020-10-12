@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.keepswalking.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文描述了在对screen（股票筛选器）进行回测的过程中所碰到的各种问题以及对应的解决方法。最后，通过对portfolio中个股权重进行优化，获得了一个相当不错的回测结果。回测以股灾顶峰（2015-06-12）为开始时点一直到2020-09-25，并以比较保守的参数设置，期间获得了近45%的总收益或年化7.5%的收益。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="screen（股票筛选器）之二 -- 回测，没有全面调查就没有伤害">
+<meta property="og:url" content="https://www.keepswalking.com/2020/09/30/screening-improvement/index.html">
+<meta property="og:site_name" content="Liang的风险平价观">
+<meta property="og:description" content="本文描述了在对screen（股票筛选器）进行回测的过程中所碰到的各种问题以及对应的解决方法。最后，通过对portfolio中个股权重进行优化，获得了一个相当不错的回测结果。回测以股灾顶峰（2015-06-12）为开始时点一直到2020-09-25，并以比较保守的参数设置，期间获得了近45%的总收益或年化7.5%的收益。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/four_interval.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/two_interval.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/post_reb.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/pre_reb.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/equal_w_benchmark_cap_w.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/hs300_compare.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/hs300_ew_compare.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/hs300_vs_300.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/cap_w_no_limit.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/thresh_20_per.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/thresh_10_per.PNG">
+<meta property="article:published_time" content="2020-09-30T02:42:18.000Z">
+<meta property="article:modified_time" content="2020-10-12T14:18:05.376Z">
+<meta property="article:author" content="Liang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.keepswalking.com/2020/09/30/screening-improvement/four_interval.PNG">
+
+<link rel="canonical" href="https://www.keepswalking.com/2020/09/30/screening-improvement/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>screen（股票筛选器）之二 -- 回测，没有全面调查就没有伤害 | Liang的风险平价观</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4c923ee16dc6e5fc66d82e7f36f2a2ec";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Liang的风险平价观" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Liang的风险平价观</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-data">
+
+    <a href="/data/" rel="section"><i class="fa fa-database fa-fw"></i>数据</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.keepswalking.com/2020/09/30/screening-improvement/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Liang">
+      <meta itemprop="description" content="Keep Walking">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liang的风险平价观">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          screen（股票筛选器）之二 -- 回测，没有全面调查就没有伤害
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-30 10:42:18" itemprop="dateCreated datePublished" datetime="2020-09-30T10:42:18+08:00">2020-09-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-12 22:18:05" itemprop="dateModified" datetime="2020-10-12T22:18:05+08:00">2020-10-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E7%AE%A1%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">量化投资组合管理</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文描述了在对screen（股票筛选器）进行回测的过程中所碰到的各种问题以及对应的解决方法。最后，通过对portfolio中个股权重进行优化，获得了一个相当不错的回测结果。回测以股灾顶峰（2015-06-12）为开始时点一直到2020-09-25，并以比较保守的参数设置，期间获得了近45%的总收益或年化7.5%的收益。</p>
+<a id="more"></a>
+<p>这段时间真的是做回测做到吐了。回测真的是一件超重体力活啊！自己刚从一个坑爬出来紧接着又跌入下一个坑，不断往复。。。痛不欲生！如果有人告诉你一个量化策略并说能盈利，但是没有回测记录那是在耍流氓。如果他给你看回测记录而没有告诉你回测条件那也是在耍流氓。</p>
+<p>上篇<a href="/2020/09/23/screening-in-practice/" title="一个基于价值的screen（筛选器） -- 大概是最简单的量化投资">一个基于价值的screen（筛选器） -- 大概是最简单的量化投资</a>介绍了一个基于价值的Screen，并且用最原始的方式做了回测，包括：</p>
+<ul>
+<li>在计算aggregate z-score的时候使用等权重</li>
+<li>在构建portfolio时简单地使用aggregate z-score为top n的股票</li>
+<li>rebalance时的操作为先全部卖出，再全部买入</li>
+</ul>
+<p>回测的结果显示能明显跑赢基准，当时心理还是沾沾自喜，要知道这可是一把成功，没有overfitting这回事啊！想接下来再做一些优化，最主要想对aggregate z-score的权重进行优化。但转念觉得自己还没有评估过该策略在不同情况下的表现，比如：</p>
+<ul>
+<li>调整rebalance的时间点，如前移或后移</li>
+<li>增加或减少rebalance 的次数</li>
+</ul>
+<p>第一感觉是这些调整对回测结果只会产生微弱的影响。但是噩梦就此开始。。。</p>
+<h2 id="问题暴露"><a href="#问题暴露" class="headerlink" title="问题暴露"></a>问题暴露</h2><p>说干就干，撸起袖子开始改代码（尽显码农本色）。</p>
+<h3 id="改变调仓（rebalance）周期"><a href="#改变调仓（rebalance）周期" class="headerlink" title="改变调仓（rebalance）周期"></a>改变调仓（rebalance）周期</h3><p>上篇screen中每年做3次rebalance，分别对应三个财报季：</p>
+<ul>
+<li>1季报：4月30日以后的第一个交易日。</li>
+<li>2季报（中报）：8月31日以后的第一个交易日。</li>
+<li>3季报： 10月31日以后的第一个交易日。</li>
+</ul>
+<p>由以上描述可以看出，从三季报到次年一季报之间有6个月的时间，这就导致了rebalance之间的interval不一致，因此<strong>考虑在1月31日以后的第一个交易日新增一次rebalance</strong>（年报：每年1月1日——4月30日，因此同1季报的时间重叠，因此等年报出来一季报也基本发布了，那么年报的信息相对就有些过期了，所以，原本3次调仓其实是忽略了年报的信息）。那么rebalance每年4次，interval基本上在3个月左右。</p>
+<p>可是结果有点出乎意料，5年的回测成绩不理想，如下图所示：</p>
+<img src="/2020/09/30/screening-improvement/four_interval.PNG" class="">
+<p>而如果换作半年一次调仓，调仓时点放在一季报和三季报发布的时间段，那么5年的回测收益接近原来的收益。如下图所示：</p>
+<img src="/2020/09/30/screening-improvement/two_interval.PNG" class="">
+<p>增加一次调仓的结果真的让我大跌眼镜！隐约感觉策略可能出问题了。继续测试其他场景。。。</p>
+<h3 id="改变调仓时点"><a href="#改变调仓时点" class="headerlink" title="改变调仓时点"></a>改变调仓时点</h3><p>如果改变调仓的时间点，则回测收益也出现了明显的下滑。首先，测试将调仓时间后移2周，每年两次调仓，即调仓的时间点为：</p>
+<ul>
+<li>1季报：5月15日以后的第一个交易日。</li>
+<li>3季报： 11月15日以后的第一个交易日。</li>
+</ul>
+<p>测试结果如下图所示：</p>
+<img src="/2020/09/30/screening-improvement/post_reb.PNG" class="">
+<p>如果说将调仓时间后移使得相关财报信息被市场消化，导致收益下降是一种解释。但是，明显跑输沪深300就感觉很难解释了，是因为市场风格发生了变化吗？</p>
+<p>那么如果将rebalance时点比原来提前一周呢？，即调仓的时间点为：</p>
+<ul>
+<li>1季报：4月23日以后的第一个交易日。</li>
+<li>3季报： 10月24日以后的第一个交易日。</li>
+</ul>
+<p>测试结果如下所示：</p>
+<img src="/2020/09/30/screening-improvement/pre_reb.PNG" class="">
+<p>微弱跑输沪深300。可能是因为没有获取到全部财报的更新数据？</p>
+<p>根据以上描述，可以发现该Screen对rebalance的时点和次数都是非常敏感。这同我的预期形成了鲜明的反差，严重伤害了我的感情！这样的策略不可能应用到实战中，于是开始着手调查。。。</p>
+<h2 id="陷阱"><a href="#陷阱" class="headerlink" title="陷阱"></a>陷阱</h2><p>由于整个回测是自动化完成的，要找到问题并不容易，输出日志也许是为数不多的方法。</p>
+<h3 id="陷阱之一-—-一定是策略出问题了"><a href="#陷阱之一-—-一定是策略出问题了" class="headerlink" title="陷阱之一 — 一定是策略出问题了"></a>陷阱之一 — 一定是策略出问题了</h3><p>对于调整rebalance时间点对回测结果产生重大影响这个问题，我第一反应是很可能策略很有可能在rebalance时间前后会给出差异巨大的输出，这样就可能导致回测结果出现严重的不一致。该如何排查这一点呢？只能通过日志输出来进行人工比较。但是，结果显示，策略的输出并无明显差别，如下所示。下表是策略原来预设的调仓时间点：2017-04-30以后的第一交易日所产生的输出：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>z_score_sum</th>
+<th>symbol</th>
+<th>industry_name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>000502.XSHE</td>
+<td>8.890258</td>
+<td>绿景控股</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>000004.XSHE</td>
+<td>8.681055</td>
+<td>国农科技</td>
+<td>软件和信息技术服务业</td>
+</tr>
+<tr>
+<td>600338.XSHG</td>
+<td>8.068400</td>
+<td>西藏珠峰</td>
+<td>有色金属矿采选业</td>
+</tr>
+<tr>
+<td>002110.XSHE</td>
+<td>7.868558</td>
+<td>三钢闽光</td>
+<td>黑色金属冶炼和压延加工业</td>
+</tr>
+<tr>
+<td>000036.XSHE</td>
+<td>7.327801</td>
+<td>华联控股</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>600052.XSHG</td>
+<td>6.932945</td>
+<td>浙江广厦</td>
+<td>广播、电视、电影和影视录音制作业</td>
+</tr>
+<tr>
+<td>600519.XSHG</td>
+<td>6.889754</td>
+<td>贵州茅台</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>002120.XSHE</td>
+<td>6.812944</td>
+<td>韵达股份</td>
+<td>邮政业</td>
+</tr>
+<tr>
+<td>002508.XSHE</td>
+<td>6.806315</td>
+<td>老板电器</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>000011.XSHE</td>
+<td>6.669217</td>
+<td>深物业A</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>002372.XSHE</td>
+<td>6.640031</td>
+<td>伟星新材</td>
+<td>橡胶和塑料制品业</td>
+</tr>
+<tr>
+<td>002032.XSHE</td>
+<td>6.371474</td>
+<td>苏泊尔</td>
+<td>金属制品业</td>
+</tr>
+<tr>
+<td>002352.XSHE</td>
+<td>6.352925</td>
+<td>顺丰控股</td>
+<td>邮政业</td>
+</tr>
+<tr>
+<td>600681.XSHG</td>
+<td>6.345977</td>
+<td>百川能源</td>
+<td>燃气生产和供应业</td>
+</tr>
+<tr>
+<td>002558.XSHE</td>
+<td>6.327748</td>
+<td>巨人网络</td>
+<td>互联网和相关服务</td>
+</tr>
+<tr>
+<td>600641.XSHG</td>
+<td>6.267760</td>
+<td>万业企业</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>002035.XSHE</td>
+<td>6.266626</td>
+<td>华帝股份</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>002468.XSHE</td>
+<td>6.229671</td>
+<td>申通快递</td>
+<td>邮政业</td>
+</tr>
+<tr>
+<td>600477.XSHG</td>
+<td>6.075676</td>
+<td>杭萧钢构</td>
+<td>金属制品业</td>
+</tr>
+<tr>
+<td>002466.XSHE</td>
+<td>6.044695</td>
+<td>天齐锂业</td>
+<td>有色金属冶炼和压延加工业</td>
+</tr>
+<tr>
+<td>600887.XSHG</td>
+<td>5.964935</td>
+<td>伊利股份</td>
+<td>食品制造业</td>
+</tr>
+<tr>
+<td>002597.XSHE</td>
+<td>5.962833</td>
+<td>金禾实业</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>600167.XSHG</td>
+<td>5.836436</td>
+<td>联美控股</td>
+<td>电力、热力生产和供应业</td>
+</tr>
+<tr>
+<td>002677.XSHE</td>
+<td>5.706263</td>
+<td>浙江美大</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>600779.XSHG</td>
+<td>5.639503</td>
+<td>水井坊</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>600746.XSHG</td>
+<td>5.600572</td>
+<td>江苏索普</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>002647.XSHE</td>
+<td>5.583226</td>
+<td>仁东控股</td>
+<td>其他金融业</td>
+</tr>
+<tr>
+<td>300268.XSHE</td>
+<td>5.565489</td>
+<td>佳沃股份</td>
+<td>农副食品加工业</td>
+</tr>
+<tr>
+<td>300136.XSHE</td>
+<td>5.494172</td>
+<td>信维通信</td>
+<td>计算机、通信和其他电子设备制造业</td>
+</tr>
+<tr>
+<td>600688.XSHG</td>
+<td>5.400361</td>
+<td>上海石化</td>
+<td>石油加工、炼焦和核燃料加工业</td>
+</tr>
+<tr>
+<td>002233.XSHE</td>
+<td>5.293639</td>
+<td>塔牌集团</td>
+<td>非金属矿物制品业</td>
+</tr>
+<tr>
+<td>002136.XSHE</td>
+<td>5.285238</td>
+<td>安纳达</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>002460.XSHE</td>
+<td>5.247013</td>
+<td>赣锋锂业</td>
+<td>有色金属冶炼和压延加工业</td>
+</tr>
+<tr>
+<td>603288.XSHG</td>
+<td>5.194811</td>
+<td>海天味业</td>
+<td>食品制造业</td>
+</tr>
+<tr>
+<td>600132.XSHG</td>
+<td>5.166631</td>
+<td>重庆啤酒</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>002043.XSHE</td>
+<td>5.161986</td>
+<td>兔宝宝</td>
+<td>木材加工和木、竹、藤、棕、草制品业</td>
+</tr>
+<tr>
+<td>600507.XSHG</td>
+<td>5.078334</td>
+<td>方大特钢</td>
+<td>黑色金属冶炼和压延加工业</td>
+</tr>
+<tr>
+<td>002555.XSHE</td>
+<td>4.955648</td>
+<td>三七互娱</td>
+<td>互联网和相关服务</td>
+</tr>
+<tr>
+<td>002636.XSHE</td>
+<td>4.927382</td>
+<td>金安国纪</td>
+<td>计算机、通信和其他电子设备制造业</td>
+</tr>
+<tr>
+<td>002133.XSHE</td>
+<td>4.854489</td>
+<td>广宇集团</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>300176.XSHE</td>
+<td>4.773486</td>
+<td>派生科技</td>
+<td>汽车制造业</td>
+</tr>
+<tr>
+<td>600309.XSHG</td>
+<td>4.762293</td>
+<td>万华化学</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>002713.XSHE</td>
+<td>4.732748</td>
+<td>东易日盛</td>
+<td>建筑装饰和其他建筑业</td>
+</tr>
+<tr>
+<td>000568.XSHE</td>
+<td>4.716226</td>
+<td>泸州老窖</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>000910.XSHE</td>
+<td>4.704433</td>
+<td>大亚圣象</td>
+<td>木材加工和木、竹、藤、棕、草制品业</td>
+</tr>
+<tr>
+<td>002507.XSHE</td>
+<td>4.697732</td>
+<td>涪陵榨菜</td>
+<td>食品制造业</td>
+</tr>
+<tr>
+<td>600211.XSHG</td>
+<td>4.618739</td>
+<td>西藏药业</td>
+<td>医药制造业</td>
+</tr>
+<tr>
+<td>002572.XSHE</td>
+<td>4.540608</td>
+<td>索菲亚</td>
+<td>家具制造业</td>
+</tr>
+<tr>
+<td>000930.XSHE</td>
+<td>4.525929</td>
+<td>中粮科技</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>000813.XSHE</td>
+<td>4.461262</td>
+<td>德展健康</td>
+<td>医药制造业</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>而下表为推后的调仓时间点：2017-05-16这个交易日所产生的输出，比策略原来预设的调仓时间点晚了2周：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>z_score_sum</th>
+<th>symbol</th>
+<th>industry_name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>000502.XSHE</td>
+<td>8.778548</td>
+<td>绿景控股</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>000004.XSHE</td>
+<td>8.597785</td>
+<td>国农科技</td>
+<td>软件和信息技术服务业</td>
+</tr>
+<tr>
+<td>002110.XSHE</td>
+<td>7.754317</td>
+<td>三钢闽光</td>
+<td>黑色金属冶炼和压延加工业</td>
+</tr>
+<tr>
+<td>002120.XSHE</td>
+<td>7.576107</td>
+<td>韵达股份</td>
+<td>邮政业</td>
+</tr>
+<tr>
+<td>600519.XSHG</td>
+<td>7.571283</td>
+<td>贵州茅台</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>600338.XSHG</td>
+<td>7.553469</td>
+<td>西藏珠峰</td>
+<td>有色金属矿采选业</td>
+</tr>
+<tr>
+<td>000036.XSHE</td>
+<td>7.347328</td>
+<td>华联控股</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>002508.XSHE</td>
+<td>7.269823</td>
+<td>老板电器</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>000011.XSHE</td>
+<td>7.180023</td>
+<td>深物业A</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>002352.XSHE</td>
+<td>7.168590</td>
+<td>顺丰控股</td>
+<td>邮政业</td>
+</tr>
+<tr>
+<td>002035.XSHE</td>
+<td>7.091673</td>
+<td>华帝股份</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>002032.XSHE</td>
+<td>7.063430</td>
+<td>苏泊尔</td>
+<td>金属制品业</td>
+</tr>
+<tr>
+<td>002372.XSHE</td>
+<td>7.029911</td>
+<td>伟星新材</td>
+<td>橡胶和塑料制品业</td>
+</tr>
+<tr>
+<td>600052.XSHG</td>
+<td>6.886197</td>
+<td>浙江广厦</td>
+<td>广播、电视、电影和影视录音制作业</td>
+</tr>
+<tr>
+<td>002468.XSHE</td>
+<td>6.820134</td>
+<td>申通快递</td>
+<td>邮政业</td>
+</tr>
+<tr>
+<td>600477.XSHG</td>
+<td>6.657167</td>
+<td>杭萧钢构</td>
+<td>金属制品业</td>
+</tr>
+<tr>
+<td>002597.XSHE</td>
+<td>6.645728</td>
+<td>金禾实业</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>600887.XSHG</td>
+<td>6.407632</td>
+<td>伊利股份</td>
+<td>食品制造业</td>
+</tr>
+<tr>
+<td>002466.XSHE</td>
+<td>6.316711</td>
+<td>天齐锂业</td>
+<td>有色金属冶炼和压延加工业</td>
+</tr>
+<tr>
+<td>300136.XSHE</td>
+<td>6.279457</td>
+<td>信维通信</td>
+<td>计算机、通信和其他电子设备制造业</td>
+</tr>
+<tr>
+<td>600779.XSHG</td>
+<td>6.244783</td>
+<td>水井坊</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>600641.XSHG</td>
+<td>6.199704</td>
+<td>万业企业</td>
+<td>房地产业</td>
+</tr>
+<tr>
+<td>002677.XSHE</td>
+<td>6.016379</td>
+<td>浙江美大</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>002460.XSHE</td>
+<td>5.974417</td>
+<td>赣锋锂业</td>
+<td>有色金属冶炼和压延加工业</td>
+</tr>
+<tr>
+<td>603288.XSHG</td>
+<td>5.783055</td>
+<td>海天味业</td>
+<td>食品制造业</td>
+</tr>
+<tr>
+<td>000568.XSHE</td>
+<td>5.741317</td>
+<td>泸州老窖</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>002636.XSHE</td>
+<td>5.690895</td>
+<td>金安国纪</td>
+<td>计算机、通信和其他电子设备制造业</td>
+</tr>
+<tr>
+<td>600681.XSHG</td>
+<td>5.650337</td>
+<td>百川能源</td>
+<td>燃气生产和供应业</td>
+</tr>
+<tr>
+<td>600746.XSHG</td>
+<td>5.632605</td>
+<td>江苏索普</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>600132.XSHG</td>
+<td>5.505306</td>
+<td>重庆啤酒</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>600688.XSHG</td>
+<td>5.485803</td>
+<td>上海石化</td>
+<td>石油加工、炼焦和核燃料加工业</td>
+</tr>
+<tr>
+<td>300268.XSHE</td>
+<td>5.423325</td>
+<td>佳沃股份</td>
+<td>农副食品加工业</td>
+</tr>
+<tr>
+<td>002507.XSHE</td>
+<td>5.385897</td>
+<td>涪陵榨菜</td>
+<td>食品制造业</td>
+</tr>
+<tr>
+<td>000858.XSHE</td>
+<td>5.205664</td>
+<td>五粮液</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>002555.XSHE</td>
+<td>5.198571</td>
+<td>三七互娱</td>
+<td>互联网和相关服务</td>
+</tr>
+<tr>
+<td>000910.XSHE</td>
+<td>5.184445</td>
+<td>大亚圣象</td>
+<td>木材加工和木、竹、藤、棕、草制品业</td>
+</tr>
+<tr>
+<td>600507.XSHG</td>
+<td>5.169067</td>
+<td>方大特钢</td>
+<td>黑色金属冶炼和压延加工业</td>
+</tr>
+<tr>
+<td>600309.XSHG</td>
+<td>5.164688</td>
+<td>万华化学</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>002572.XSHE</td>
+<td>5.162698</td>
+<td>索菲亚</td>
+<td>家具制造业</td>
+</tr>
+<tr>
+<td>600167.XSHG</td>
+<td>5.118928</td>
+<td>联美控股</td>
+<td>电力、热力生产和供应业</td>
+</tr>
+<tr>
+<td>002136.XSHE</td>
+<td>5.080895</td>
+<td>安纳达</td>
+<td>化学原料及化学制品制造业</td>
+</tr>
+<tr>
+<td>002043.XSHE</td>
+<td>5.013130</td>
+<td>兔宝宝</td>
+<td>木材加工和木、竹、藤、棕、草制品业</td>
+</tr>
+<tr>
+<td>000049.XSHE</td>
+<td>5.000309</td>
+<td>德赛电池</td>
+<td>电气机械和器材制造业</td>
+</tr>
+<tr>
+<td>002558.XSHE</td>
+<td>4.966376</td>
+<td>巨人网络</td>
+<td>互联网和相关服务</td>
+</tr>
+<tr>
+<td>002304.XSHE</td>
+<td>4.951366</td>
+<td>洋河股份</td>
+<td>酒、饮料和精制茶制造业</td>
+</tr>
+<tr>
+<td>002415.XSHE</td>
+<td>4.854819</td>
+<td>海康威视</td>
+<td>计算机、通信和其他电子设备制造业</td>
+</tr>
+<tr>
+<td>002647.XSHE</td>
+<td>4.782066</td>
+<td>仁东控股</td>
+<td>其他金融业</td>
+</tr>
+<tr>
+<td>300176.XSHE</td>
+<td>4.772607</td>
+<td>派生科技</td>
+<td>汽车制造业</td>
+</tr>
+<tr>
+<td>002713.XSHE</td>
+<td>4.767137</td>
+<td>东易日盛</td>
+<td>建筑装饰和其他建筑业</td>
+</tr>
+<tr>
+<td>600211.XSHG</td>
+<td>4.707598</td>
+<td>西藏药业</td>
+<td>医药制造业</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>由以上两表对比可见，策略输出的一致性还是相当高的，除了排名发生了些许变化（因为股价改变了），总体来看排名前50的成分股票变化很少（<strong>有贵州茅台哦！！！</strong>）。那么就排除了策略算法上的问题。到底哪里出问题了？感觉没啥方向，已经感觉大伤元气了。。。</p>
+<h3 id="陷阱之二-—-停牌"><a href="#陷阱之二-—-停牌" class="headerlink" title="陷阱之二 — 停牌"></a>陷阱之二 — 停牌</h3><p>既然策略本身没有问题，那很有可能在执行策略的过程中出问题了！于是将排查的重点放到持仓上。果然很快就发现问题了，通过日志可以发现每次rebalance的时候，总是有一些股票卖不出去，同时会有一些股票买不进来。再通过日志发现因为股票停牌了！对于普通投资者来说本来的持仓的股票个数也不会很大，因此很少会碰到股票停牌。但是，对于策略来说，我的portfolio由50只股票组成。几乎每次rebalance时总是会碰到有股票停牌。尤其是在2015年6月份极端行情的那段时间，出现了大面积的股票停牌，这对策略的结果产生了很大的冲击。因此就会出现改变rebalance的时间点，portfolio的持仓会有很大的区别。例如对于通过策略入围的50只股票，在t天有10只股票停牌，而在t+n天可只有3只股票停牌了。那么在t日买入和在t+n日买入portfolio的构成会有很大的区别。由于停牌，导致了我的portfolio在不同时点做rebalance会有不同只数的股票构成，而且股票只数不足50只。</p>
+<p>发现问题以后，又是狂敲一通代码修改策略的回测过程，在rebalance当天：</p>
+<ul>
+<li>如果有股票因停牌无法卖出的，在买入时还是以portfolio的股票到达50只为止。例如当日有10只股票因停牌无法卖出的，那么只能买入40只股票。</li>
+<li>由于停牌无法卖出的股票在后续交易日执行卖出操作，有可能后续交易日继续停牌，或跌停无法卖出的，在下一交易日继续执行卖出，直至全部卖出为止。</li>
+<li>在卖出的同时补入对应数量入围股票。</li>
+</ul>
+<p>一番测试，修改bug以后觉得没啥问题了，结果一跑回测，发现portfolio里面股票的数量还是不对。。。继续排查。。。</p>
+<h3 id="陷阱之三-—-涨跌停"><a href="#陷阱之三-—-涨跌停" class="headerlink" title="陷阱之三 — 涨跌停"></a>陷阱之三 — 涨跌停</h3><p>顺藤摸瓜，发现策略执行过程中没有考虑涨跌停的股票。例如在rebalance当天，需卖出的股票如果碰到跌停，则是无法卖出的，那么只能在后续交易日卖出。后续交易日也可能继续跌停，那我的策略就是一直执行卖出操作，直至卖出为止。同停牌相似，后续卖出以后也必须买入相同只数的股票。例如后续某交易日补卖出3只股票，则必须同时买入3只股票。也就是说，portfolio的构成始终维持在50只股票。</p>
+<p>如果碰到涨停则在rebalance当天无法买入。那么这里的策略同卖出有所<strong>不同</strong>。买入如果碰到涨停则换一只入围股票，直到portfolio达到50只，也就是说，rebalance当天肯定会使portfolio的持股数量达到50只。</p>
+<p>继续修改代码，回测结果如下图所示：</p>
+<img src="/2020/09/30/screening-improvement/equal_w_benchmark_cap_w.PNG" class="">
+<p>上图的rebalance时间点为预设时间点后移14天，总收益为-1.88%。而预设rebalance的最终收益是-1.96%，两者对比从最终收益角度看差别不大。看上去问题是解决了，但是这收益和基准（沪深300全收益指数）没啥区别，而且很长时间里面还落后基准。难道我设计的策略就只能取得市场收益吗？</p>
+<p>我对取得市场收益没有什么偏见，恰恰相反，我觉得能取得市场收益也很不错了。但是，我设计这个策略的初衷肯定是想跑赢市场，那为何没有跑赢呢？继续排查。。。</p>
+<h3 id="陷阱之四-—-个股权重"><a href="#陷阱之四-—-个股权重" class="headerlink" title="陷阱之四 — 个股权重"></a>陷阱之四 — 个股权重</h3><p>在解决上门几个问题时，已经做了无数次的回测了，每次都会发生同一个现象，那就是：从2017年开始策略就会落后基准，然后同基准的差距越拉越大。初看感觉就是策略上出问题了。但是，检查持仓也没有发现什么。难道是回测框架（RQAlpha）的问题？</p>
+<p>为了验证我的想法，我又设计了一个测试方案。我想，既然我的基准是沪深300全收益指数，那么我干脆再写一个策略。每次调仓从沪深300里面<strong>随机</strong>抽取50只股票，也是等权重。那么，跑出来的收益应该同沪深300指数差不多吧。于是继续一通敲击键盘。执行回测，出结果，见下图：</p>
+<img src="/2020/09/30/screening-improvement/hs300_compare.PNG" class="">
+<p>What？！同样从2017年开始分叉了。我再将佣金调成了0，结果也一样。。。不会真的是回测框架的bug吧？！当时也真的是两眼一黑，觉得要另找回测框架了，心中真的是一万匹草泥马奔腾啊！</p>
+<p>转念一想，我每次调仓用的是等权重，而沪深300是流通市值权重。那我是不是该找沪深300等权重指数作为基准来回测一下呢？想想觉得有一定道理，反正死马当活马，再跑一边，出结果：</p>
+<img src="/2020/09/30/screening-improvement/hs300_ew_compare.PNG" class="">
+<p>跑了几遍，基本能验证我的想法。其实用沪深300指数和沪深300等权重指数直接比较一下，就能发现端倪：</p>
+<img src="/2020/09/30/screening-improvement/hs300_vs_300.PNG" class="">
+<p>等权重指数严重跑输市值指数。说明市值大的股票要比市值小的股票表现更出色。</p>
+<p>Ok，长舒一口气，看来权重决定成败了。那么，接下去就不是排查问题了，目标很明确，对股票权重进行优化。（overfitting?!）</p>
+<h2 id="优化权重"><a href="#优化权重" class="headerlink" title="优化权重"></a>优化权重</h2><p>有了明确的目标，接下来就好办了，不用等权重，换用其他的权重做一下测试。继续猛敲一通键盘（看来应该去买一个手感好一点的键盘了）。</p>
+<h3 id="使用流通市值权重"><a href="#使用流通市值权重" class="headerlink" title="使用流通市值权重"></a>使用流通市值权重</h3><p>首先想到的就是以市值做为权重。那么在入围的50只股票里面，大盘股的权重大而小盘股的权重小。我直接使用“000985.XSHG，中证全指” 里面的权重为基础，对50只股票按比例重新分配权重（即50只股票的权重之和等于1）。举例来说，假如我的portfolio里有2只股票000001.XSHE和000004.XSHE，在2015-06-12的中证全指里：</p>
+<ul>
+<li>000001.XSHE的权重为0.0040</li>
+<li>000004.XSHE的权重为0.0001</li>
+</ul>
+<p>那么经过换算，这两只股票的权重分别为：</p>
+<ul>
+<li>000001.XSHE的权重为0.97561</li>
+<li>000004.XSHE的权重为0.02439</li>
+</ul>
+<p>使用流通市值权重进行回测的结果是：</p>
+<img src="/2020/09/30/screening-improvement/cap_w_no_limit.PNG" class="">
+<p>Holly Cow… 71.5%的收益而基准收益为-3%！！！我整个人为之一振啊，这岂止是咸鱼翻身啊。。。（放飞自我了10多分钟以后）我想还是该仔细看一下结果，这确实有点事后诸葛亮的味道，毕竟我看到了等权重指数和市值指数的差异以后再来改我的策略。这有点overfitting的味道了。</p>
+<p>以2019-05-06 rebalance后的持仓前5位为例：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>position_value</th>
+<th>name</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>600519.XSHG</td>
+<td>271800.0</td>
+<td>贵州茅台</td>
+<td>0.361408</td>
+</tr>
+<tr>
+<td>000858.XSHE</td>
+<td>128968.0</td>
+<td>五粮液</td>
+<td>0.146703</td>
+</tr>
+<tr>
+<td>600585.XSHG</td>
+<td>50063.0</td>
+<td>海螺水泥</td>
+<td>0.059027</td>
+</tr>
+<tr>
+<td>601888.XSHG</td>
+<td>45606.0</td>
+<td>中国中免</td>
+<td>0.055920</td>
+</tr>
+<tr>
+<td>603288.XSHG</td>
+<td>44250.0</td>
+<td>海天味业</td>
+<td>0.053504</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>可见光茅台一家就占了31%的仓位。这样的仓位从投资组合角度来说风险暴露程度太高了，茅台一家的涨跌直接影响了整个portfolio。而另一个问题是排在第二大仓位的股票是五粮液，而茅台和五粮液同属一个行业，因此，这样的持仓行业集中度也太高了。可以说这是overfitting了。</p>
+<h3 id="流通市值"><a href="#流通市值" class="headerlink" title="流通市值++"></a>流通市值++</h3><p>那就继续对股票权重进行改进。我想到了一个方案：我设置一个单只股票持仓的阈值，portfolio里的股票持仓不能超过这个阈值。比如我设置20%作为阈值，在根现有权重排序，最大的排在最前。那么，上面持仓中，茅台就超过了，因此茅台的持仓变为20%，而多余的部分按比例分配给其余几家公司。如果排在第二家的权重也超了，那么继续这个过程。</p>
+<p>举例来说，我有如下的仓位:</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>w</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>001</td>
+<td>0.50</td>
+</tr>
+<tr>
+<td>002</td>
+<td>0.40</td>
+</tr>
+<tr>
+<td>005</td>
+<td>0.04</td>
+</tr>
+<tr>
+<td>003</td>
+<td>0.03</td>
+</tr>
+<tr>
+<td>004</td>
+<td>0.03</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我的阈值为20%，那么经过处理得到如下的权重：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>w</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>001</td>
+<td>0.200</td>
+</tr>
+<tr>
+<td>002</td>
+<td>0.160</td>
+</tr>
+<tr>
+<td>003</td>
+<td>0.192</td>
+</tr>
+<tr>
+<td>004</td>
+<td>0.192</td>
+</tr>
+<tr>
+<td>005</td>
+<td>0.256</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>通过这样处理就好比regularization能将那些出现极端仓位的情况化解掉，防止overfitting。</p>
+<p>那么对于我个人而言，20%是个股的极端仓位了，因此我将阈值设置成20%并回测，结果如下：</p>
+<img src="/2020/09/30/screening-improvement/thresh_20_per.PNG" class="">
+<p>近60%的收益，同之前71.5%的收益比有所下降。但这样的权重设置在实际应用中会更加可靠。再来比较一下2019-05-06 rebalance后持仓比例的变化</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>position_value</th>
+<th>name</th>
+<th>原weight</th>
+<th>新weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>600519.XSHG</td>
+<td>271800.0</td>
+<td>贵州茅台</td>
+<td>0.361408</td>
+<td>0.2</td>
+</tr>
+<tr>
+<td>000858.XSHE</td>
+<td>128968.0</td>
+<td>五粮液</td>
+<td>0.146703</td>
+<td>0.16</td>
+</tr>
+<tr>
+<td>600585.XSHG</td>
+<td>50063.0</td>
+<td>海螺水泥</td>
+<td>0.059027</td>
+<td>0.0768</td>
+</tr>
+<tr>
+<td>601888.XSHG</td>
+<td>45606.0</td>
+<td>中国中免</td>
+<td>0.055920</td>
+<td>0.072758</td>
+</tr>
+<tr>
+<td>603288.XSHG</td>
+<td>44250.0</td>
+<td>海天味业</td>
+<td>0.053504</td>
+<td>0.069614</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>由上表可见，不光茅台的权重设置成了0.2，茅台+五粮液的权重也明显下降了。个人感觉这个权重分配的算法是比较适合真实应用。由于阈值可以灵活设置，因此可以设置得更加保守，比如15%或10%。下图显示了10%为阈值的回测结果（真的是回测做到吐啊。。。），依旧能获得45.37%的回报。</p>
+<img src="/2020/09/30/screening-improvement/thresh_10_per.PNG" class="">
+<h2 id="策略回测结果"><a href="#策略回测结果" class="headerlink" title="策略回测结果"></a>策略回测结果</h2><p>最后展示一下策略生成持仓结果，我的设置如下：</p>
+<ul>
+<li>起始时间2015-06-12</li>
+<li>终止时间2020-09-25</li>
+<li>持仓阈值10%</li>
+<li>选股范围：中证全指</li>
+<li>每年rebalance2次，分别为4月30日以及10月31日以后的第一个交易日</li>
+</ul>
+<p>以下展示每年10月31日后第一个交易日rebalance完成后的持仓（top 5）：</p>
+<h3 id="2015"><a href="#2015" class="headerlink" title="2015"></a>2015</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>position_value</th>
+<th>name</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>600276.XSHG</td>
+<td>51510.0</td>
+<td>恒瑞医药</td>
+<td>0.088675</td>
+</tr>
+<tr>
+<td>600271.XSHG</td>
+<td>44728.0</td>
+<td>航天信息</td>
+<td>0.077000</td>
+</tr>
+<tr>
+<td>600066.XSHG</td>
+<td>40090.0</td>
+<td>宇通客车</td>
+<td>0.069016</td>
+</tr>
+<tr>
+<td>300017.XSHE</td>
+<td>36174.0</td>
+<td>网宿科技</td>
+<td>0.062274</td>
+</tr>
+<tr>
+<td>600649.XSHG</td>
+<td>28740.0</td>
+<td>城投控股</td>
+<td>0.049476</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="2016"><a href="#2016" class="headerlink" title="2016"></a>2016</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>position_value</th>
+<th>name</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>600519.XSHG</td>
+<td>63336.0</td>
+<td>贵州茅台</td>
+<td>0.104413</td>
+</tr>
+<tr>
+<td>600887.XSHG</td>
+<td>57824.0</td>
+<td>伊利股份</td>
+<td>0.095326</td>
+</tr>
+<tr>
+<td>600276.XSHG</td>
+<td>51579.0</td>
+<td>恒瑞医药</td>
+<td>0.085031</td>
+</tr>
+<tr>
+<td>300072.XSHE</td>
+<td>30821.0</td>
+<td>三聚环保</td>
+<td>0.050810</td>
+</tr>
+<tr>
+<td>000568.XSHE</td>
+<td>28320.0</td>
+<td>泸州老窖</td>
+<td>0.046687</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="2017"><a href="#2017" class="headerlink" title="2017"></a>2017</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>position_value</th>
+<th>name</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>600887.XSHG</td>
+<td>77004.0</td>
+<td>伊利股份</td>
+<td>0.093416</td>
+</tr>
+<tr>
+<td>600276.XSHG</td>
+<td>68510.0</td>
+<td>恒瑞医药</td>
+<td>0.083112</td>
+</tr>
+<tr>
+<td>600519.XSHG</td>
+<td>62301.0</td>
+<td>贵州茅台</td>
+<td>0.075579</td>
+</tr>
+<tr>
+<td>002304.XSHE</td>
+<td>56600.0</td>
+<td>洋河股份</td>
+<td>0.068663</td>
+</tr>
+<tr>
+<td>600309.XSHG</td>
+<td>44820.0</td>
+<td>万华化学</td>
+<td>0.054373</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="2018"><a href="#2018" class="headerlink" title="2018"></a>2018</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>position_value</th>
+<th>name</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>600585.XSHG</td>
+<td>70560.0</td>
+<td>海螺水泥</td>
+<td>0.103942</td>
+</tr>
+<tr>
+<td>601888.XSHG</td>
+<td>63516.0</td>
+<td>中国中免</td>
+<td>0.093566</td>
+</tr>
+<tr>
+<td>603288.XSHG</td>
+<td>58680.0</td>
+<td>海天味业</td>
+<td>0.086442</td>
+</tr>
+<tr>
+<td>600309.XSHG</td>
+<td>52110.0</td>
+<td>万华化学</td>
+<td>0.076764</td>
+</tr>
+<tr>
+<td>600516.XSHG</td>
+<td>29400.0</td>
+<td>方大炭素</td>
+<td>0.043309</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="2019"><a href="#2019" class="headerlink" title="2019"></a>2019</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>label</th>
+<th>position_value</th>
+<th>name</th>
+<th>weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>000858.XSHE</td>
+<td>93590.0</td>
+<td>五粮液</td>
+<td>0.099662</td>
+</tr>
+<tr>
+<td>002475.XSHE</td>
+<td>91868.0</td>
+<td>立讯精密</td>
+<td>0.097829</td>
+</tr>
+<tr>
+<td>603288.XSHG</td>
+<td>78603.0</td>
+<td>海天味业</td>
+<td>0.083703</td>
+</tr>
+<tr>
+<td>600585.XSHG</td>
+<td>73899.0</td>
+<td>海螺水泥</td>
+<td>0.078694</td>
+</tr>
+<tr>
+<td>300015.XSHE</td>
+<td>54522.0</td>
+<td>爱尔眼科</td>
+<td>0.058060</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最后聊点感想，如果要写一些言之有物的东西真心是需要做大量的工作。这篇文章（其实也包括我写的其他内容）背后是大量的代码和测试。对于那些每天更新的自媒体，我不敢说100%但十之八九是没啥信息量。高质量的文章如果能做到每周更新那真的非常不易。</p>
+<p>本篇把回测过程中碰到的陷阱给逐个解决了，而且还搞定了个股权重问题，下一篇《screen（筛选器）之三》打算着手优化aggregate z-score的权重问题，也就是每个factor该如何分配权重。敬请期待！</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/23/screening-in-practice/" rel="prev" title="一个基于价值的screen（筛选器） -- 大概是最简单的量化投资">
+      <i class="fa fa-chevron-left"></i> 一个基于价值的screen（筛选器） -- 大概是最简单的量化投资
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题暴露"><span class="nav-number">1.</span> <span class="nav-text">问题暴露</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#改变调仓（rebalance）周期"><span class="nav-number">1.1.</span> <span class="nav-text">改变调仓（rebalance）周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#改变调仓时点"><span class="nav-number">1.2.</span> <span class="nav-text">改变调仓时点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#陷阱"><span class="nav-number">2.</span> <span class="nav-text">陷阱</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#陷阱之一-—-一定是策略出问题了"><span class="nav-number">2.1.</span> <span class="nav-text">陷阱之一 — 一定是策略出问题了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#陷阱之二-—-停牌"><span class="nav-number">2.2.</span> <span class="nav-text">陷阱之二 — 停牌</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#陷阱之三-—-涨跌停"><span class="nav-number">2.3.</span> <span class="nav-text">陷阱之三 — 涨跌停</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#陷阱之四-—-个股权重"><span class="nav-number">2.4.</span> <span class="nav-text">陷阱之四 — 个股权重</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化权重"><span class="nav-number">3.</span> <span class="nav-text">优化权重</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用流通市值权重"><span class="nav-number">3.1.</span> <span class="nav-text">使用流通市值权重</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流通市值"><span class="nav-number">3.2.</span> <span class="nav-text">流通市值++</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#策略回测结果"><span class="nav-number">4.</span> <span class="nav-text">策略回测结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2015"><span class="nav-number">4.1.</span> <span class="nav-text">2015</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2016"><span class="nav-number">4.2.</span> <span class="nav-text">2016</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2017"><span class="nav-number">4.3.</span> <span class="nav-text">2017</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2018"><span class="nav-number">4.4.</span> <span class="nav-text">2018</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2019"><span class="nav-number">4.5.</span> <span class="nav-text">2019</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Liang</p>
+  <div class="site-description" itemprop="description">Keep Walking</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ecmkit" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ecmkit" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Liang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
