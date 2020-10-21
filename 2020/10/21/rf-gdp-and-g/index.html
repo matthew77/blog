@@ -20,22 +20,23 @@
     var CONFIG = {"hostname":"www.keepswalking.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="所谓的Risk Premium（以下简写成RP）是值市场的预期收益(expected return)减去无风险收益率（risk free rate）$ r_f $。RP是估值的关键，当对某只股票进行估值的时候，你首先需要确定其required return（或称discount rate）r。而$ r &#x3D; r_f + \beta*RP $。那么中国市场的RP是多少呢？作为emerging mark">
+  <meta name="description" content="本文虽短，但是涉及到一个非常重要的知识点—如何确定DCF模型里的永续增长率g。为何会想到写这个问题？因为我自己对如何确定永续增长率也一直比较迷茫。最近读到泰康资产CEO段国圣一篇关于“后疫情时代的资产配置”的主题演讲，里面的一些内容让我有了方向。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="中国股票市场的风险溢价">
-<meta property="og:url" content="https://www.keepswalking.com/2020/07/14/cn-market-rp/index.html">
+<meta property="og:title" content="rf gdp and g">
+<meta property="og:url" content="https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/index.html">
 <meta property="og:site_name" content="Liang的风险平价观">
-<meta property="og:description" content="所谓的Risk Premium（以下简写成RP）是值市场的预期收益(expected return)减去无风险收益率（risk free rate）$ r_f $。RP是估值的关键，当对某只股票进行估值的时候，你首先需要确定其required return（或称discount rate）r。而$ r &#x3D; r_f + \beta*RP $。那么中国市场的RP是多少呢？作为emerging mark">
+<meta property="og:description" content="本文虽短，但是涉及到一个非常重要的知识点—如何确定DCF模型里的永续增长率g。为何会想到写这个问题？因为我自己对如何确定永续增长率也一直比较迷茫。最近读到泰康资产CEO段国圣一篇关于“后疫情时代的资产配置”的主题演讲，里面的一些内容让我有了方向。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.keepswalking.com/2020/07/14/cn-market-rp/irp.PNG">
-<meta property="og:image" content="https://www.keepswalking.com/2020/07/14/cn-market-rp/which_to_use.PNG">
-<meta property="article:published_time" content="2020-07-14T13:11:41.000Z">
-<meta property="article:modified_time" content="2020-09-04T11:34:33.178Z">
+<meta property="og:image" content="https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/dcf.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/why_10ybond.PNG">
+<meta property="og:image" content="https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/why_10ybond_1.PNG">
+<meta property="article:published_time" content="2020-10-21T06:23:18.000Z">
+<meta property="article:modified_time" content="2020-10-21T08:50:59.255Z">
 <meta property="article:author" content="Liang">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.keepswalking.com/2020/07/14/cn-market-rp/irp.PNG">
+<meta name="twitter:image" content="https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/dcf.PNG">
 
-<link rel="canonical" href="https://www.keepswalking.com/2020/07/14/cn-market-rp/">
+<link rel="canonical" href="https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/">
 
 
 <script id="page-configurations">
@@ -48,7 +49,7 @@
   };
 </script>
 
-  <title>中国股票市场的风险溢价 | Liang的风险平价观</title>
+  <title>rf gdp and g | Liang的风险平价观</title>
   
 
 
@@ -178,7 +179,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.keepswalking.com/2020/07/14/cn-market-rp/">
+    <link itemprop="mainEntityOfPage" href="https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -191,7 +192,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          中国股票市场的风险溢价
+          rf gdp and g
         </h1>
 
         <div class="post-meta">
@@ -200,16 +201,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-07-14 21:11:41" itemprop="dateCreated datePublished" datetime="2020-07-14T21:11:41+08:00">2020-07-14</time>
+              <time title="创建时间：2020-10-21 14:23:18 / 修改时间：16:50:59" itemprop="dateCreated datePublished" datetime="2020-10-21T14:23:18+08:00">2020-10-21</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-09-04 19:34:33" itemprop="dateModified" datetime="2020-09-04T19:34:33+08:00">2020-09-04</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -231,178 +226,27 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>所谓的Risk Premium（以下简写成RP）是值市场的预期收益(expected return)减去无风险收益率（risk free rate）$ r_f $。RP是估值的关键，当对某只股票进行估值的时候，你首先需要确定其required return（或称discount rate）r。而$ r = r_f + \beta*RP $。那么中国市场的RP是多少呢？作为emerging market，中国市场的RP是否就比成熟市场高呢？</p>
+        <p>本文虽短，但是涉及到一个非常重要的知识点—如何确定DCF模型里的永续增长率g。为何会想到写这个问题？因为我自己对如何确定永续增长率也一直比较迷茫。最近读到泰康资产CEO段国圣一篇关于“后疫情时代的资产配置”的主题演讲，里面的一些内容让我有了方向。</p>
 <a id="more"></a>
-<p>RP的确定通常有2种方式。Historical Premium 和 Implied Premium。Historical Premium其实就是根据历史数据计算市场的平均收益率（算数或几何平均）。这里以沪深300指数来代表中国股票市场整体。那么，先来看看Historical Premium是多少？参见下表：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>时间</th>
-<th>开盘</th>
-<th>收盘</th>
-<th>收益</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> 2005/12/30</td>
-<td>994.76</td>
-<td>923.45</td>
-<td>-7.17%</td>
-</tr>
-<tr>
-<td> 2006/12/29</td>
-<td>926.56</td>
-<td>2041.05</td>
-<td>121.02%</td>
-</tr>
-<tr>
-<td> 2007/12/28</td>
-<td>2073.25</td>
-<td>5338.27</td>
-<td>161.55%</td>
-</tr>
-<tr>
-<td> 2008/12/31</td>
-<td>5349.76</td>
-<td>1817.72</td>
-<td>-65.95%</td>
-</tr>
-<tr>
-<td> 2009/12/31</td>
-<td>1848.33</td>
-<td>3575.68</td>
-<td>96.71%</td>
-</tr>
-<tr>
-<td> 2010/12/31</td>
-<td>3592.47</td>
-<td>3128.26</td>
-<td>-12.51%</td>
-</tr>
-<tr>
-<td> 2011/12/30</td>
-<td>3155.56</td>
-<td>2345.74</td>
-<td>-25.01%</td>
-</tr>
-<tr>
-<td> 2012/12/31</td>
-<td>2361.5</td>
-<td>2522.95</td>
-<td>7.55%</td>
-</tr>
-<tr>
-<td> 2013/12/31</td>
-<td>2551.81</td>
-<td>2330.03</td>
-<td>-7.65%</td>
-</tr>
-<tr>
-<td> 2014/12/31</td>
-<td>2323.43</td>
-<td>3533.71</td>
-<td>51.66%</td>
-</tr>
-<tr>
-<td> 2015/12/31</td>
-<td>3566.09</td>
-<td>3731</td>
-<td>5.58%</td>
-</tr>
-<tr>
-<td> 2016/12/30</td>
-<td>3725.86</td>
-<td>3310.08</td>
-<td>-11.28%</td>
-</tr>
-<tr>
-<td> 2017/12/29</td>
-<td>3313.95</td>
-<td>4030.86</td>
-<td>21.78%</td>
-</tr>
-<tr>
-<td> 2018/12/28</td>
-<td>4045.21</td>
-<td>3010.65</td>
-<td>-25.31%</td>
-</tr>
-<tr>
-<td> 2019/12/31</td>
-<td>3017.07</td>
-<td>4096.58</td>
-<td>36.07%</td>
-</tr>
-<tr>
-<td> 2020/07/14</td>
-<td>4121.35</td>
-<td>4806.69</td>
-<td>17.33%</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>一共才16条数据，数据样本很小，未必能揭示真实的RP。如果以算数平均计算，可得沪深300的预期收益是：22.77%。而以几何平均计算，预期收益是：10.35%，几何平均更合理，通常来说几何平均是会小于算数平均。对于无风险收益率来说，选取10年期国债的收益率：3.06%，由此可得RP=10.35%-3.06% = 7.29%。看上去好像还蛮不错的哦！</p>
-<p>当然，使用historical premium的问题也很明显，你需要有大量的历史数据，对于成熟市场，如果美国股市，可以得到相对可靠的数据（其实方差也很大），而对于中国这样的emerging market，historical premium的准确性更是值得怀疑。另外一个问题，历史数据只能反应历史，而很多新的变化就无法体现在结果中，就好比看着后视镜开车。</p>
-<p>Implied Premium，在计算过程中使用了“未来数据”，将最新的预期加入计算，因此更加能反应未来的变化。那么，如何计算implied premium呢？简单来说就是根据dividend discount model (DDM) 来推算出r—required return, 我们知道DDM的简单形式可以写成：</p>
-<script type="math/tex; mode=display">
-P = D_1/(r-g)</script><p>其中，P对应现在的指数，D1=下一年的分红，g=收入增长率。那么，如果知道P，D1，g就可以推算出r来了。而D1，g都是预测值，是对未来的预期。通过这种方式计算出来的r对估值具有更好的效果。</p>
-<p>接下来还是以沪深300为例来计算Implied Premium。在本例中使用两段式的DDM， 即一开始的5年为高速增长期，5年以后为稳定增长期。输入参数如下：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>值</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>当前指数</td>
-<td>4806.69</td>
-<td>这个很容获取，直接填上最新的指数值，我这里填的式2020/7/14日沪深300的收盘价</td>
-</tr>
-<tr>
-<td>分红和回购率</td>
-<td>2.07%</td>
-<td>这个要花一点功夫了，不得不说中证指数有限公司工作很粗糙，照理这些数据应该提供的，我在他们网站上找了好久也没找到，而S&amp;P以及恒生指数都提供这些数据的。最后只能自己计算了，将300只成分股一个一个数据汇集起来。最终的结果也符合直觉，国内红率不是很高，尤其对应这几天的大涨，分红率就更低了。</td>
-</tr>
-<tr>
-<td>今后5年收入增加率</td>
-<td>14.364%</td>
-<td>这个数据也挺难弄。我从Choice终端上查找一致性预期获得的。原始数据是今后2年复合增长率21.9%，但是感觉这数据太高了。有可能是疫情的原因。我自己作了调整。</td>
-</tr>
-<tr>
-<td>五年以后增长率</td>
-<td>3.06%</td>
-<td>这个值代表了永续增长率，我取和无风险收益保持一致</td>
-</tr>
-<tr>
-<td>10年期国债收益率</td>
-<td>3.06%</td>
-<td>无风险收益率</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>然后，利用MS Excel的规划求解就能得到implied risk premium，参见下图：</p>
-<img src="/2020/07/14/cn-market-rp/irp.PNG" class="">
-<p>expected dividend是根据今后5年收入增长率推算得到。terminal value根据DDM公式计算得到。应用规划求解，可变单元格的值设置为Implied Risk Premium，最后的结果为3.49%，同historical premium的7.29%比低了好多啊！！！至于说哪个值更加符合市场实际情况呢？我个人觉得3.49%似乎比较符合直观感受。我大哀股如同绞肉机，说直白一点，就是收益和风险不对称，股民承担了很高的风险却为了不太理想的收益。</p>
-<p>为何implied premium会那么低？首先，分红+回购比例很低！这也导致了terminal value很低，而另一方面，指数本身又很高。这就进一步解释了高风险低收益的市场状况。假设市场跌去50%，而分红绝对值保持不变，那么implied premium就变成了6.81%，相对来说就改善了很多。</p>
-<p>所以，implied premium能从风险收益比较的角度来提供我们观察市场的一种方法。那么，究竟该使用historical premium还是implied premium呢？</p>
-<p>下表是Damodaran教授提供的美国市场的数据：</p>
-<img src="/2020/07/14/cn-market-rp/which_to_use.PNG" class="">
-<p>显然implied premium效果好很多了。不过需要指出的一点，implied premium需要高质量的预期数据，例如今后几年的盈利增长率，分红率。获得高质量的一致性预期数据就显得尤为重要。当然还需要指出的是implied premium并没有一个客观正确的值，每个人可以有自己预期，并得到对应的值，就好像每个人对市场都可以有自己的看法一样。RP是一项很关键的数据，后面的股票估值直接需要RP的参与。我打算每周都会更新implied risk premium。</p>
-<p>：：：更新（2020/9/4）：：：</p>
-<p>更新了模型的数据：</p>
+<p>其实，本来g不是问题！因为根据Damodaran的方法，g的<strong>上限</strong>就是无风险利率。但是，什么事情到了中国就必须得有中国特色。我们先来看一个通用的DCF模型，如下图所示：</p>
+<img src="/2020/10/21/rf-gdp-and-g/dcf.PNG" class="">
+<p>DCF被人诟病的一大问题是terminal value，因为terminal value占最终估值的比例非常大，即使使用10年的长度情况也差不多。这直接导致一个问题，那就是如果terminal value有些偏差，那整个结果就废了！如何确定terminal value？</p>
+<script type="math/tex; mode=display">TV_t = \frac {CF_{t+1}} {r-g_{stable}}</script><p>由以上公式可见，影响terminal value的因素有3个。cashflow, r和g。通常来说，cashflow估计的准确与否是由你对目标公司业务的熟悉程度决定的。r即discount rate一般由beta决定，如果使用bottom up beta方法，那相对把握还是比较大。而g该如何确定呢？Damodaran是用risk free rate，一般是指10年期国债。他的理由如下：</p>
+<img src="/2020/10/21/rf-gdp-and-g/why_10ybond.PNG" class="">
+<p>他的理由是：</p>
 <ul>
-<li>使用FCFE而非原来的分红+回购来计算implied risk premium。</li>
-<li>具体更新说明参见：<a href="/2020/09/04/cn-market-implied-RP-with-FCFE/" title="基于FCFE重新计算中国市场隐含风险溢价">基于FCFE重新计算中国市场隐含风险溢价</a></li>
+<li>长期来说，实际增长率<strong>不能低于</strong>实际利率，因为商品和服务的增长必须能抵得过实际利率，否则借款人就不应该借钱</li>
+<li>长期来说，实际增长率<strong>可能高于</strong>实际利率，相当于是对借款人的一种风险补偿。然而，随着经济趋向成熟，两者的差异将会缩小。而由于经济体里会出现成长性公司，因此可以谨慎假设高出的部分来自于这些公司。（我不知道这段Damodaran想表达啥？感觉逻辑混乱，根据他的论述那得出的结论应该是Nominal GDP growth &gt; Risk free rate）</li>
+<li>由历史数据可见，总体上Nominal GDP还是会高出T Bond Rate，但是比较接近。确实有些时间T Bond Rate还会比Nominal GDP高</li>
 </ul>
-<p>结果参见：<a href="/2020/07/21/CN-implied-RP/" title="A股市场隐含风险溢价(Implied Risk Premium)">A股市场隐含风险溢价(Implied Risk Premium)</a></p>
+<img src="/2020/10/21/rf-gdp-and-g/why_10ybond_1.PNG" class="">
+<p>上图更加直观！蓝柱=Real GDP growth，灰柱=inflation rate，蓝柱+灰柱=intrinsic risk free rate，由以上理论，intrinsic risk free rate应该接近10-year T bond（红色）。实际来看基本还是比较吻合。</p>
+<p>综上，从美国市场看Nominal GDP growth和T Bond Rate相当接近。考虑到T Bond Rate的获得<strong>极其方便</strong>，因此Damodaran提出用risk free rate，即10-year T Bond Rate作为g的<strong>cap（上限）</strong>。注意，他给出的rule是用无风险利率作为上限。</p>
+<p>那么他的方法是否可以直接用在我们大A股市场呢？我也一直比较犹豫，是因为我们的GDP明显高于10年期国债ytm！如果用10年期国债ytm作为g那有可能估出来的价值都偏低，但<strong>我一直不清楚我们的GDP和无风险利率之间的差异会如此巨大的原因是什么</strong>？因此就不知道到底<strong>该用无风险利率作为g更合适，还是用预期GDP增长率更合适</strong>？直到我昨天读了泰康资产CEO段国圣一篇关于“后疫情时代的资产配置”的主题演讲。引用相关内容如下：</p>
+<p><em>。。。我们过去，不仅是中国，新兴市场国家在建设初期都是<strong>利率抑制</strong>的，实际上是用老百姓的储蓄来支持整个国家的建设，所以导致<strong>中国的债券收益率的中枢明显比GDP中枢要低。西方国家、发达国家国债的收益率中枢跟GDP的中枢基本是一致的，有一定的差异，但总体是差异很小的</strong>，所以在利率市场化过程中，这样一个缺口会缩窄。。。</em></p>
+<p><em>。。。<strong>中国利率市场化没有完成，利率体系的中枢和名义GDP之间有一定的缺口</strong>。我们利率体系的中枢，我们讲利率一般都是用无风险利率，就是十年期国债作为一个基准，它跟名义GDP有一个系统性的缺口，反映整个发展中国家（包括中国）金融抑制，<strong>利率市场化在逐步完成的时候，国债的收益率中枢和名义GDP会趋向一致，这是美国和日本等一些成熟的发达国家已经发生的过程</strong>。随着我们国家利率市场化的推进，我们十年期的国债与名义GDP的缺口在缩小。2012年和2013年利率市场化改革，以这个时候为界，<strong>前面这个缺口是大概12%</strong>，利率本身加12%才到的名义GDP，<strong>实行利率化改革以后，逐步收窄到5%</strong>，随着未来一段时间利率市场化继续的推进，对利率的底部形成一个支持。。。</em></p>
+<p>当我读到这些内容时有点eureka moment的感觉！之所以我们的GDP和无风险利率有如此大的差异是因为发展中国家都会进行利率抑制。我理解就是人为压低名义利率，使得实际利率变得非常低，甚至是负，通过这种方式促进投资和消费，设想一下，借款人可以以很低的利率借到钱，由于实际上是负利率，当他还钱的时候其实还的更少！</p>
+<p>碎片阅读还是能带来一些价值啊。。。（其实我是用讯飞有声一边骑车一边听的。。。），好了，这下就明确了，<strong>在计算terminal value的时候永续增长率g应该使用GDP的增长率</strong>。但在实际操作中其实还是需要一些假设，因为使用g的时点是在若干年后e.g. 5年或10年；显然直接用当下时点的GDP增长率就不适合。而对于美国市场使用10年期国债YTM的情景，ytm是IRR（internal rate of return）天然就自带预期成分，因此这也是直接使用10年期国债YTM的好处之一（另外一个就是很容易获得，每天都想查就有！）。因此，为了更好估计出terminal value，g应该使用expected GDP growth rate。暂不清楚哪里能查到比较靠谱的5年后甚至10年后GDP的预期增长。这里可能需要扮演上帝，但至少我们还有10年期国债做参考嘛！要错也不至于错的太离谱！！</p>
 
     </div>
 
@@ -447,13 +291,10 @@ P = D_1/(r-g)</script><p>其中，P对应现在的指数，D1=下一年的分红
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/06/02/vanishing-gradients/" rel="prev" title="vanishing gradients">
-      <i class="fa fa-chevron-left"></i> vanishing gradients
+    <a href="/2020/10/16/a-simple-way-to-evaluate-the-market/" rel="prev" title="一个简单的衡量股市估值高低的方法">
+      <i class="fa fa-chevron-left"></i> 一个简单的衡量股市估值高低的方法
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/07/18/bottom-up-beta/" rel="next" title="Bottom-up Beta方法 -- 试算腾讯的beta">
-      Bottom-up Beta方法 -- 试算腾讯的beta <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     

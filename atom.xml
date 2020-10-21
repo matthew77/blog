@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.keepswalking.com/"/>
-  <updated>2020-10-17T13:33:55.680Z</updated>
+  <updated>2020-10-21T08:50:59.255Z</updated>
   <id>https://www.keepswalking.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>rf gdp and g</title>
+    <link href="https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/"/>
+    <id>https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/</id>
+    <published>2020-10-21T06:23:18.000Z</published>
+    <updated>2020-10-21T08:50:59.255Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文虽短，但是涉及到一个非常重要的知识点—如何确定DCF模型里的永续增长率g。为何会想到写这个问题？因为我自己对如何确定永续增长率也一直比较迷茫。最近读到泰康资产CEO段国圣一篇关于“后疫情时代的资产配置”的主题演讲，里面的一些内容让我有了方向。</p><a id="more"></a><p>其实，本来g不是问题！因为根据Damodaran的方法，g的<strong>上限</strong>就是无风险利率。但是，什么事情到了中国就必须得有中国特色。我们先来看一个通用的DCF模型，如下图所示：</p><img src="/2020/10/21/rf-gdp-and-g/dcf.PNG" class=""><p>DCF被人诟病的一大问题是terminal value，因为terminal value占最终估值的比例非常大，即使使用10年的长度情况也差不多。这直接导致一个问题，那就是如果terminal value有些偏差，那整个结果就废了！如何确定terminal value？</p><script type="math/tex; mode=display">TV_t = \frac {CF_{t+1}} {r-g_{stable}}</script><p>由以上公式可见，影响terminal value的因素有3个。cashflow, r和g。通常来说，cashflow估计的准确与否是由你对目标公司业务的熟悉程度决定的。r即discount rate一般由beta决定，如果使用bottom up beta方法，那相对把握还是比较大。而g该如何确定呢？Damodaran是用risk free rate，一般是指10年期国债。他的理由如下：</p><img src="/2020/10/21/rf-gdp-and-g/why_10ybond.PNG" class=""><p>他的理由是：</p><ul><li>长期来说，实际增长率<strong>不能低于</strong>实际利率，因为商品和服务的增长必须能抵得过实际利率，否则借款人就不应该借钱</li><li>长期来说，实际增长率<strong>可能高于</strong>实际利率，相当于是对借款人的一种风险补偿。然而，随着经济趋向成熟，两者的差异将会缩小。而由于经济体里会出现成长性公司，因此可以谨慎假设高出的部分来自于这些公司。（我不知道这段Damodaran想表达啥？感觉逻辑混乱，根据他的论述那得出的结论应该是Nominal GDP growth &gt; Risk free rate）</li><li>由历史数据可见，总体上Nominal GDP还是会高出T Bond Rate，但是比较接近。确实有些时间T Bond Rate还会比Nominal GDP高</li></ul><img src="/2020/10/21/rf-gdp-and-g/why_10ybond_1.PNG" class=""><p>上图更加直观！蓝柱=Real GDP growth，灰柱=inflation rate，蓝柱+灰柱=intrinsic risk free rate，由以上理论，intrinsic risk free rate应该接近10-year T bond（红色）。实际来看基本还是比较吻合。</p><p>综上，从美国市场看Nominal GDP growth和T Bond Rate相当接近。考虑到T Bond Rate的获得<strong>极其方便</strong>，因此Damodaran提出用risk free rate，即10-year T Bond Rate作为g的<strong>cap（上限）</strong>。注意，他给出的rule是用无风险利率作为上限。</p><p>那么他的方法是否可以直接用在我们大A股市场呢？我也一直比较犹豫，是因为我们的GDP明显高于10年期国债ytm！如果用10年期国债ytm作为g那有可能估出来的价值都偏低，但<strong>我一直不清楚我们的GDP和无风险利率之间的差异会如此巨大的原因是什么</strong>？因此就不知道到底<strong>该用无风险利率作为g更合适，还是用预期GDP增长率更合适</strong>？直到我昨天读了泰康资产CEO段国圣一篇关于“后疫情时代的资产配置”的主题演讲。引用相关内容如下：</p><p><em>。。。我们过去，不仅是中国，新兴市场国家在建设初期都是<strong>利率抑制</strong>的，实际上是用老百姓的储蓄来支持整个国家的建设，所以导致<strong>中国的债券收益率的中枢明显比GDP中枢要低。西方国家、发达国家国债的收益率中枢跟GDP的中枢基本是一致的，有一定的差异，但总体是差异很小的</strong>，所以在利率市场化过程中，这样一个缺口会缩窄。。。</em></p><p><em>。。。<strong>中国利率市场化没有完成，利率体系的中枢和名义GDP之间有一定的缺口</strong>。我们利率体系的中枢，我们讲利率一般都是用无风险利率，就是十年期国债作为一个基准，它跟名义GDP有一个系统性的缺口，反映整个发展中国家（包括中国）金融抑制，<strong>利率市场化在逐步完成的时候，国债的收益率中枢和名义GDP会趋向一致，这是美国和日本等一些成熟的发达国家已经发生的过程</strong>。随着我们国家利率市场化的推进，我们十年期的国债与名义GDP的缺口在缩小。2012年和2013年利率市场化改革，以这个时候为界，<strong>前面这个缺口是大概12%</strong>，利率本身加12%才到的名义GDP，<strong>实行利率化改革以后，逐步收窄到5%</strong>，随着未来一段时间利率市场化继续的推进，对利率的底部形成一个支持。。。</em></p><p>当我读到这些内容时有点eureka moment的感觉！之所以我们的GDP和无风险利率有如此大的差异是因为发展中国家都会进行利率抑制。我理解就是人为压低名义利率，使得实际利率变得非常低，甚至是负，通过这种方式促进投资和消费，设想一下，借款人可以以很低的利率借到钱，由于实际上是负利率，当他还钱的时候其实还的更少！</p><p>碎片阅读还是能带来一些价值啊。。。（其实我是用讯飞有声一边骑车一边听的。。。），好了，这下就明确了，<strong>在计算terminal value的时候永续增长率g应该使用GDP的增长率</strong>。但在实际操作中其实还是需要一些假设，因为使用g的时点是在若干年后e.g. 5年或10年；显然直接用当下时点的GDP增长率就不适合。而对于美国市场使用10年期国债YTM的情景，ytm是IRR（internal rate of return）天然就自带预期成分，因此这也是直接使用10年期国债YTM的好处之一（另外一个就是很容易获得，每天都想查就有！）。因此，为了更好估计出terminal value，g应该使用expected GDP growth rate。暂不清楚哪里能查到比较靠谱的5年后甚至10年后GDP的预期增长。这里可能需要扮演上帝，但至少我们还有10年期国债做参考嘛！要错也不至于错的太离谱！！</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文虽短，但是涉及到一个非常重要的知识点—如何确定DCF模型里的永续增长率g。为何会想到写这个问题？因为我自己对如何确定永续增长率也一直比较迷茫。最近读到泰康资产CEO段国圣一篇关于“后疫情时代的资产配置”的主题演讲，里面的一些内容让我有了方向。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Valuation" scheme="https://www.keepswalking.com/categories/Valuation/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>一个简单的衡量股市估值高低的方法</title>
@@ -427,27 +448,6 @@
     
     
       <category term="Macro" scheme="https://www.keepswalking.com/categories/Macro/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>风险评价策略（Risk Parity)基准指数</title>
-    <link href="https://www.keepswalking.com/2017/10/16/rp-benchmark-index/"/>
-    <id>https://www.keepswalking.com/2017/10/16/rp-benchmark-index/</id>
-    <published>2017-10-16T13:09:07.000Z</published>
-    <updated>2017-10-16T13:12:09.203Z</updated>
-    
-    <content type="html"><![CDATA[<p>6月份考完CFA leve I 就打算用R实现一个Risk Parity的策略，原本觉得很快就能搞定，但是没想到越写东西越多，细节的问题不断浮出水面，直到最近才完成了大部分的功能。写了1000多行的R代码，本篇就是梳理自己在编程过程中碰到的一些问题和想法。如果想了解Risk Parity量化的方法可以参考之前的《<a href="http://www.keepswalking.com/2017/07/23/risk-parity-quantitative-fundamental/">Risk Parity 量化入门</a>》<br><a id="more"></a></p><h2 id="最根本的想法：为什么要实现一个Risk-Parity，或为什么Risk-Parity能实现收益？"><a href="#最根本的想法：为什么要实现一个Risk-Parity，或为什么Risk-Parity能实现收益？" class="headerlink" title="最根本的想法：为什么要实现一个Risk Parity，或为什么Risk Parity能实现收益？"></a>最根本的想法：为什么要实现一个Risk Parity，或为什么Risk Parity能实现收益？</h2><p>我自己主要是参考了Ray Dalio关于全天候基金的一些介绍，觉得很有道理。主要有以下几点：</p><ul><li>长期来看，beta也就是资产的收益一定是超过现金的。</li><li>理由是因为，其一，这是有资本主义制度本质决定的，资金总是流向能产生更高收益的地方。而那些能产生正收益的人或项目就会借入资金，而投资人则会借出资金获取收益。显然，资本市场就是投资人和项目汇集地。当然，有些制度下未必如此。。。</li><li>其二，风险应该获得对应的补偿。简而言之就是高风险高收益。</li></ul><p>对于我自己而言，我需要一个benchmark，来衡量自己投资的绩效。同时，这个基准指数，也是我用来观察市场的一个很好的工具。因此，我觉得实现这个基准指数是一件很有意义的事情。</p><h2 id="为什么不去追求alpha？"><a href="#为什么不去追求alpha？" class="headerlink" title="为什么不去追求alpha？"></a>为什么不去追求alpha？</h2><p>我觉得是一个因人而异的事情。alpha是零和游戏，你获得的alpha其实别人的loss，从这点来看就知道获取alpha的竞争激烈，也就是说，你必须比别人在某些方面强，你才能从他人身上抢到钱。明白了这点，就需要对自身进行一些必要分析，自己到底在哪些方面比别人强？要长期跑赢市场是一件几乎不可能完成的任务！在这个市场里面，有人靠基本面分析，有人靠技术分析，有的靠行为心理。。。但是，我相信这个市场的效率会越来越高，越来越逼近semi-strong efficient market。秉持这个观点，再加之我自己并没有什么过人之处，那么，我应该安心于获取beta，或者说，要获取alpha我会借助别人的能力，比如选则基金。这里我想多说一句，对于大部分散户而言，不要去走所谓的基本面这条路，因为其实这条路是相当昂贵的，光从数据角度来看，要获取和机构对等的数据就是一件不可能的事情！机构可以获取各类研究报告，机构有专职人员看某个行业，当需要了解行业细节时候，随时有人可以说清楚，他们甚至可以花钱用卫星来数船。</p><p>以上的大原则指导了我努力的方向。那么，要获取beta，搞个股票指数基金定投也ok啊，为啥要用Risk Parity呢？如果你能承受得起指数的波动并能坚持到底，我想也是一条可选则的路。就我自己而言，我相信分散投资，而Risk Parity能做到比指数基金更好的分散投资，因此也就实现了更低的波动。</p><h2 id="Risk-Parity的组合里面该包括什么品种？"><a href="#Risk-Parity的组合里面该包括什么品种？" class="headerlink" title="Risk Parity的组合里面该包括什么品种？"></a>Risk Parity的组合里面该包括什么品种？</h2><p>我主要是根据Edward E. Qian的那本 Risk Parity Fundmentals来选择品种。大类上来讲包括了以下三种：</p><ul><li>interest risk premium，也就是债券了，其实主是指利率债。长期来看，投资者通过承担利率风险（比如买入长期国债）获得利率的风险溢价。</li><li>equity risk premium，也就是股票了，长期来看投资者通过投资股票必然可以获得高于无风险利率的收益。其实从微观的角度来看，企业主通过股票市场融资，通过持续经营，获得高于融资成本的收益。</li><li>inflation risk premium，也就是商品，长期来看商品可以对冲通货膨胀。</li></ul><p>而这三大类资产类别本身的相关性不高，所以是比较理想的构建portfolio的要素。比如，在高通胀时期，股票和债券的表现不好，但是，商品的表现会比较突出；而在经济低迷的时期，债券的表现要好于股票和商品。需要说明的是以上三大类都包含了“长期来看”这个前提，因为从某个时间段来说，会出现三类资产都在下跌的情况。但是从长期来看，这3类资产的期望收益都是正的。</p><h2 id="都有哪些资产入选到Risk-Parity基准指数里？"><a href="#都有哪些资产入选到Risk-Parity基准指数里？" class="headerlink" title="都有哪些资产入选到Risk Parity基准指数里？"></a>都有哪些资产入选到Risk Parity基准指数里？</h2><p>刚一开始我并不想加入太多的资产品种，我想从简单的开始，逐步完善，而基准指数也是我观察市场的一个窗口。我初步的想法是在大类的risk parity下包含小类的risk parity。大类上已经提到了要包括债券，股票和商品。而每个大类下，我想再通过跨国配置做进一步的risk parity，目的是将风险分散的更彻底。那么需要包括哪些国家呢？我想以：</p><ul><li>消费国：美国，欧洲</li><li>生产国：中国</li><li>资源国：澳洲</li></ul><p>这样的分类来选择国家，之所以这样想，是因为，通常这些国家在同一时间会处于不同的经济周期上，因此，也就能更好的分散风险。所以，最后每个大类都会包含这些国家的资产。例如，在股票的大类下会分别包含：美国、欧洲、中国和澳洲的股票，而这些不同国家的股票之间也要实现risk parity。以下就是目前包括的基准指数里包含的资产：</p><ul><li>股票<ul><li>美国：S&amp;P500 - 标普500指数(Total Return)</li><li>欧洲：德国DAX指数，本来想用stoxx 50的，但是不确定stoxx是否是total return（有谁知道麻烦告知一下），而DAX指数本身就是total return的方式。</li><li>中国：沪深300指数，但是找不到沪深300的total return指数，所以就直接用沪深300EFT（510310）并使用后复权获得最终的数据。不过300EFT历史太短了，导致我很难做回测，我就用50ETF接300ETF，这么处理一下后就有比较长的历史数据了！</li><li>澳洲：ASX200 - 澳洲200指数（Total Return）</li></ul></li><li>债券<ul><li>美国：Thomson Reuters US 10 Year Government Benchmark - 美国10年期债券指数 （目测应该是total return）</li><li>欧洲：S&amp;P Eurozone Sovereign Bond 7-10 Years Index （total return）</li><li>中国：Shanghai SE Treasury Bond - 国债指数 （目测应该是total return）</li><li>澳洲：S&amp;P/ASX Government Bond 5-10 Year Index (Total return)</li></ul></li><li>商品，对于商品而言，并没有国别的区分，主要考虑到国内市场和国际市场会有不同步的现象，所以分别使用两个商品指数。同时，将黄金单列出来，我的想法是黄金本身是对冲通胀的一种工具，同时她兼具一种信用保障，比如她一种避险资产，因此将她单列出来，目的是能起到更好的分散风险的作用。<ul><li>黄金 - 国内黄金现货价格 </li><li>国际商品：S&amp;P GSCI 商品指数（total return）</li><li>国内商品：通达信期货通里面有一个大宗商品指数（T001），不清楚是谁编制的，暂时就先用这个指数吧！这个指数应该不是total return。不过影响应该不会太大。</li></ul></li></ul><p>还是要提一句数据收集，没想到花掉那么多精力，之前也没有考虑指数是否是total return。随着测试的开始，渐渐意识到这个问题。而我自己也没有什么好的数据终端（花不起这个钱啊！）好在investing.com上的数据还比较全面。后来又发现了www.spindices.com这个网站，他是标普的一个关于指数汇编的网站，提供了非常全面的指数品种，还能下载数据，不过普通用户只能回溯10年的数据。看来以后花钱买数据的必然的了。回测的过程中发现了很多数据上的问题，需要自己不断地对数据进行修正，数据的准备和清理觉绝对是一件耗时耗精力的事情，远远超出了自己的预期。</p><h2 id="资金管理"><a href="#资金管理" class="headerlink" title="资金管理"></a>资金管理</h2><p>本系统使用一个很简单的资金管理模型：1倍恒定杠杆（1份本金+1份融资）。也就是在任何情况下保持1倍左右的杠杆。从资金管理的角度来看，重点关注是否会爆仓。那么1倍杠杆爆仓会发生在所持的portfolio瞬时下跌50%。这种可能性从一个交易日的时间窗口来看几乎是不可能发生的。因为portfolio本身是分散投资的，包括了债券、股票和商品。另外由于是恒定1倍杠杆的算法，当资产价格下跌，导致超过1倍杠杆时就会触发系统卖出所持资产保证杠杆维持在1倍。</p><h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p>以下罗列一些实现上的细节：</p><ul><li>Risk Parity everywhere。不光是在资产大类上实现Risk Parity，在子类上也实现Risk Parity，例如在股票大类里面可以分为，中国股票，美国股票，德国股票等，那么这些品种也会是Risk Parity。 再下一层，比如中国股票里面可以分创业板，上证50，那么仍旧是Risk Parity。 而我编写的R程序可以自动完成这些工作，我所需要做的仅仅是写出一个资产配置的树形结构。</li><li>Rebalance 策略。我没有使用定期Rebalance的策略，而是针对每个品种设置一个threadhold。超过了就进行Rebalance。这个threadhold是根据每个品种的return std(standard deviation)计算出来的。</li><li>correlation matrix不是静态的，而是会变动的，目前的策略就是根据最近3~5年的数据进行调整。判断correlation matrix是否需要更新的标准是同上次使用的matrix做比较，如果发生统计意义上的改变，则correlation matrix需要更新，那么对应的，各类资产的比重也都需要调整。R程序里使用biotools包的boxM方法来进行判断。</li><li>计算各类资产子Risk Parity下的比重的时候，需要用到优化包，R程序里使用的是BB包里面的spg方法。她能模拟Excel里面的规划求解（solver）。</li><li>计算指数的时候考虑到了交易费用和借款利息。交易费用目前固定为1/1000，借款利息使用的是14天回购利率（204014）。不清楚这样是否合理。</li><li>将所有国外的资产价格换算成RMB（CNY），因为，在计算correlation的时候，必须用同种货币才有意义。</li></ul><h2 id="下一个阶段需要做哪些方面的改进？"><a href="#下一个阶段需要做哪些方面的改进？" class="headerlink" title="下一个阶段需要做哪些方面的改进？"></a>下一个阶段需要做哪些方面的改进？</h2><p>目前我最希望能加入的是timing model，也就择时调整个资产的比重。一个直观的想法是，如果债券处在高位了，那么我希望在Risk Parity里面减少债券的比重。同样，如果商品处在低位，那么我希望能增加该品种的比重。看了一些资料，目前的方向是引入momentum/trend following的方法，对各个品种的比重进行调整。当然也有很多的细节问题需要考虑，比如：当某个品种加速上冲的时候，也往往是最后一波行情了，比如2015年6月份的股灾。那么，这个时候，momentum/trend following并不能指出这种风险。这就需要设计一个指标，根据历史数据的统计加入判断，比如乖离率的统计。具体我也没有想清楚。有时候觉得，既然是一个benchmark，就不应加入这些目的是为了增加alpha的东西。而这些可以加入到我自己的真实的投资组合当中去。</p><h2 id="回测演示"><a href="#回测演示" class="headerlink" title="回测演示"></a>回测演示</h2><p>最后就显示一下自己做的Risk Parity benchmark index的资金曲线。如下图所示：<br><img src="/2017/10/16/rp-benchmark-index/rp_ts.jpg" class=""></p><p>红色是1倍杠杆的净值曲线，黑色是S&amp;P500 total return并换算成人民币。下面针对回测结果做一下说明和总结：</p><ul><li>首先，还是有点出乎意外，竟然能和S&amp;P500差不多打平，要知道我才用了1倍的杠杆。</li><li>该净值曲线是在扣除了交易费用之后获得的。不过没有计算融资费用，也就是1倍杠杆的融资费用。这算是小小耍流氓。会在下次回测的时候做一下灵敏度的测试，看看不同的融资费用和交易费用会对净值造成多大的影响</li><li>资产分配的权重演变来看，初始权重（不包括杠杆，也就是总计为1的情况下），最初债券的权重为74%，演变到后来债券的权重为85%以上，几乎就是一只债券基金了。主要的原因就是债券超低的波动率，尤其是上证国债的超低波动率（几乎就是一根直线），再加上全球央行的大放水，造成了债券的超低波动率，这就直接导致了在Risk Parity中，债券占比的大幅提高。一个值得思考的点就是，如果债券波动率突然增加，就会对现有的配置造成很大的冲击。是否应该给每个大类设置设置一个配置的上限呢？</li><li>其实，这个Risk Parity的组合是可以通过增加杠杆来提高收益的。因为，通过数据可以看到，未加杠杆的情况下（总计权重为1）的Risk Parity的standard deviation和S&amp;P500 total return (人民币计价)的standard deviation的比为：1：5.2。也就是说，如果将Risk Parity的波动率调成和S&amp;P500一致的话，可以用4倍杠杆！而目前只用了1倍杠杆。所以，在实际运行Risk Parity的时候，也可以考虑动态杠杆。</li><li>Risk Parity回测结果的Annualized Sharpe Ratio为2.13。很不错的值，不过考虑到其实她几乎就是一只债券基金，这个sharp ratio也算靠谱。</li><li>最后提一下08年金融危机时的表现，从净值曲线的表现来看是远好于S&amp;P500的，这得益于危机期间债券，黄金和其他资产之间的负相关性。</li></ul><p>参考文献：</p><ul><li>Edward E. Qian, Risk Parity Fundmentals</li><li>Bridgewater, Engineering targeted return &amp; risks</li><li>Bridgewater, Our thoughts about Risk Parity and All Weather</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;6月份考完CFA leve I 就打算用R实现一个Risk Parity的策略，原本觉得很快就能搞定，但是没想到越写东西越多，细节的问题不断浮出水面，直到最近才完成了大部分的功能。写了1000多行的R代码，本篇就是梳理自己在编程过程中碰到的一些问题和想法。如果想了解Risk Parity量化的方法可以参考之前的《&lt;a href=&quot;http://www.keepswalking.com/2017/07/23/risk-parity-quantitative-fundamental/&quot;&gt;Risk Parity 量化入门&lt;/a&gt;》&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="Risk Parity" scheme="https://www.keepswalking.com/categories/Risk-Parity/"/>
     
     
   </entry>
