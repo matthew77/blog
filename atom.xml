@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.keepswalking.com/"/>
-  <updated>2020-10-21T08:50:59.255Z</updated>
+  <updated>2020-10-21T08:56:24.915Z</updated>
   <id>https://www.keepswalking.com/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>rf gdp and g</title>
+    <title>无风险利率，GDP增速以及DCF中的永续增长率g</title>
     <link href="https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/"/>
     <id>https://www.keepswalking.com/2020/10/21/rf-gdp-and-g/</id>
     <published>2020-10-21T06:23:18.000Z</published>
-    <updated>2020-10-21T08:50:59.255Z</updated>
+    <updated>2020-10-21T08:56:24.915Z</updated>
     
     <content type="html"><![CDATA[<p>本文虽短，但是涉及到一个非常重要的知识点—如何确定DCF模型里的永续增长率g。为何会想到写这个问题？因为我自己对如何确定永续增长率也一直比较迷茫。最近读到泰康资产CEO段国圣一篇关于“后疫情时代的资产配置”的主题演讲，里面的一些内容让我有了方向。</p><a id="more"></a><p>其实，本来g不是问题！因为根据Damodaran的方法，g的<strong>上限</strong>就是无风险利率。但是，什么事情到了中国就必须得有中国特色。我们先来看一个通用的DCF模型，如下图所示：</p><img src="/2020/10/21/rf-gdp-and-g/dcf.PNG" class=""><p>DCF被人诟病的一大问题是terminal value，因为terminal value占最终估值的比例非常大，即使使用10年的长度情况也差不多。这直接导致一个问题，那就是如果terminal value有些偏差，那整个结果就废了！如何确定terminal value？</p><script type="math/tex; mode=display">TV_t = \frac {CF_{t+1}} {r-g_{stable}}</script><p>由以上公式可见，影响terminal value的因素有3个。cashflow, r和g。通常来说，cashflow估计的准确与否是由你对目标公司业务的熟悉程度决定的。r即discount rate一般由beta决定，如果使用bottom up beta方法，那相对把握还是比较大。而g该如何确定呢？Damodaran是用risk free rate，一般是指10年期国债。他的理由如下：</p><img src="/2020/10/21/rf-gdp-and-g/why_10ybond.PNG" class=""><p>他的理由是：</p><ul><li>长期来说，实际增长率<strong>不能低于</strong>实际利率，因为商品和服务的增长必须能抵得过实际利率，否则借款人就不应该借钱</li><li>长期来说，实际增长率<strong>可能高于</strong>实际利率，相当于是对借款人的一种风险补偿。然而，随着经济趋向成熟，两者的差异将会缩小。而由于经济体里会出现成长性公司，因此可以谨慎假设高出的部分来自于这些公司。（我不知道这段Damodaran想表达啥？感觉逻辑混乱，根据他的论述那得出的结论应该是Nominal GDP growth &gt; Risk free rate）</li><li>由历史数据可见，总体上Nominal GDP还是会高出T Bond Rate，但是比较接近。确实有些时间T Bond Rate还会比Nominal GDP高</li></ul><img src="/2020/10/21/rf-gdp-and-g/why_10ybond_1.PNG" class=""><p>上图更加直观！蓝柱=Real GDP growth，灰柱=inflation rate，蓝柱+灰柱=intrinsic risk free rate，由以上理论，intrinsic risk free rate应该接近10-year T bond（红色）。实际来看基本还是比较吻合。</p><p>综上，从美国市场看Nominal GDP growth和T Bond Rate相当接近。考虑到T Bond Rate的获得<strong>极其方便</strong>，因此Damodaran提出用risk free rate，即10-year T Bond Rate作为g的<strong>cap（上限）</strong>。注意，他给出的rule是用无风险利率作为上限。</p><p>那么他的方法是否可以直接用在我们大A股市场呢？我也一直比较犹豫，是因为我们的GDP明显高于10年期国债ytm！如果用10年期国债ytm作为g那有可能估出来的价值都偏低，但<strong>我一直不清楚我们的GDP和无风险利率之间的差异会如此巨大的原因是什么</strong>？因此就不知道到底<strong>该用无风险利率作为g更合适，还是用预期GDP增长率更合适</strong>？直到我昨天读了泰康资产CEO段国圣一篇关于“后疫情时代的资产配置”的主题演讲。引用相关内容如下：</p><p><em>。。。我们过去，不仅是中国，新兴市场国家在建设初期都是<strong>利率抑制</strong>的，实际上是用老百姓的储蓄来支持整个国家的建设，所以导致<strong>中国的债券收益率的中枢明显比GDP中枢要低。西方国家、发达国家国债的收益率中枢跟GDP的中枢基本是一致的，有一定的差异，但总体是差异很小的</strong>，所以在利率市场化过程中，这样一个缺口会缩窄。。。</em></p><p><em>。。。<strong>中国利率市场化没有完成，利率体系的中枢和名义GDP之间有一定的缺口</strong>。我们利率体系的中枢，我们讲利率一般都是用无风险利率，就是十年期国债作为一个基准，它跟名义GDP有一个系统性的缺口，反映整个发展中国家（包括中国）金融抑制，<strong>利率市场化在逐步完成的时候，国债的收益率中枢和名义GDP会趋向一致，这是美国和日本等一些成熟的发达国家已经发生的过程</strong>。随着我们国家利率市场化的推进，我们十年期的国债与名义GDP的缺口在缩小。2012年和2013年利率市场化改革，以这个时候为界，<strong>前面这个缺口是大概12%</strong>，利率本身加12%才到的名义GDP，<strong>实行利率化改革以后，逐步收窄到5%</strong>，随着未来一段时间利率市场化继续的推进，对利率的底部形成一个支持。。。</em></p><p>当我读到这些内容时有点eureka moment的感觉！之所以我们的GDP和无风险利率有如此大的差异是因为发展中国家都会进行利率抑制。我理解就是人为压低名义利率，使得实际利率变得非常低，甚至是负，通过这种方式促进投资和消费，设想一下，借款人可以以很低的利率借到钱，由于实际上是负利率，当他还钱的时候其实还的更少！</p><p>碎片阅读还是能带来一些价值啊。。。（其实我是用讯飞有声一边骑车一边听的。。。），好了，这下就明确了，<strong>在计算terminal value的时候永续增长率g应该使用GDP的增长率</strong>。但在实际操作中其实还是需要一些假设，因为使用g的时点是在若干年后e.g. 5年或10年；显然直接用当下时点的GDP增长率就不适合。而对于美国市场使用10年期国债YTM的情景，ytm是IRR（internal rate of return）天然就自带预期成分，因此这也是直接使用10年期国债YTM的好处之一（另外一个就是很容易获得，每天都想查就有！）。因此，为了更好估计出terminal value，g应该使用expected GDP growth rate。暂不清楚哪里能查到比较靠谱的5年后甚至10年后GDP的预期增长。这里可能需要扮演上帝，但至少我们还有10年期国债做参考嘛！要错也不至于错的太离谱！！</p>]]></content>
     
